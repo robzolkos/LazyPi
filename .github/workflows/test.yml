@@ -1,0 +1,75 @@
+name: test
+
+on:
+  push:
+    branches: [master]
+  pull_request:
+
+concurrency:
+  group: ${{ github.workflow }}-${{ github.ref }}
+  cancel-in-progress: true
+
+jobs:
+  e2e:
+    runs-on: ${{ matrix.os }}
+    strategy:
+      matrix:
+        os: [ubuntu-latest]
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 20
+
+      - name: Install bun
+        uses: oven-sh/setup-bun@v2
+
+      - name: Install pi
+        run: npm install -g @mariozechner/pi-coding-agent
+
+      - name: Install npm dependencies
+        run: npm ci
+
+      - name: Run lazypi --yes
+        run: node bin/lazypi.mjs --yes
+
+      - name: Assert settings.json exists
+        run: test -f ~/.pi/agent/settings.json
+
+      - name: Assert expected packages installed
+        run: |
+          node - <<'EOF'
+          const fs = require("fs");
+          const settings = JSON.parse(fs.readFileSync(`${process.env.HOME}/.pi/agent/settings.json`, "utf8"));
+          const sources = new Set((settings.packages ?? []).map(p => typeof p === "string" ? p : p.source));
+
+          const expected = [
+            "npm:pi-subagents",
+            "npm:pi-mcp-adapter",
+            "npm:pi-web-access",
+            "npm:pi-memory-md",
+            "npm:@plannotator/pi-extension",
+            "npm:@juanibiapina/pi-powerbar",
+            "npm:@tmustier/pi-usage-extension",
+            "npm:@tmustier/pi-raw-paste",
+            "npm:@tmustier/pi-ralph-wiggum",
+            "npm:pi-btw",
+            "npm:@every-env/compound-plugin",
+            "npm:@devkade/pi-plan",
+            "npm:pi-simplify",
+            "npm:pi-add-dir",
+            "npm:pi-themes",
+            "npm:pi-cyber-ui",
+            "npm:@victor-software-house/pi-curated-themes",
+            "npm:pi-terminal-theme",
+          ];
+
+          const missing = expected.filter(s => !sources.has(s));
+          if (missing.length) {
+            console.error("Missing packages in settings.json:");
+            missing.forEach(s => console.error(" -", s));
+            process.exit(1);
+          }
+          console.log(`All ${expected.length} expected packages found.`);
+          EOF

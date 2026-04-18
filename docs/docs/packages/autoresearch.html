@@ -1,0 +1,151 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <link rel="icon" type="image/svg+xml" href="/favicon.svg">
+  <title>Autoresearch — LazyPi Docs</title>
+  <link rel="stylesheet" href="/docs.css">
+</head>
+<body>
+
+<nav class="site-nav">
+  <a class="nav-logo" href="/">Lazy<span>Pi</span></a>
+  <div class="nav-links">
+    <a href="/#features">Features</a>
+    <a href="/#catalog">Catalog</a>
+    <a href="/themes.html">Themes</a>
+    <a href="/docs/" class="active">Docs</a>
+    <a href="/faq.html">FAQ</a>
+    <a href="https://github.com/robzolkos/lazypi" target="_blank" rel="noopener" title="GitHub">
+      <svg width="18" height="18" viewBox="0 0 24 24" fill="currentColor"><path d="M12 0C5.37 0 0 5.37 0 12c0 5.31 3.435 9.795 8.205 11.385.6.105.825-.255.825-.57 0-.285-.015-1.23-.015-2.235-3.015.555-3.795-.735-4.035-1.41-.135-.345-.72-1.41-1.23-1.695-.42-.225-1.02-.78-.015-.795.945-.015 1.62.87 1.845 1.23 1.08 1.815 2.805 1.305 3.495.99.105-.78.42-1.305.765-1.605-2.67-.3-5.46-1.335-5.46-5.925 0-1.305.465-2.385 1.23-3.225-.12-.3-.54-1.53.12-3.18 0 0 1.005-.315 3.3 1.23.96-.27 1.98-.405 3-.405s2.04.135 3 .405c2.295-1.56 3.3-1.23 3.3-1.23.66 1.65.24 2.88.12 3.18.765.84 1.23 1.905 1.23 3.225 0 4.605-2.805 5.625-5.475 5.925.435.375.81 1.095.81 2.22 0 1.605-.015 2.895-.015 3.3 0 .315.225.69.825.57A12.02 12.02 0 0 0 24 12c0-6.63-5.37-12-12-12z"/></svg>
+    </a>
+  </div>
+  <a class="nav-cta" href="/#install">Install</a>
+</nav>
+
+<button class="sidebar-toggle" id="sidebar-toggle" onclick="toggleSidebar()">☰</button>
+
+<div class="docs-shell">
+  <aside class="sidebar" id="sidebar">
+    <div class="sidebar-header">LazyPi Docs</div>
+    <div class="sidebar-section-label">Overview</div>
+    <nav class="sidebar-nav">
+      <a href="/docs/" class="sidebar-link">Overview</a>
+      <a href="/docs/first-steps.html" class="sidebar-link">First Steps</a>
+      <a href="/docs/installation.html" class="sidebar-link">Installation</a>
+      <a href="/docs/updating.html" class="sidebar-link">Updating</a>
+      <a href="/docs/removing.html" class="sidebar-link">Removing</a>
+    </nav>
+    <div class="sidebar-section-label">Packages</div>
+    <nav class="sidebar-nav">
+      <a href="/docs/packages/" class="sidebar-link">All packages</a>
+      <a href="/docs/packages/subagents.html" class="sidebar-link">Sub-agents</a>
+      <a href="/docs/packages/mcp-adapter.html" class="sidebar-link">MCP Adapter</a>
+      <a href="/docs/packages/web-access.html" class="sidebar-link">Web Access</a>
+      <a href="/docs/packages/memory.html" class="sidebar-link">Memory</a>
+      <a href="/docs/packages/diff-review.html" class="sidebar-link">Diff Review</a>
+      <a href="/docs/packages/plan.html" class="sidebar-link">Plan</a>
+      <a href="/docs/packages/simplify.html" class="sidebar-link">Simplify</a>
+      <a href="/docs/packages/add-dir.html" class="sidebar-link">Add Directory</a>
+      <a href="/docs/packages/powerbar.html" class="sidebar-link">Powerbar</a>
+      <a href="/docs/packages/usage.html" class="sidebar-link">Usage Tracker</a>
+      <a href="/docs/packages/todo.html" class="sidebar-link">Todo List</a>
+      <a href="/docs/packages/btw.html" class="sidebar-link">BTW</a>
+      <a href="/docs/packages/autoresearch.html" class="sidebar-link active">Autoresearch</a>
+      <a href="/docs/packages/ralph-wiggum.html" class="sidebar-link">Ralph Wiggum</a>
+      <a href="/docs/packages/compound-engineering.html" class="sidebar-link">Compound Engineering</a>
+    </nav>
+  </aside>
+
+  <main class="docs-content">
+    <h1>Autoresearch</h1>
+    <p class="page-desc">Autonomous optimization loop: edit → commit → benchmark → keep/revert → repeat.</p>
+
+    <h2>What it does</h2>
+    <p>
+      Pi-autoresearch runs a continuous experiment loop against any measurable optimization target — test suite speed, bundle size, Lighthouse scores, model benchmark scores, or any metric you can express as a command that returns a number. Inspired by Andrej Karpathy's autoresearch concept.
+    </p>
+    <p>
+      Each loop iteration: Pi makes an edit, commits it, runs your benchmark command, compares the result to the baseline, and either keeps or reverts the change. Results are logged to <code>autoresearch.jsonl</code> and persist across context resets — you can stop and resume at any time. A live browser dashboard (<code>/autoresearch export</code>) shows results as they accumulate.
+    </p>
+    <p>
+      The <code>/skill:autoresearch-create</code> command walks you through setup: what to optimize, what command to run, and what metric to track. <code>/skill:autoresearch-finalize</code> groups successful experiments into independent reviewable branches.
+    </p>
+
+    <h2>Why it's included</h2>
+    <p>
+      Some optimization work is inherently empirical — you can't reason your way to a faster webpack config or a better regularization schedule. Autoresearch turns Pi into an autonomous experimenter that can run hundreds of iterations while you sleep, keeping what works and discarding what doesn't.
+    </p>
+
+    <h2>Commands</h2>
+    <table>
+      <thead>
+        <tr><th>Command</th><th>What it does</th></tr>
+      </thead>
+      <tbody>
+        <tr>
+          <td><code>/autoresearch &lt;text&gt;</code></td>
+          <td>Enter autoresearch mode, or resume if <code>autoresearch.md</code> exists</td>
+        </tr>
+        <tr>
+          <td><code>/autoresearch off</code></td>
+          <td>Leave autoresearch mode — keeps the log intact</td>
+        </tr>
+        <tr>
+          <td><code>/autoresearch clear</code></td>
+          <td>Delete log, reset all state, turn mode off</td>
+        </tr>
+        <tr>
+          <td><code>/autoresearch export</code></td>
+          <td>Open live browser dashboard that auto-updates as experiments run</td>
+        </tr>
+        <tr>
+          <td><code>/skill:autoresearch-create</code></td>
+          <td>Guided setup: goal, benchmark command, metric — then starts the loop</td>
+        </tr>
+        <tr>
+          <td><code>/skill:autoresearch-finalize</code></td>
+          <td>Group kept experiments into independent reviewable branches</td>
+        </tr>
+      </tbody>
+    </table>
+
+    <div class="learn-more">
+      <a href="https://github.com/davebcn87/pi-autoresearch" target="_blank" rel="noopener">→ GitHub — davebcn87/pi-autoresearch</a>
+    </div>
+
+    <nav class="prev-next">
+      <a href="/docs/packages/btw.html" class="prev-next-link">
+        <span class="prev-next-label">Previous</span>
+        ← BTW
+      </a>
+      <a href="/docs/packages/ralph-wiggum.html" class="prev-next-link next">
+        <span class="prev-next-label">Next</span>
+        Ralph Wiggum →
+      </a>
+    </nav>
+
+    <footer>
+      <p style="font-size:0.95rem;color:var(--text-dim);margin-bottom:0.75rem;">Built by <a href="https://zolkos.com" target="_blank" style="color:var(--text-bright);text-decoration:none;">Rob Zolkos</a></p>
+      <p style="display:inline-flex;align-items:center;gap:0.75rem;">
+        <a href="https://github.com/robzolkos/lazypi" target="_blank" rel="noopener" style="display:inline-flex;align-items:center;gap:0.3rem;">
+          <svg width="14" height="14" viewBox="0 0 24 24" fill="currentColor"><path d="M12 0C5.37 0 0 5.37 0 12c0 5.31 3.435 9.795 8.205 11.385.6.105.825-.255.825-.57 0-.285-.015-1.23-.015-2.235-3.015.555-3.795-.735-4.035-1.41-.135-.345-.72-1.41-1.23-1.695-.42-.225-1.02-.78-.015-.795.945-.015 1.62.87 1.845 1.23 1.08 1.815 2.805 1.305 3.495.99.105-.78.42-1.305.765-1.605-2.67-.3-5.46-1.335-5.46-5.925 0-1.305.465-2.385 1.23-3.225-.12-.3-.54-1.53.12-3.18 0 0 1.005-.315 3.3 1.23.96-.27 1.98-.405 3-.405s2.04.135 3 .405c2.295-1.56 3.3-1.23 3.3-1.23.66 1.65.24 2.88.12 3.18.765.84 1.23 1.905 1.23 3.225 0 4.605-2.805 5.625-5.475 5.925.435.375.81 1.095.81 2.22 0 1.605-.015 2.895-.015 3.3 0 .315.225.69.825.57A12.02 12.02 0 0 0 24 12c0-6.63-5.37-12-12-12z"/></svg>
+          GitHub
+        </a>
+        <span>·</span>
+        <a href="https://www.npmjs.com/package/@robzolkos/lazypi" target="_blank">npm</a>
+        <span>·</span>
+        <span>MIT License</span>
+      </p>
+    </footer>
+  </main>
+</div>
+
+<script>
+function toggleSidebar() {
+  document.getElementById('sidebar').classList.toggle('open');
+}
+</script>
+</body>
+</html>

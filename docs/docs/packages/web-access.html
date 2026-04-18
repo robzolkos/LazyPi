@@ -1,0 +1,141 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <link rel="icon" type="image/svg+xml" href="/favicon.svg">
+  <title>Web Access — LazyPi Docs</title>
+  <link rel="stylesheet" href="/docs.css">
+</head>
+<body>
+
+<nav class="site-nav">
+  <a class="nav-logo" href="/">Lazy<span>Pi</span></a>
+  <div class="nav-links">
+    <a href="/#features">Features</a>
+    <a href="/#catalog">Catalog</a>
+    <a href="/themes.html">Themes</a>
+    <a href="/docs/" class="active">Docs</a>
+    <a href="/faq.html">FAQ</a>
+    <a href="https://github.com/robzolkos/lazypi" target="_blank" rel="noopener" title="GitHub">
+      <svg width="18" height="18" viewBox="0 0 24 24" fill="currentColor"><path d="M12 0C5.37 0 0 5.37 0 12c0 5.31 3.435 9.795 8.205 11.385.6.105.825-.255.825-.57 0-.285-.015-1.23-.015-2.235-3.015.555-3.795-.735-4.035-1.41-.135-.345-.72-1.41-1.23-1.695-.42-.225-1.02-.78-.015-.795.945-.015 1.62.87 1.845 1.23 1.08 1.815 2.805 1.305 3.495.99.105-.78.42-1.305.765-1.605-2.67-.3-5.46-1.335-5.46-5.925 0-1.305.465-2.385 1.23-3.225-.12-.3-.54-1.53.12-3.18 0 0 1.005-.315 3.3 1.23.96-.27 1.98-.405 3-.405s2.04.135 3 .405c2.295-1.56 3.3-1.23 3.3-1.23.66 1.65.24 2.88.12 3.18.765.84 1.23 1.905 1.23 3.225 0 4.605-2.805 5.625-5.475 5.925.435.375.81 1.095.81 2.22 0 1.605-.015 2.895-.015 3.3 0 .315.225.69.825.57A12.02 12.02 0 0 0 24 12c0-6.63-5.37-12-12-12z"/></svg>
+    </a>
+  </div>
+  <a class="nav-cta" href="/#install">Install</a>
+</nav>
+
+<button class="sidebar-toggle" id="sidebar-toggle" onclick="toggleSidebar()">☰</button>
+
+<div class="docs-shell">
+  <aside class="sidebar" id="sidebar">
+    <div class="sidebar-header">LazyPi Docs</div>
+    <div class="sidebar-section-label">Overview</div>
+    <nav class="sidebar-nav">
+      <a href="/docs/" class="sidebar-link">Overview</a>
+      <a href="/docs/first-steps.html" class="sidebar-link">First Steps</a>
+      <a href="/docs/installation.html" class="sidebar-link">Installation</a>
+      <a href="/docs/updating.html" class="sidebar-link">Updating</a>
+      <a href="/docs/removing.html" class="sidebar-link">Removing</a>
+    </nav>
+    <div class="sidebar-section-label">Packages</div>
+    <nav class="sidebar-nav">
+      <a href="/docs/packages/" class="sidebar-link">All packages</a>
+      <a href="/docs/packages/subagents.html" class="sidebar-link">Sub-agents</a>
+      <a href="/docs/packages/mcp-adapter.html" class="sidebar-link">MCP Adapter</a>
+      <a href="/docs/packages/web-access.html" class="sidebar-link active">Web Access</a>
+      <a href="/docs/packages/memory.html" class="sidebar-link">Memory</a>
+      <a href="/docs/packages/diff-review.html" class="sidebar-link">Diff Review</a>
+      <a href="/docs/packages/plan.html" class="sidebar-link">Plan</a>
+      <a href="/docs/packages/simplify.html" class="sidebar-link">Simplify</a>
+      <a href="/docs/packages/add-dir.html" class="sidebar-link">Add Directory</a>
+      <a href="/docs/packages/powerbar.html" class="sidebar-link">Powerbar</a>
+      <a href="/docs/packages/usage.html" class="sidebar-link">Usage Tracker</a>
+      <a href="/docs/packages/todo.html" class="sidebar-link">Todo List</a>
+      <a href="/docs/packages/btw.html" class="sidebar-link">BTW</a>
+      <a href="/docs/packages/autoresearch.html" class="sidebar-link">Autoresearch</a>
+      <a href="/docs/packages/ralph-wiggum.html" class="sidebar-link">Ralph Wiggum</a>
+      <a href="/docs/packages/compound-engineering.html" class="sidebar-link">Compound Engineering</a>
+    </nav>
+  </aside>
+
+  <main class="docs-content">
+    <h1>Web Access</h1>
+    <p class="page-desc">Web search, content extraction, and video understanding via Exa, Perplexity, and Gemini.</p>
+
+    <h2>What it does</h2>
+    <p>
+      Pi-Web-Access gives Pi the ability to search the web, fetch and extract page content, and understand video — without requiring browser automation. It exposes four tools that Pi invokes directly: <code>web_search</code>, <code>code_search</code>, <code>fetch_content</code>, and <code>get_search_content</code>.
+    </p>
+    <p>
+      The package is zero-config when used via Exa MCP. It also supports Perplexity and Gemini as providers, with smart fallback across them. Specialized capabilities include YouTube video understanding, local video file analysis, GitHub repository cloning for deeper inspection, and PDF extraction.
+    </p>
+
+    <h2>Why it's included</h2>
+    <p>
+      A coding agent that can't look things up has to rely entirely on training data. That's a significant limitation for anything involving recent library versions, documentation, Stack Overflow answers, or API references. Web Access makes Pi a genuinely useful research partner, not just a code completer.
+    </p>
+
+    <h2>Commands</h2>
+    <p>Web Access has no slash commands. Pi invokes the following tools directly based on context:</p>
+    <table>
+      <thead>
+        <tr><th>Tool</th><th>What it does</th></tr>
+      </thead>
+      <tbody>
+        <tr>
+          <td><code>web_search</code></td>
+          <td>General web search across providers</td>
+        </tr>
+        <tr>
+          <td><code>code_search</code></td>
+          <td>Search optimized for code and technical content</td>
+        </tr>
+        <tr>
+          <td><code>fetch_content</code></td>
+          <td>Fetch and extract content from a URL</td>
+        </tr>
+        <tr>
+          <td><code>get_search_content</code></td>
+          <td>Search and retrieve full page content in one step</td>
+        </tr>
+      </tbody>
+    </table>
+
+    <div class="learn-more">
+      <a href="https://github.com/nicobailon/pi-web-access" target="_blank" rel="noopener">→ GitHub — nicobailon/pi-web-access</a>
+    </div>
+
+    <nav class="prev-next">
+      <a href="/docs/packages/mcp-adapter.html" class="prev-next-link">
+        <span class="prev-next-label">Previous</span>
+        ← MCP Adapter
+      </a>
+      <a href="/docs/packages/memory.html" class="prev-next-link next">
+        <span class="prev-next-label">Next</span>
+        Memory →
+      </a>
+    </nav>
+
+    <footer>
+      <p style="font-size:0.95rem;color:var(--text-dim);margin-bottom:0.75rem;">Built by <a href="https://zolkos.com" target="_blank" style="color:var(--text-bright);text-decoration:none;">Rob Zolkos</a></p>
+      <p style="display:inline-flex;align-items:center;gap:0.75rem;">
+        <a href="https://github.com/robzolkos/lazypi" target="_blank" rel="noopener" style="display:inline-flex;align-items:center;gap:0.3rem;">
+          <svg width="14" height="14" viewBox="0 0 24 24" fill="currentColor"><path d="M12 0C5.37 0 0 5.37 0 12c0 5.31 3.435 9.795 8.205 11.385.6.105.825-.255.825-.57 0-.285-.015-1.23-.015-2.235-3.015.555-3.795-.735-4.035-1.41-.135-.345-.72-1.41-1.23-1.695-.42-.225-1.02-.78-.015-.795.945-.015 1.62.87 1.845 1.23 1.08 1.815 2.805 1.305 3.495.99.105-.78.42-1.305.765-1.605-2.67-.3-5.46-1.335-5.46-5.925 0-1.305.465-2.385 1.23-3.225-.12-.3-.54-1.53.12-3.18 0 0 1.005-.315 3.3 1.23.96-.27 1.98-.405 3-.405s2.04.135 3 .405c2.295-1.56 3.3-1.23 3.3-1.23.66 1.65.24 2.88.12 3.18.765.84 1.23 1.905 1.23 3.225 0 4.605-2.805 5.625-5.475 5.925.435.375.81 1.095.81 2.22 0 1.605-.015 2.895-.015 3.3 0 .315.225.69.825.57A12.02 12.02 0 0 0 24 12c0-6.63-5.37-12-12-12z"/></svg>
+          GitHub
+        </a>
+        <span>·</span>
+        <a href="https://www.npmjs.com/package/@robzolkos/lazypi" target="_blank">npm</a>
+        <span>·</span>
+        <span>MIT License</span>
+      </p>
+    </footer>
+  </main>
+</div>
+
+<script>
+function toggleSidebar() {
+  document.getElementById('sidebar').classList.toggle('open');
+}
+</script>
+</body>
+</html>

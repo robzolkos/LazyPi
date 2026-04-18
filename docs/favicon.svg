@@ -1,0 +1,8 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 32 32">
+  <rect width="32" height="32" rx="6" fill="#0a0a0a"/>
+  <text font-family="'SF Mono', 'Fira Code', monospace" font-weight="800" fill="#4afa7a">
+    <tspan x="3" y="14" font-size="9">Z</tspan>
+    <tspan x="9" y="21" font-size="11">Z</tspan>
+    <tspan x="16" y="30" font-size="14">Z</tspan>
+  </text>
+</svg>

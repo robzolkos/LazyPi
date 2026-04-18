@@ -1,0 +1,376 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <link rel="icon" type="image/svg+xml" href="/favicon.svg">
+  <title>Themes — LazyPi</title>
+  <style>
+    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+    :root {
+      --bg: #0a0a0a;
+      --bg2: #111;
+      --bg3: #161616;
+      --border: #222;
+      --green: #4afa7a;
+      --text: #d0d0d0;
+      --text-dim: #666;
+      --text-bright: #f0f0f0;
+    }
+
+    body {
+      background: var(--bg);
+      color: var(--text);
+      font-family: 'SF Mono', 'Fira Code', 'Fira Mono', 'Cascadia Code', 'Consolas', monospace;
+      min-height: 100vh;
+    }
+
+    nav {
+      position: fixed;
+      top: 0; left: 0; right: 0;
+      z-index: 100;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      padding: 1rem 2rem;
+      background: rgba(10,10,10,0.85);
+      backdrop-filter: blur(12px);
+      border-bottom: 1px solid var(--border);
+    }
+    .nav-logo {
+      font-size: 1.3rem;
+      color: var(--green);
+      font-weight: 700;
+      letter-spacing: -0.5px;
+      text-decoration: none;
+    }
+    .nav-logo span { color: #ffffff; }
+    .nav-links { display: flex; gap: 2rem; }
+    .nav-links a {
+      color: var(--text-dim);
+      text-decoration: none;
+      font-size: 0.85rem;
+      transition: color 0.2s;
+    }
+    .nav-links a:hover, .nav-links a.active { color: var(--green); }
+    .nav-cta {
+      background: var(--green);
+      color: #000;
+      border: none;
+      padding: 0.45rem 1rem;
+      font-family: inherit;
+      font-size: 0.8rem;
+      font-weight: 700;
+      cursor: pointer;
+      border-radius: 3px;
+      text-decoration: none;
+      transition: opacity 0.2s;
+    }
+    .nav-cta:hover { opacity: 0.85; }
+
+    .header {
+      padding: 8rem 2rem 3rem;
+      text-align: center;
+      border-bottom: 1px solid var(--border);
+    }
+
+    .header-eyebrow {
+      font-size: 0.75rem;
+      letter-spacing: 0.15em;
+      text-transform: uppercase;
+      color: var(--green);
+      margin-bottom: 1rem;
+    }
+
+    .header h1 {
+      font-size: clamp(2rem, 4vw, 3rem);
+      font-weight: 800;
+      color: var(--text-bright);
+      letter-spacing: -1px;
+      margin-bottom: 0.75rem;
+    }
+
+    .header p {
+      color: var(--text-dim);
+      font-size: 0.95rem;
+    }
+
+    .filter-bar {
+      display: flex;
+      gap: 0.5rem;
+      justify-content: center;
+      flex-wrap: wrap;
+      padding: 1.5rem 2rem;
+      border-bottom: 1px solid var(--border);
+      background: var(--bg2);
+      position: sticky;
+      top: 57px;
+      z-index: 50;
+    }
+
+    .filter-btn {
+      background: none;
+      border: 1px solid var(--border);
+      color: var(--text-dim);
+      font-family: inherit;
+      font-size: 0.75rem;
+      padding: 0.35rem 0.85rem;
+      border-radius: 3px;
+      cursor: pointer;
+      transition: all 0.15s;
+      letter-spacing: 0.05em;
+    }
+    .filter-btn:hover { border-color: var(--green); color: var(--green); }
+    .filter-btn.active { background: var(--green); color: #000; border-color: var(--green); font-weight: 700; }
+
+    .themes-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fill, minmax(220px, 1fr));
+      gap: 1px;
+      background: var(--border);
+      padding: 1px;
+    }
+
+    .theme-tile {
+      display: flex;
+      flex-direction: column;
+      justify-content: space-between;
+      padding: 1.25rem;
+      min-height: 130px;
+      cursor: default;
+      transition: transform 0.15s, box-shadow 0.15s;
+      position: relative;
+    }
+
+    .theme-tile:hover {
+      transform: scale(1.02);
+      z-index: 2;
+      box-shadow: 0 8px 32px rgba(0,0,0,0.5);
+    }
+
+    .theme-name {
+      font-size: 0.9rem;
+      font-weight: 700;
+      line-height: 1.3;
+      margin-bottom: 0.5rem;
+    }
+
+    .theme-pkg {
+      font-size: 0.65rem;
+      opacity: 0.5;
+      letter-spacing: 0.05em;
+      margin-bottom: 0.75rem;
+    }
+
+    .swatches {
+      display: flex;
+      gap: 4px;
+      flex-wrap: wrap;
+    }
+
+    .swatch {
+      width: 18px;
+      height: 18px;
+      border-radius: 3px;
+      flex-shrink: 0;
+    }
+
+    footer {
+      padding: 2rem;
+      text-align: center;
+      color: var(--text-dim);
+      font-size: 0.8rem;
+      border-top: 1px solid var(--border);
+    }
+    footer a { color: var(--text-dim); text-decoration: none; }
+    footer a:hover { color: var(--green); }
+
+    @media (max-width: 600px) {
+      .nav-links { display: none; }
+      .themes-grid { grid-template-columns: repeat(auto-fill, minmax(160px, 1fr)); }
+    }
+  </style>
+</head>
+<body>
+
+<nav>
+  <a class="nav-logo" href="/">Lazy<span>Pi</span></a>
+  <div class="nav-links">
+    <a href="/#features">Features</a>
+    <a href="/#catalog">Catalog</a>
+    <a href="/themes.html" class="active">Themes</a>
+    <a href="/docs/">Docs</a>
+    <a href="/faq.html">FAQ</a>
+    <a href="https://github.com/robzolkos/lazypi" target="_blank" rel="noopener" title="GitHub">
+      <svg width="18" height="18" viewBox="0 0 24 24" fill="currentColor"><path d="M12 0C5.37 0 0 5.37 0 12c0 5.31 3.435 9.795 8.205 11.385.6.105.825-.255.825-.57 0-.285-.015-1.23-.015-2.235-3.015.555-3.795-.735-4.035-1.41-.135-.345-.72-1.41-1.23-1.695-.42-.225-1.02-.78-.015-.795.945-.015 1.62.87 1.845 1.23 1.08 1.815 2.805 1.305 3.495.99.105-.78.42-1.305.765-1.605-2.67-.3-5.46-1.335-5.46-5.925 0-1.305.465-2.385 1.23-3.225-.12-.3-.54-1.53.12-3.18 0 0 1.005-.315 3.3 1.23.96-.27 1.98-.405 3-.405s2.04.135 3 .405c2.295-1.56 3.3-1.23 3.3-1.23.66 1.65.24 2.88.12 3.18.765.84 1.23 1.905 1.23 3.225 0 4.605-2.805 5.625-5.475 5.925.435.375.81 1.095.81 2.22 0 1.605-.015 2.895-.015 3.3 0 .315.225.69.825.57A12.02 12.02 0 0 0 24 12c0-6.63-5.37-12-12-12z"/></svg>
+    </a>
+  </div>
+  <a class="nav-cta" href="/#install">Install</a>
+</nav>
+
+<div class="header">
+  <p class="header-eyebrow">Installed with LazyPi</p>
+  <h1>76 Themes</h1>
+  <p>Every theme you get with <code style="color:var(--green)">npx @robzolkos/lazypi</code> — click any tile to preview.</p>
+</div>
+
+<div class="filter-bar" id="filter-bar"></div>
+
+<div class="themes-grid" id="themes-grid"></div>
+
+<footer>
+  <p style="font-size:0.95rem;color:var(--text-dim);margin-bottom:0.75rem;">Built by <a href="https://zolkos.com" target="_blank" style="color:var(--text-bright);text-decoration:none;">Rob Zolkos</a></p>
+  <p style="display:inline-flex;align-items:center;gap:0.75rem;">
+    <a href="https://github.com/robzolkos/lazypi" target="_blank" rel="noopener" style="display:inline-flex;align-items:center;gap:0.3rem;">
+      <svg width="14" height="14" viewBox="0 0 24 24" fill="currentColor"><path d="M12 0C5.37 0 0 5.37 0 12c0 5.31 3.435 9.795 8.205 11.385.6.105.825-.255.825-.57 0-.285-.015-1.23-.015-2.235-3.015.555-3.795-.735-4.035-1.41-.135-.345-.72-1.41-1.23-1.695-.42-.225-1.02-.78-.015-.795.945-.015 1.62.87 1.845 1.23 1.08 1.815 2.805 1.305 3.495.99.105-.78.42-1.305.765-1.605-2.67-.3-5.46-1.335-5.46-5.925 0-1.305.465-2.385 1.23-3.225-.12-.3-.54-1.53.12-3.18 0 0 1.005-.315 3.3 1.23.96-.27 1.98-.405 3-.405s2.04.135 3 .405c2.295-1.56 3.3-1.23 3.3-1.23.66 1.65.24 2.88.12 3.18.765.84 1.23 1.905 1.23 3.225 0 4.605-2.805 5.625-5.475 5.925.435.375.81 1.095.81 2.22 0 1.605-.015 2.895-.015 3.3 0 .315.225.69.825.57A12.02 12.02 0 0 0 24 12c0-6.63-5.37-12-12-12z"/></svg>
+      GitHub
+    </a>
+    <span>·</span>
+    <a href="https://www.npmjs.com/package/@robzolkos/lazypi" target="_blank">npm</a>
+    <span>·</span>
+    <span>MIT License</span>
+  </p>
+</footer>
+
+<script>
+const themes = [
+  { name: "Adventure",               pkg: "pi-curated-themes", bg: "#040404", fg: "#feffff", swatches: ["#d84a33","#5da602","#eebb6e","#417ab3","#e5c499","#bdcfe5"] },
+  { name: "Adwaita Dark",            pkg: "pi-curated-themes", bg: "#1d1d20", fg: "#ffffff", swatches: ["#c01c28","#2ec27e","#f5c211","#1e78e4","#9841bb","#0ab9dc"] },
+  { name: "Arcoiris",                pkg: "pi-curated-themes", bg: "#201f1e", fg: "#eee4d9", swatches: ["#da2700","#12c258","#ffc656","#518bfc","#e37bd9","#63fad5"] },
+  { name: "Arthur",                  pkg: "pi-curated-themes", bg: "#1c1c1c", fg: "#ddeedd", swatches: ["#cd5c5c","#86af80","#e8ae5b","#6495ed","#deb887","#b0c4de"] },
+  { name: "Atom",                    pkg: "pi-curated-themes", bg: "#161719", fg: "#c5c8c6", swatches: ["#fd5ff1","#87c38a","#ffd7b1","#85befd","#b9b6fc","#85befd"] },
+  { name: "Aura",                    pkg: "pi-curated-themes", bg: "#15141b", fg: "#edecee", swatches: ["#ff6767","#61ffca","#ffca85","#a277ff","#a277ff","#61ffca"] },
+  { name: "Black Metal Bathory",     pkg: "pi-curated-themes", bg: "#000000", fg: "#c1c1c1", swatches: ["#5f8787","#fbcb97","#e78a53","#888888","#999999","#aaaaaa"] },
+  { name: "Black Metal Burzum",      pkg: "pi-curated-themes", bg: "#000000", fg: "#c1c1c1", swatches: ["#5f8787","#ddeecc","#99bbaa","#888888","#999999","#aaaaaa"] },
+  { name: "Black Metal Khold",       pkg: "pi-curated-themes", bg: "#000000", fg: "#c1c1c1", swatches: ["#5f8787","#eceee3","#974b46","#888888","#999999","#aaaaaa"] },
+  { name: "Box",                     pkg: "pi-curated-themes", bg: "#141d2b", fg: "#9fef00", swatches: ["#cc0403","#19cb00","#cecb00","#0d73cc","#cb1ed1","#0dcdcd"] },
+  { name: "Brogrammer",              pkg: "pi-curated-themes", bg: "#131313", fg: "#d6dbe5", swatches: ["#f81118","#2dc55e","#ecba0f","#2a84d2","#4e5ab7","#1081d6"] },
+  { name: "Carbonfox",               pkg: "pi-curated-themes", bg: "#161616", fg: "#f2f4f8", swatches: ["#ee5396","#25be6a","#08bdba","#78a9ff","#be95ff","#33b1ff"] },
+  { name: "Catppuccin Latte",        pkg: "pi-themes",         bg: "#eff1f5", fg: "#4c4f69", swatches: ["#d20f39","#40a02b","#df8e1d","#1e66f5","#8839ef","#04a5e5"] },
+  { name: "Catppuccin Mocha",        pkg: "pi-themes",         bg: "#1e1e2e", fg: "#cdd6f4", swatches: ["#f38ba8","#a6e3a1","#f9e2af","#89b4fa","#cba6f7","#89dceb"] },
+  { name: "Citruszest",              pkg: "pi-curated-themes", bg: "#121212", fg: "#bfbfbf", swatches: ["#ff5454","#00cc7a","#ffd400","#00bfff","#ff90fe","#48d1cc"] },
+  { name: "Cursor Dark",             pkg: "pi-curated-themes", bg: "#141414", fg: "#d4d4d4", swatches: ["#fc6b83","#3fa266","#d2943e","#81a1c1","#b48ead","#88c0d0"] },
+  { name: "Cutie Pro",               pkg: "pi-curated-themes", bg: "#181818", fg: "#d5d0c9", swatches: ["#f56e7f","#bec975","#f58669","#42d9c5","#d286b7","#37cb8a"] },
+  { name: "Cyber UI Dark",           pkg: "pi-cyber-ui",       bg: "#0d1117", fg: "#c9d1d9", swatches: ["#ff7b72","#3fb950","#d29922","#58a6ff","#bc8cff","#39c5cf"] },
+  { name: "Dark Modern",             pkg: "pi-curated-themes", bg: "#1f1f1f", fg: "#cccccc", swatches: ["#f74949","#2ea043","#9e6a03","#0078d4","#d01273","#1db4d6"] },
+  { name: "Dark Pastel",             pkg: "pi-curated-themes", bg: "#000000", fg: "#ffffff", swatches: ["#ff5555","#55ff55","#ffff55","#5555ff","#ff55ff","#55ffff"] },
+  { name: "Dimmed Monokai",          pkg: "pi-curated-themes", bg: "#1f1f1f", fg: "#b9bcba", swatches: ["#be3f48","#879a3b","#c5a635","#4f76a1","#855c8d","#578fa4"] },
+  { name: "Doom Peacock",            pkg: "pi-curated-themes", bg: "#2b2a27", fg: "#ede0ce", swatches: ["#cb4b16","#26a6a6","#bcd42a","#2a6cc6","#a9a1e1","#5699af"] },
+  { name: "Dracula",                 pkg: "pi-themes",         bg: "#282a36", fg: "#f8f8f2", swatches: ["#ff5555","#50fa7b","#f1fa8c","#bd93f9","#ff79c6","#8be9fd"] },
+  { name: "Dracula Plus",            pkg: "pi-curated-themes", bg: "#1e1523", fg: "#f8f8f2", swatches: ["#ff5555","#50fa7b","#f1fa8c","#9580ff","#ff79c6","#8be9fd"] },
+  { name: "Earthsong",               pkg: "pi-curated-themes", bg: "#292520", fg: "#e5c7a9", swatches: ["#c94234","#85c54c","#f5ae2e","#1398b9","#d0633d","#509552"] },
+  { name: "Everforest Dark Hard",    pkg: "pi-curated-themes", bg: "#1e2326", fg: "#d3c6aa", swatches: ["#e67e80","#a7c080","#dbbc7f","#7fbbb3","#d699b6","#83c092"] },
+  { name: "Fahrenheit",              pkg: "pi-curated-themes", bg: "#000000", fg: "#ffffce", swatches: ["#cda074","#9e744d","#fecf75","#7f0e0f","#734c4d","#979797"] },
+  { name: "Flatland",                pkg: "pi-curated-themes", bg: "#1d1f21", fg: "#b8dbef", swatches: ["#f18339","#9fd364","#f4ef6d","#5096be","#695abc","#d63865"] },
+  { name: "Flexoki Dark",            pkg: "pi-curated-themes", bg: "#100f0f", fg: "#cecdc3", swatches: ["#d14d41","#879a39","#d0a215","#4385be","#ce5d97","#3aa99f"] },
+  { name: "Front End Delight",       pkg: "pi-curated-themes", bg: "#1b1c1d", fg: "#adadad", swatches: ["#f8511b","#565747","#fa771d","#2c70b7","#f02e4f","#3ca1a6"] },
+  { name: "Fun Forrest",             pkg: "pi-curated-themes", bg: "#251200", fg: "#dec165", swatches: ["#d6262b","#919c00","#be8a13","#4699a3","#8d4331","#da8213"] },
+  { name: "Galizur",                 pkg: "pi-curated-themes", bg: "#071317", fg: "#ddeeff", swatches: ["#aa1122","#33aa11","#ccaa22","#2255cc","#7755aa","#22bbdd"] },
+  { name: "GitHub Dark Colorblind",  pkg: "pi-curated-themes", bg: "#0d1117", fg: "#c9d1d9", swatches: ["#ec8e2c","#58a6ff","#d29922","#58a6ff","#bc8cff","#39c5cf"] },
+  { name: "GitHub Dark High Contrast", pkg: "pi-curated-themes", bg: "#0a0c10", fg: "#f0f3f6", swatches: ["#ff9492","#26cd4d","#f0b72f","#71b7ff","#cb9eff","#39c5cf"] },
+  { name: "Glacier",                 pkg: "pi-curated-themes", bg: "#0c1115", fg: "#ffffff", swatches: ["#bd0f2f","#35a770","#fb9435","#1f5872","#bd2523","#778397"] },
+  { name: "Gruber Darker",           pkg: "pi-curated-themes", bg: "#181818", fg: "#e4e4e4", swatches: ["#ff0a36","#42dc00","#ffdb00","#92a7cb","#a095cb","#90aa9e"] },
+  { name: "Gruvbox Dark",            pkg: "pi-themes",         bg: "#282828", fg: "#ebdbb2", swatches: ["#cc241d","#98971a","#d79921","#458588","#b16286","#689d6a"] },
+  { name: "Gruvbox Dark Hard",       pkg: "pi-curated-themes", bg: "#1d2021", fg: "#ebdbb2", swatches: ["#cc241d","#98971a","#d79921","#458588","#b16286","#689d6a"] },
+  { name: "Gruvbox Light",           pkg: "pi-themes",         bg: "#fbf1c7", fg: "#3c3836", swatches: ["#cc241d","#98971a","#d79921","#458588","#b16286","#689d6a"] },
+  { name: "Gruvbox Material",        pkg: "pi-curated-themes", bg: "#1d2021", fg: "#d4be98", swatches: ["#ea6926","#c1d041","#eecf75","#6da3ec","#fd9bc1","#fe9d6e"] },
+  { name: "Guezwhoz",                pkg: "pi-curated-themes", bg: "#1d1d1d", fg: "#d9d9d9", swatches: ["#e85181","#7ad694","#b7d074","#5aa0d6","#9a90e0","#58d6ce"] },
+  { name: "Hackerman",               pkg: "pi-hackerman",      bg: "#0d0208", fg: "#00ff41", swatches: ["#ff0000","#00ff41","#ffff00","#003b00","#ff00ff","#00ffff"] },
+  { name: "Hacktober",               pkg: "pi-curated-themes", bg: "#141414", fg: "#c9c9c9", swatches: ["#b34538","#587744","#d08949","#206ec5","#864651","#ac9166"] },
+  { name: "Hardcore",                pkg: "pi-curated-themes", bg: "#121212", fg: "#a0a0a0", swatches: ["#f92672","#a6e22e","#fd971f","#66d9ef","#9e6ffe","#5e7175"] },
+  { name: "Havn Skumring",           pkg: "pi-curated-themes", bg: "#111522", fg: "#d6dbeb", swatches: ["#ea563e","#6ead7b","#f8b330","#596cf7","#7c719e","#d588c1"] },
+  { name: "IC Orange PPL",           pkg: "pi-curated-themes", bg: "#262626", fg: "#ffcb83", swatches: ["#c13900","#a4a900","#caaf00","#bd6d00","#fc5e00","#f79500"] },
+  { name: "iTerm2 Smoooooth",        pkg: "pi-curated-themes", bg: "#15191f", fg: "#dcdcdc", swatches: ["#b43c2a","#00c200","#c7c400","#2744c7","#c040be","#00c5c7"] },
+  { name: "iTerm2 Tango Dark",       pkg: "pi-curated-themes", bg: "#000000", fg: "#ffffff", swatches: ["#d81e00","#5ea702","#cfae00","#427ab3","#89658e","#00a7aa"] },
+  { name: "Japanesque",              pkg: "pi-curated-themes", bg: "#1e1e1e", fg: "#f7f6ec", swatches: ["#cf3f61","#7bb75b","#e9b32a","#4c9ad4","#a57fc4","#389aad"] },
+  { name: "Jellybeans",              pkg: "pi-curated-themes", bg: "#121212", fg: "#dedede", swatches: ["#e27373","#94b979","#ffba7b","#97bedc","#e1c0fa","#00988e"] },
+  { name: "Kanagawa Wave",           pkg: "pi-curated-themes", bg: "#1f1f28", fg: "#dcd7ba", swatches: ["#c34043","#76946a","#c0a36e","#7e9cd8","#957fb8","#6a9589"] },
+  { name: "Kurokula",                pkg: "pi-curated-themes", bg: "#141515", fg: "#e0cfc2", swatches: ["#c35a52","#78b3a9","#e1b917","#5c91dd","#8b79a6","#867268"] },
+  { name: "Later This Evening",      pkg: "pi-curated-themes", bg: "#222222", fg: "#959595", swatches: ["#d45a60","#afba67","#e5d289","#a0bad6","#c092d6","#91bfb7"] },
+  { name: "Lovelace",                pkg: "pi-curated-themes", bg: "#1d1f28", fg: "#fdfdfd", swatches: ["#f37f97","#5adecd","#f2a272","#8897f4","#c574dd","#79e6f3"] },
+  { name: "Material Darker",         pkg: "pi-curated-themes", bg: "#212121", fg: "#eeffff", swatches: ["#ff5370","#c3e88d","#ffcb6b","#82aaff","#c792ea","#89ddff"] },
+  { name: "Matte Black",             pkg: "pi-curated-themes", bg: "#121212", fg: "#bebebe", swatches: ["#d35f5f","#ffc107","#b91c1c","#e68e0d","#d35f5f","#bebebe"] },
+  { name: "Mellow",                  pkg: "pi-curated-themes", bg: "#161617", fg: "#c9c7cd", swatches: ["#f5a191","#90b99f","#e6b99d","#aca1cf","#e29eca","#ea83a5"] },
+  { name: "Miasma",                  pkg: "pi-curated-themes", bg: "#222222", fg: "#c2c2b0", swatches: ["#685742","#5f875f","#b36d43","#78824b","#bb7744","#c9a554"] },
+  { name: "Nord",                    pkg: "pi-themes",         bg: "#2e3440", fg: "#d8dee9", swatches: ["#bf616a","#a3be8c","#ebcb8b","#81a1c1","#b48ead","#88c0d0"] },
+  { name: "Nvim Dark",               pkg: "pi-curated-themes", bg: "#14161b", fg: "#e0e2ea", swatches: ["#ffc0b9","#b3f6c0","#fce094","#a6dbff","#ffcaff","#8cf8f7"] },
+  { name: "One Dark",                pkg: "pi-themes",         bg: "#282c34", fg: "#abb2bf", swatches: ["#e06c75","#98c379","#e5c07b","#61afef","#c678dd","#56b6c2"] },
+  { name: "Popping and Locking",     pkg: "pi-curated-themes", bg: "#111114", fg: "#e0e0e0", swatches: ["#ff3c6f","#00e86e","#f9d71c","#1e90ff","#c75bff","#00d4ff"] },
+  { name: "Sea Shells",              pkg: "pi-curated-themes", bg: "#09141b", fg: "#deb88d", swatches: ["#d15123","#027c9b","#fca02f","#1e4950","#68d4f1","#50a3b5"] },
+  { name: "Sleepy Hollow",           pkg: "pi-curated-themes", bg: "#121214", fg: "#af9a91", swatches: ["#ba3934","#91773f","#b55600","#5f63b4","#a17c7b","#8faea9"] },
+  { name: "Smyck",                   pkg: "pi-curated-themes", bg: "#1b1b1b", fg: "#f7f7f7", swatches: ["#b84131","#7da900","#c4a500","#62a3c4","#ba8acc","#207383"] },
+  { name: "Solarized Dark",          pkg: "pi-themes",         bg: "#002b36", fg: "#839496", swatches: ["#dc322f","#859900","#b58900","#268bd2","#d33682","#2aa198"] },
+  { name: "Solarized Light",         pkg: "pi-themes",         bg: "#fdf6e3", fg: "#657b83", swatches: ["#dc322f","#859900","#b58900","#268bd2","#d33682","#2aa198"] },
+  { name: "Terminal (ANSI)",         pkg: "pi-terminal-theme", bg: "#000000", fg: "#ffffff", swatches: ["#cc0000","#4e9a06","#c4a000","#3465a4","#75507b","#06989a"] },
+  { name: "Tokyo Night",             pkg: "pi-themes",         bg: "#1a1b26", fg: "#a9b1d6", swatches: ["#f7768e","#9ece6a","#e0af68","#7aa2f7","#bb9af7","#7dcfff"] },
+  { name: "Tomorrow Night",          pkg: "pi-curated-themes", bg: "#1d1f21", fg: "#c5c8c6", swatches: ["#cc6666","#b5bd68","#f0c674","#81a2be","#b294bb","#8abeb7"] },
+  { name: "Tomorrow Night Bright",   pkg: "pi-curated-themes", bg: "#000000", fg: "#eaeaea", swatches: ["#d54e53","#b9ca4a","#e7c547","#7aa6da","#c397d8","#70c0b1"] },
+  { name: "Tomorrow Night Burns",    pkg: "pi-curated-themes", bg: "#151515", fg: "#a1b0b8", swatches: ["#832e31","#a63c40","#d3494e","#fc595f","#df9395","#ba8586"] },
+  { name: "Twilight",                pkg: "pi-curated-themes", bg: "#141414", fg: "#ffffd4", swatches: ["#c06d44","#afb97a","#c2a86c","#44474a","#b4be7c","#778385"] },
+  { name: "Vague",                   pkg: "pi-curated-themes", bg: "#141415", fg: "#cdcdcd", swatches: ["#d8647e","#7fa563","#f3be7c","#6e94b2","#bb9dbd","#aeaed1"] },
+  { name: "Vesper",                  pkg: "pi-curated-themes", bg: "#101010", fg: "#ffffff",  swatches: ["#f5a191","#90b99f","#e6b99d","#aca1cf","#e29eca","#ea83a5"] },
+  { name: "Xcode Dark HC",           pkg: "pi-curated-themes", bg: "#000000", fg: "#ffffff", swatches: ["#ff6961","#4cd964","#ffcc02","#0082fc","#da8fff","#5fdfff"] },
+];
+
+const pkgLabels = {
+  "pi-curated-themes": "curated",
+  "pi-themes":         "pi-themes",
+  "pi-hackerman":      "hackerman",
+  "pi-cyber-ui":       "cyber-ui",
+  "pi-terminal-theme": "terminal",
+};
+
+const pkgColors = {
+  "pi-curated-themes": "#7aa2f7",
+  "pi-themes":         "#4afa7a",
+  "pi-hackerman":      "#00ff41",
+  "pi-cyber-ui":       "#58a6ff",
+  "pi-terminal-theme": "#888",
+};
+
+const allPkgs = [...new Set(themes.map(t => t.pkg))];
+
+function renderGrid(filter) {
+  const grid = document.getElementById('themes-grid');
+  const filtered = filter === 'all' ? themes : themes.filter(t => t.pkg === filter);
+  grid.innerHTML = filtered.map(t => {
+    const swatchHtml = t.swatches.map(c =>
+      `<div class="swatch" style="background:${c}"></div>`
+    ).join('');
+    const pkgColor = pkgColors[t.pkg] || '#888';
+    const pkgLabel = pkgLabels[t.pkg] || t.pkg;
+    return `
+      <div class="theme-tile" style="background:${t.bg}">
+        <div>
+          <div class="theme-name" style="color:${t.fg}">${t.name}</div>
+          <div class="theme-pkg" style="color:${pkgColor};opacity:0.8">${pkgLabel}</div>
+        </div>
+        <div class="swatches">${swatchHtml}</div>
+      </div>`;
+  }).join('');
+}
+
+function renderFilters(active) {
+  const bar = document.getElementById('filter-bar');
+  const buttons = [
+    { key: 'all', label: `All (${themes.length})` },
+    ...allPkgs.map(p => ({ key: p, label: `${pkgLabels[p]} (${themes.filter(t => t.pkg === p).length})` }))
+  ];
+  bar.innerHTML = buttons.map(b =>
+    `<button class="filter-btn ${b.key === active ? 'active' : ''}" data-pkg="${b.key}">${b.label}</button>`
+  ).join('');
+  bar.querySelectorAll('.filter-btn').forEach(btn => {
+    btn.addEventListener('click', () => {
+      renderFilters(btn.dataset.pkg);
+      renderGrid(btn.dataset.pkg);
+    });
+  });
+}
+
+renderFilters('all');
+renderGrid('all');
+</script>
+
+</body>
+</html>
