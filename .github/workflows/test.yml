@@ -53,6 +53,7 @@ jobs:
             "npm:@juanibiapina/pi-powerbar",
             "npm:@tmustier/pi-usage-extension",
             "npm:@tmustier/pi-raw-paste",
+            "npm:pi-interactive-shell",
             "npm:@tmustier/pi-ralph-wiggum",
             "npm:pi-btw",
             "npm:@every-env/compound-plugin",

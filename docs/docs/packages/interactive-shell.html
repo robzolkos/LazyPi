@@ -4,7 +4,7 @@
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <link rel="icon" type="image/svg+xml" href="/favicon.svg">
-  <title>Simplify — LazyPi Docs</title>
+  <title>Interactive Shell — LazyPi Docs</title>
   <link rel="stylesheet" href="/docs.css">
 </head>
 <body>
@@ -46,15 +46,14 @@
       <a href="/docs/packages/memory.html" class="sidebar-link">Memory</a>
       <a href="/docs/packages/diff-review.html" class="sidebar-link">Diff Review</a>
       <a href="/docs/packages/plan.html" class="sidebar-link">Plan</a>
-      <a href="/docs/packages/simplify.html" class="sidebar-link active">Simplify</a>
+      <a href="/docs/packages/simplify.html" class="sidebar-link">Simplify</a>
       <a href="/docs/packages/add-dir.html" class="sidebar-link">Add Directory</a>
-
       <a href="/docs/packages/prompt-templates.html" class="sidebar-link">Prompt Templates</a>
       <a href="/docs/packages/powerbar.html" class="sidebar-link">Powerbar</a>
       <a href="/docs/packages/usage.html" class="sidebar-link">Usage Tracker</a>
       <a href="/docs/packages/todo.html" class="sidebar-link">Todo List</a>
       <a href="/docs/packages/btw.html" class="sidebar-link">BTW</a>
-      <a href="/docs/packages/interactive-shell.html" class="sidebar-link">Interactive Shell</a>
+      <a href="/docs/packages/interactive-shell.html" class="sidebar-link active">Interactive Shell</a>
       <a href="/docs/packages/autoresearch.html" class="sidebar-link">Autoresearch</a>
       <a href="/docs/packages/ralph-wiggum.html" class="sidebar-link">Ralph Wiggum</a>
       <a href="/docs/packages/compound-engineering.html" class="sidebar-link">Compound Engineering</a>
@@ -62,20 +61,23 @@
   </aside>
 
   <main class="docs-content">
-    <h1>Simplify</h1>
-    <p class="page-desc">Reviews recently changed code for clarity, consistency, and maintainability — never changes behavior.</p>
+    <h1>Interactive Shell</h1>
+    <p class="page-desc">Observable terminal overlays for Pi and other CLIs, with interactive, hands-free, and dispatch workflows.</p>
 
     <h2>What it does</h2>
     <p>
-      Pi-simplify reads every file that changed in your working tree, applies clarity and consistency improvements one at a time, then runs your test suite after each change to verify nothing broke. It operates on a strict constraint: it may only improve how the code reads, never what it does.
+      Pi Interactive Shell gives Pi a real terminal overlay for interactive command-line programs. Instead of guessing at TUI output, Pi can launch and supervise Pi itself, Codex, Claude, editors, REPLs, SSH sessions, database shells, dev servers, and other long-running terminal workflows while you watch.
     </p>
     <p>
-      This means simplify is safe to run after any implementation pass. It won't introduce regressions because it won't change logic. What it will do is catch naming inconsistencies, overly complex expressions, unnecessary nesting, and other readability issues that are easy to miss when you're focused on getting the feature to work.
+      It supports three main ways of working: <strong>interactive</strong> for direct control, <strong>hands-free</strong> for monitored long-running sessions, and <strong>dispatch</strong> for fire-and-forget delegation that wakes Pi up when the session finishes. Background sessions can be reattached later, and the package also ships prompt templates and skills for agent-driven review and implementation workflows.
     </p>
 
     <h2>Why it's included</h2>
     <p>
-      Implementation and cleanup are cognitively different tasks. Trying to do both at once usually means the cleanup doesn't happen. Simplify makes it a one-command step after implementation — run it, review the diff, and you're done.
+      A lot of real developer tools are still terminal-first: editors like <code>vim</code>, SSH, watch mode test runners, database shells, long-running build processes, and other agent CLIs. Interactive Shell lets Pi work with those tools in a visible, controllable way instead of treating them as opaque subprocesses.
+    </p>
+    <p>
+      That makes it a strong fit for LazyPi: it expands what Pi can safely supervise without forcing you to leave the terminal. Upstream ships prebuilt PTY binaries via <code>zigpty</code>, so supported platforms do not need a native <code>node-gyp</code> toolchain just to install it.
     </p>
 
     <h2>Commands</h2>
@@ -85,36 +87,44 @@
       </thead>
       <tbody>
         <tr>
-          <td><code>/simplify</code></td>
-          <td>Review all uncommitted changes</td>
+          <td><code>/spawn [agent] [prompt]</code></td>
+          <td>Launch Pi, Claude, Codex, or another configured agent in an interactive overlay</td>
         </tr>
         <tr>
-          <td><code>/simplify --staged</code></td>
-          <td>Review only staged changes</td>
+          <td><code>/spawn [agent] "prompt" --hands-free</code></td>
+          <td>Start a monitored session that Pi can check in on while you watch</td>
         </tr>
         <tr>
-          <td><code>/simplify src/foo.ts src/bar.ts</code></td>
-          <td>Review specific files</td>
+          <td><code>/spawn [agent] "prompt" --dispatch</code></td>
+          <td>Delegate work and wake Pi up when the session finishes</td>
         </tr>
         <tr>
-          <td><code>/simplify --ref=main</code></td>
-          <td>Diff against a specific branch and review those changes</td>
+          <td><code>/attach [session-id]</code></td>
+          <td>Reconnect to a background or previously launched session</td>
+        </tr>
+        <tr>
+          <td><code>/dismiss [session-id]</code></td>
+          <td>Clean up a background session you no longer need</td>
         </tr>
       </tbody>
     </table>
 
+    <p>
+      You can also simply ask Pi in natural language to run something in dispatch or hands-free mode. The package exposes an <code>interactive_shell</code> tool under the hood, but end users normally work through slash commands or plain-English requests.
+    </p>
+
     <div class="learn-more">
-      <a href="https://github.com/MattDevy/pi-extensions" target="_blank" rel="noopener">→ GitHub — MattDevy/pi-extensions</a>
+      <a href="https://github.com/nicobailon/pi-interactive-shell" target="_blank" rel="noopener">→ GitHub — nicobailon/pi-interactive-shell</a>
     </div>
 
     <nav class="prev-next">
-      <a href="/docs/packages/plan.html" class="prev-next-link">
+      <a href="/docs/packages/btw.html" class="prev-next-link">
         <span class="prev-next-label">Previous</span>
-        ← Plan
+        ← BTW
       </a>
-      <a href="/docs/packages/add-dir.html" class="prev-next-link next">
+      <a href="/docs/packages/autoresearch.html" class="prev-next-link next">
         <span class="prev-next-label">Next</span>
-        Add Directory →
+        Autoresearch →
       </a>
     </nav>
 
