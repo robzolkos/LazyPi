@@ -696,7 +696,8 @@ function cmdDoctor(flags) {
 	if (hasCmd("pi")) {
 		pass("`pi` is on PATH");
 		const v = spawnSync("pi", ["--version"], { encoding: "utf8" });
-		if (v.status === 0 && v.stdout.trim()) pass(`pi --version: ${v.stdout.trim()}`);
+		const vout = (v.stdout ?? "").trim() || (v.stderr ?? "").trim();
+		if (vout) pass(`pi --version: ${vout}`);
 		else warn("Could not read `pi --version` output");
 	} else {
 		fail("`pi` is not on PATH — run `npx @robzolkos/lazypi` to install it");
