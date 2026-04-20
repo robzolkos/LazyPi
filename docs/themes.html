@@ -212,7 +212,7 @@
 <div class="header">
   <p class="header-eyebrow">Installed with LazyPi</p>
   <h1>76 Themes</h1>
-  <p>Every theme you get with <code style="color:var(--green)">npx @robzolkos/lazypi</code> — click any tile to preview.</p>
+  <p>Every theme you get with <code style="color:var(--green)">npx @robzolkos/lazypi</code> — click any tile to preview. LazyPi filters duplicate theme IDs from <code style="color:var(--green)">pi-themes</code>, so <code style="color:var(--green)">catppuccin-mocha</code> and <code style="color:var(--green)">gruvbox-dark</code> are sourced from <code style="color:var(--green)">pi-curated-themes</code>.</p>
 </div>
 
 <div class="filter-bar" id="filter-bar"></div>
@@ -248,7 +248,7 @@ const themes = [
   { name: "Brogrammer",              pkg: "pi-curated-themes", bg: "#131313", fg: "#d6dbe5", swatches: ["#f81118","#2dc55e","#ecba0f","#2a84d2","#4e5ab7","#1081d6"] },
   { name: "Carbonfox",               pkg: "pi-curated-themes", bg: "#161616", fg: "#f2f4f8", swatches: ["#ee5396","#25be6a","#08bdba","#78a9ff","#be95ff","#33b1ff"] },
   { name: "Catppuccin Latte",        pkg: "pi-themes",         bg: "#eff1f5", fg: "#4c4f69", swatches: ["#d20f39","#40a02b","#df8e1d","#1e66f5","#8839ef","#04a5e5"] },
-  { name: "Catppuccin Mocha",        pkg: "pi-themes",         bg: "#1e1e2e", fg: "#cdd6f4", swatches: ["#f38ba8","#a6e3a1","#f9e2af","#89b4fa","#cba6f7","#89dceb"] },
+  { name: "Catppuccin Mocha",        pkg: "pi-curated-themes", bg: "#1e1e2e", fg: "#cdd6f4", swatches: ["#f38ba8","#a6e3a1","#f9e2af","#89b4fa","#cba6f7","#89dceb"] },
   { name: "Citruszest",              pkg: "pi-curated-themes", bg: "#121212", fg: "#bfbfbf", swatches: ["#ff5454","#00cc7a","#ffd400","#00bfff","#ff90fe","#48d1cc"] },
   { name: "Cursor Dark",             pkg: "pi-curated-themes", bg: "#141414", fg: "#d4d4d4", swatches: ["#fc6b83","#3fa266","#d2943e","#81a1c1","#b48ead","#88c0d0"] },
   { name: "Cutie Pro",               pkg: "pi-curated-themes", bg: "#181818", fg: "#d5d0c9", swatches: ["#f56e7f","#bec975","#f58669","#42d9c5","#d286b7","#37cb8a"] },
@@ -271,7 +271,7 @@ const themes = [
   { name: "GitHub Dark High Contrast", pkg: "pi-curated-themes", bg: "#0a0c10", fg: "#f0f3f6", swatches: ["#ff9492","#26cd4d","#f0b72f","#71b7ff","#cb9eff","#39c5cf"] },
   { name: "Glacier",                 pkg: "pi-curated-themes", bg: "#0c1115", fg: "#ffffff", swatches: ["#bd0f2f","#35a770","#fb9435","#1f5872","#bd2523","#778397"] },
   { name: "Gruber Darker",           pkg: "pi-curated-themes", bg: "#181818", fg: "#e4e4e4", swatches: ["#ff0a36","#42dc00","#ffdb00","#92a7cb","#a095cb","#90aa9e"] },
-  { name: "Gruvbox Dark",            pkg: "pi-themes",         bg: "#282828", fg: "#ebdbb2", swatches: ["#cc241d","#98971a","#d79921","#458588","#b16286","#689d6a"] },
+  { name: "Gruvbox Dark",            pkg: "pi-curated-themes", bg: "#282828", fg: "#ebdbb2", swatches: ["#cc241d","#98971a","#d79921","#458588","#b16286","#689d6a"] },
   { name: "Gruvbox Dark Hard",       pkg: "pi-curated-themes", bg: "#1d2021", fg: "#ebdbb2", swatches: ["#cc241d","#98971a","#d79921","#458588","#b16286","#689d6a"] },
   { name: "Gruvbox Light",           pkg: "pi-themes",         bg: "#fbf1c7", fg: "#3c3836", swatches: ["#cc241d","#98971a","#d79921","#458588","#b16286","#689d6a"] },
   { name: "Gruvbox Material",        pkg: "pi-curated-themes", bg: "#1d2021", fg: "#d4be98", swatches: ["#ea6926","#c1d041","#eecf75","#6da3ec","#fd9bc1","#fe9d6e"] },
