@@ -59,6 +59,7 @@ jobs:
             "npm:@devkade/pi-plan",
             "npm:pi-simplify",
             "npm:pi-add-dir",
+            "npm:pi-prompt-template-model",
             "npm:pi-themes",
             "npm:pi-cyber-ui",
             "npm:@victor-software-house/pi-curated-themes",
