@@ -227,6 +227,15 @@ function settingsPath(local) {
 // so they fall back to the user's active session model instead.
 const SUBAGENT_BUILTIN_MODELS = ["context-builder", "planner", "researcher", "reviewer", "scout", "worker"];
 
+const PI_THEMES_FILTERED_ENTRY = {
+	source: "npm:pi-themes",
+	themes: [
+		"themes/*.json",
+		"!themes/catppuccin-mocha.json",
+		"!themes/gruvbox-dark.json",
+	],
+};
+
 function readSettings(local) {
 	const path = settingsPath(local);
 	if (!existsSync(path)) return { path, exists: false, parsed: null, error: null };
@@ -242,13 +251,12 @@ function backupPath(path) {
 	return `${path}.lazypi.${timestamp}.bak`;
 }
 
-function writeSubagentOverrides(local) {
+function writeSettings(local, mutate) {
 	const current = readSettings(local);
 	if (current.error) return { ok: false, path: current.path, error: current.error };
 	const settings = current.parsed ?? {};
-	const overrides = {};
-	for (const name of SUBAGENT_BUILTIN_MODELS) overrides[name] = { model: "" };
-	settings.subagents = { ...(settings.subagents ?? {}), agentOverrides: { ...(settings.subagents?.agentOverrides ?? {}), ...overrides } };
+	const changed = mutate(settings);
+	if (!changed) return { ok: true, path: current.path, backup: null, changed: false };
 	mkdirSync(dirname(current.path), { recursive: true });
 	let backup = null;
 	if (current.exists) {
@@ -256,7 +264,32 @@ function writeSubagentOverrides(local) {
 		copyFileSync(current.path, backup);
 	}
 	writeFileSync(current.path, JSON.stringify(settings, null, 2) + "\n", "utf8");
-	return { ok: true, path: current.path, backup };
+	return { ok: true, path: current.path, backup, changed: true };
+}
+
+function writeSubagentOverrides(local) {
+	return writeSettings(local, (settings) => {
+		const overrides = {};
+		for (const name of SUBAGENT_BUILTIN_MODELS) overrides[name] = { model: "" };
+		settings.subagents = { ...(settings.subagents ?? {}), agentOverrides: { ...(settings.subagents?.agentOverrides ?? {}), ...overrides } };
+		return true;
+	});
+}
+
+function writePiThemesFilter(local) {
+	return writeSettings(local, (settings) => {
+		const packages = Array.isArray(settings.packages) ? [...settings.packages] : [];
+		const index = packages.findIndex((entry) => (typeof entry === "string" && entry === PI_THEMES_FILTERED_ENTRY.source)
+			|| (entry && typeof entry === "object" && entry.source === PI_THEMES_FILTERED_ENTRY.source));
+		if (index === -1) return false;
+		const entry = packages[index];
+		if (entry && typeof entry === "object" && Array.isArray(entry.themes)) return false;
+		packages[index] = entry && typeof entry === "object"
+			? { ...entry, themes: [...PI_THEMES_FILTERED_ENTRY.themes] }
+			: { ...PI_THEMES_FILTERED_ENTRY, themes: [...PI_THEMES_FILTERED_ENTRY.themes] };
+		settings.packages = packages;
+		return true;
+	});
 }
 
 function readInstalledSources(local) {
@@ -526,7 +559,21 @@ async function cmdInstall(flags) {
 		}
 	}
 
+
 	if (toInstall.length === 0) {
+		if (selected.some((p) => p.id === "pi-themes")) {
+			const themesFilterResult = writePiThemesFilter(flags.local);
+			if (!themesFilterResult.ok) {
+				const message = `Refusing to update ${themesFilterResult.path} because it is not valid JSON (${themesFilterResult.error}). Fix the file first, then rerun lazypi.`;
+				if (interactive) {
+					log.error(message);
+					outro(red("Aborted."));
+				} else {
+					console.error(red(message));
+				}
+				return 2;
+			}
+		}
 		printCheatsheet(selected, interactive);
 		const done = "Nothing to do — every selected package is already installed.";
 		if (interactive) log.success(green(done));
@@ -555,6 +602,20 @@ async function cmdInstall(flags) {
 			failed.push(pkg);
 			if (interactive) log.error(`failed to install ${pkg.id}`);
 			else console.error(red(`  ✗ failed to install ${pkg.id}`));
+		}
+	}
+
+	if (selected.some((p) => p.id === "pi-themes")) {
+		const themesFilterResult = writePiThemesFilter(flags.local);
+		if (!themesFilterResult.ok) {
+			const message = `Refusing to update ${themesFilterResult.path} because it is not valid JSON (${themesFilterResult.error}). Fix the file first, then rerun lazypi.`;
+			if (interactive) {
+				log.error(message);
+				outro(red("Aborted."));
+			} else {
+				console.error(red(message));
+			}
+			return 2;
 		}
 	}
 
