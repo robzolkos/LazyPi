@@ -1,5 +1,12 @@
 # Changelog
 
+## [0.1.5](https://github.com/robzolkos/LazyPi/compare/v0.1.4...v0.1.5) (2026-04-21)
+
+
+### Bug Fixes
+
+* support official Compound Engineering install ([#13](https://github.com/robzolkos/LazyPi/issues/13)) ([ffe13e1](https://github.com/robzolkos/LazyPi/commit/ffe13e1499bf93d54e63c17450ae0ac848a4b856))
+
 ## [0.1.4](https://github.com/robzolkos/LazyPi/compare/v0.1.3...v0.1.4) (2026-04-21)
 
 
