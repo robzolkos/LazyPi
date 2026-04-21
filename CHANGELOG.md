@@ -1,5 +1,12 @@
 # Changelog
 
+## [0.1.6](https://github.com/robzolkos/LazyPi/compare/v0.1.5...v0.1.6) (2026-04-21)
+
+
+### Bug Fixes
+
+* add repository metadata for npm provenance ([f1e916f](https://github.com/robzolkos/LazyPi/commit/f1e916f83c3eb1059d1f7a283570a71e37c7e186))
+
 ## [0.1.5](https://github.com/robzolkos/LazyPi/compare/v0.1.4...v0.1.5) (2026-04-21)
 
 
