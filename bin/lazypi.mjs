@@ -41,6 +41,7 @@ const PACKAGES = [
 	{ id: "raw-paste", category: "ui", source: "npm:@tmustier/pi-raw-paste", description: "Raw paste command", hint: "Paste raw clipboard content without Pi re-interpreting it." },
 	{ id: "todos", category: "ui", source: "git:github.com/tintinweb/pi-manage-todo-list@b75c449aa85ce328e9a8b632f62bf642aed40359", description: "Todo list management", hint: "Track multi-step work with live progress widget and session persistence." },
 	{ id: "btw", category: "ui", source: "npm:pi-btw", description: "Side-chat popover", hint: "Ask quick questions without polluting your conversation history." },
+	{ id: "interactive-shell", category: "ui", source: "npm:pi-interactive-shell", description: "Interactive shell overlays", hint: "Run Pi, Codex, editors, SSH, and long-running CLIs in observable overlays with hands-free and dispatch modes." },
 	{ id: "autoresearch", category: "research", source: "git:github.com/davebcn87/pi-autoresearch@5a29db080131449edc6d25a6b351b12879063366", description: "Autonomous experiment loop", hint: "Long-running autonomous research loop." },
 	{ id: "ralph-wiggum", category: "research", source: "npm:@tmustier/pi-ralph-wiggum", description: "Ralph Wiggum agent loop", hint: "Long-running iterative dev loops with goals, checklists, and optional self-reflection." },
 	{ id: "compound", category: "frameworks", source: "npm:@every-env/compound-plugin", description: "Compound Engineering workflow", hint: "Structured multi-step engineering workflow." },
@@ -197,7 +198,7 @@ ${bold("Default behaviour:")}
 
 ${bold("Categories:")}
   core         foundations: sub-agents, MCP, web access, memory, prompt templates, …
-  ui           powerbar, usage dashboard, plan-notator, …
+  ui           powerbar, interactive shell overlays, usage dashboard, …
   research     autonomous research / experiment loops
   frameworks   structured engineering workflows
 

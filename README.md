@@ -13,6 +13,8 @@ LazyPi will:
 1. Install `pi` for you if it isn't installed yet.
 2. Ask if you want to install all the packages or choose which to install.
 
+That setup includes agent tooling, memory, planning, interactive shell overlays for long-running CLIs, usage tracking, and themes.
+
 That's it.  Once done - run `pi` and experience a feature rich coding agent experience.
 
 Install is **idempotent** — LazyPi reads your Pi settings and skips any package that is already installed, so re-running is safe.
