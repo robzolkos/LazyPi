@@ -62,13 +62,41 @@ LazyPi uses **Release Please** plus **npm trusted publishing**.
 
 ### How it works
 
-1. You merge normal PRs into `master`
-2. You run the `release-please` workflow manually from GitHub Actions
-3. Release Please creates or updates a release PR
-4. That release PR bumps `package.json` and `package-lock.json` and can update `CHANGELOG.md`
-5. You merge the release PR through the normal protected-branch flow
-6. Release Please creates the git tag and GitHub Release
-7. The `publish.yml` workflow publishes the tagged release to npm using trusted publishing
+1. Contributors merge normal PRs into `master`
+2. Release Please runs automatically on pushes to `master`
+3. It creates or updates a single release PR
+4. That release PR bumps `package.json` and `package-lock.json`
+5. When you merge the release PR, Release Please creates the git tag and GitHub Release
+6. The same workflow publishes that tagged release to npm using trusted publishing
+
+### One-time npm setup
+
+In npm package settings for `@robzolkos/lazypi`, add a trusted publisher for this repo:
+
+- **Provider:** GitHub Actions
+- **Owner / repo:** `robzolkos/LazyPi`
+- **Workflow filename:** `release-please.yml`
+
+No npm token is needed once trusted publishing is configured.
+
+### Commit message conventions
+
+Release Please determines the next version from commit messages. Recommended prefixes:
+
+- `fix:` → patch
+- `feat:` → minor
+- `feat!:` or `BREAKING CHANGE:` → major
+
+### Cut a release
+
+- Merge your normal work PRs into `master`
+- Wait for Release Please to open or update the release PR
+- When you want to publish, merge that release PR
+- Tag creation, GitHub Release creation, and npm publish happen automatically after that merge
+
+### Optional manual override
+
+If you ever need to force a specific version, you can still run the `release-please` workflow manually and provide `release_as`.
 
 ---
 

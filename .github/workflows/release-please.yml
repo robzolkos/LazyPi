@@ -1,10 +1,13 @@
 name: release-please
 
 on:
+  push:
+    branches:
+      - master
   workflow_dispatch:
     inputs:
       release_as:
-        description: Optional explicit version override for this run (for example 0.1.3)
+        description: Optional explicit version override for this run (for example 0.1.4)
         required: false
         type: string
 
@@ -12,6 +15,7 @@ permissions:
   contents: write
   pull-requests: write
   issues: write
+  id-token: write
 
 jobs:
   release-please:
@@ -23,3 +27,24 @@ jobs:
         with:
           release-type: node
           release-as: ${{ inputs.release_as }}
+
+      - name: Checkout release tag
+        if: ${{ steps.release.outputs.releases_created == 'true' }}
+        uses: actions/checkout@v4
+        with:
+          ref: ${{ steps.release.outputs.tag_name }}
+
+      - name: Set up Node
+        if: ${{ steps.release.outputs.releases_created == 'true' }}
+        uses: actions/setup-node@v4
+        with:
+          node-version: 24
+          registry-url: https://registry.npmjs.org
+
+      - name: Install dependencies
+        if: ${{ steps.release.outputs.releases_created == 'true' }}
+        run: npm ci
+
+      - name: Publish to npm with trusted publishing
+        if: ${{ steps.release.outputs.releases_created == 'true' }}
+        run: npm publish --provenance --access public
