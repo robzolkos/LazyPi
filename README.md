@@ -68,31 +68,6 @@ LazyPi uses **Release Please** plus **npm trusted publishing**.
 6. Release Please creates the git tag and GitHub Release
 7. The `publish.yml` workflow publishes the tagged release to npm using trusted publishing
 
-### One-time npm setup
-
-In npm package settings for `@robzolkos/lazypi`, add a trusted publisher for this repo:
-
-- **Provider:** GitHub Actions
-- **Owner / repo:** `robzolkos/LazyPi`
-- **Workflow filename:** `publish.yml`
-
-No npm token is needed once trusted publishing is configured.
-
-### Commit message conventions
-
-Release Please determines the next version from commit messages. Recommended prefixes:
-
-- `fix:` → patch
-- `feat:` → minor
-- `feat!:` or `BREAKING CHANGE:` → major
-
-### Cut a release
-
-- Merge your normal work PRs into `master`
-- Run the `release-please` workflow from GitHub Actions when you want to cut a release
-- Review and merge the release PR it creates or updates
-- npm publish happens automatically after the GitHub Release is created
-
 ---
 
 For the full list of included packages and themes, see [lazypi.org](https://lazypi.org).
