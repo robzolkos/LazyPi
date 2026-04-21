@@ -66,12 +66,6 @@ To release a new version:
 - Merge the Release Please release PR when you are ready to publish
 - GitHub creates the tag/release and publishes to npm automatically
 
-npm trusted publishing should be configured for:
-
-- **Provider:** GitHub Actions
-- **Repo:** `robzolkos/LazyPi`
-- **Workflow:** `release-please.yml`
-
 ---
 
 For the full list of included packages and themes, see [lazypi.org](https://lazypi.org).
