@@ -90,6 +90,72 @@
     }
     .nav-cta:hover { opacity: 0.85; }
 
+    .mobile-nav {
+      display: none;
+      position: relative;
+      margin-left: auto;
+    }
+    .mobile-nav summary {
+      list-style: none;
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      padding: 0.1rem 0.2rem;
+      border: none;
+      background: transparent;
+      color: var(--text-dim);
+      font-family: inherit;
+      font-size: 1.8rem;
+      font-weight: 400;
+      line-height: 1;
+      cursor: pointer;
+    }
+    .mobile-nav summary::-webkit-details-marker { display: none; }
+    .mobile-nav summary:hover { color: var(--text-bright); }
+    .mobile-nav summary:focus-visible {
+      outline: 2px solid var(--green);
+      outline-offset: 4px;
+      border-radius: 4px;
+    }
+    .mobile-nav[open] summary { color: var(--green); }
+    .mobile-nav-menu {
+      position: absolute;
+      top: calc(100% + 0.75rem);
+      right: 0;
+      display: flex;
+      flex-direction: column;
+      gap: 0.25rem;
+      width: min(260px, calc(100vw - 2rem));
+      padding: 0.75rem;
+      border: 1px solid var(--border);
+      border-radius: 6px;
+      background: rgba(10,10,10,0.97);
+      box-shadow: 0 18px 40px rgba(0,0,0,0.35);
+    }
+    .mobile-nav-menu a {
+      display: flex;
+      align-items: center;
+      gap: 0.5rem;
+      color: var(--text-dim);
+      text-decoration: none;
+      font-size: 0.9rem;
+      padding: 0.45rem 0.5rem;
+      border-radius: 3px;
+      transition: color 0.2s, background 0.2s;
+    }
+    .mobile-nav-menu a:hover, .mobile-nav-menu a.active {
+      color: var(--green);
+      background: var(--bg2);
+    }
+    .mobile-nav-menu .nav-cta {
+      display: block;
+      margin-top: 0.35rem;
+      text-align: center;
+      color: #000;
+      padding: 0.6rem 0.9rem;
+    }
+    .mobile-nav-menu a svg { display: block; }
+
     /* HERO */
     .hero {
       min-height: 100vh;
@@ -546,7 +612,9 @@
     footer a:hover { color: var(--green); }
 
     @media (max-width: 600px) {
-      .nav-links { display: none; }
+      nav { padding: 1rem; gap: 0.75rem; }
+      .nav-links-desktop, .nav-cta-desktop { display: none; }
+      .mobile-nav { display: block; }
       .stat { min-width: 50%; }
       .compare-table { font-size: 0.8rem; }
       .compare-table th, .compare-table td { padding: 0.65rem 0.75rem; }
@@ -557,17 +625,31 @@
 
 <nav>
   <a class="nav-logo" href="/">Lazy<span>Pi</span></a>
-  <div class="nav-links">
+  <div class="nav-links nav-links-desktop">
     <a href="/#features">Features</a>
     <a href="/#catalog">Catalog</a>
     <a href="/themes.html">Themes</a>
     <a href="/docs/">Docs</a>
     <a href="/faq.html">FAQ</a>
     <a href="https://github.com/robzolkos/lazypi" target="_blank" rel="noopener" title="GitHub">
-      <svg width="18" height="18" viewBox="0 0 24 24" fill="currentColor"><path d="M12 0C5.37 0 0 5.37 0 12c0 5.31 3.435 9.795 8.205 11.385.6.105.825-.255.825-.57 0-.285-.015-1.23-.015-2.235-3.015.555-3.795-.735-4.035-1.41-.135-.345-.72-1.41-1.23-1.695-.42-.225-1.02-.78-.015-.795.945-.015 1.62.87 1.845 1.23 1.08 1.815 2.805 1.305 3.495.99.105-.78.42-1.305.765-1.605-2.67-.3-5.46-1.335-5.46-5.925 0-1.305.465-2.385 1.23-3.225-.12-.3-.54-1.53.12-3.18 0 0 1.005-.315 3.3 1.23.96-.27 1.98-.405 3-.405s2.04.135 3 .405c2.295-1.56 3.3-1.23 3.3-1.23.66 1.65.24 2.88.12 3.18.765.84 1.23 1.905 1.23 3.225 0 4.605-2.805 5.625-5.475 5.925.435.375.81 1.095.81 2.22 0 1.605-.015 2.895-.015 3.3 0 .315.225.69.825.57A12.02 12.02 0 0 0 24 12c0-6.63-5.37-12-12-12z"/></svg>
+    <svg width="18" height="18" viewBox="0 0 24 24" fill="currentColor"><path d="M12 0C5.37 0 0 5.37 0 12c0 5.31 3.435 9.795 8.205 11.385.6.105.825-.255.825-.57 0-.285-.015-1.23-.015-2.235-3.015.555-3.795-.735-4.035-1.41-.135-.345-.72-1.41-1.23-1.695-.42-.225-1.02-.78-.015-.795.945-.015 1.62.87 1.845 1.23 1.08 1.815 2.805 1.305 3.495.99.105-.78.42-1.305.765-1.605-2.67-.3-5.46-1.335-5.46-5.925 0-1.305.465-2.385 1.23-3.225-.12-.3-.54-1.53.12-3.18 0 0 1.005-.315 3.3 1.23.96-.27 1.98-.405 3-.405s2.04.135 3 .405c2.295-1.56 3.3-1.23 3.3-1.23.66 1.65.24 2.88.12 3.18.765.84 1.23 1.905 1.23 3.225 0 4.605-2.805 5.625-5.475 5.925.435.375.81 1.095.81 2.22 0 1.605-.015 2.895-.015 3.3 0 .315.225.69.825.57A12.02 12.02 0 0 0 24 12c0-6.63-5.37-12-12-12z"/></svg>
     </a>
   </div>
-  <a class="nav-cta" href="/#install">Install</a>
+  <a class="nav-cta nav-cta-desktop" href="/#install">Install</a>
+  <details class="mobile-nav">
+    <summary aria-label="Toggle navigation">&#9776;</summary>
+    <div class="mobile-nav-menu">
+    <a href="/#features">Features</a>
+    <a href="/#catalog">Catalog</a>
+    <a href="/themes.html">Themes</a>
+    <a href="/docs/">Docs</a>
+    <a href="/faq.html">FAQ</a>
+    <a href="https://github.com/robzolkos/lazypi" target="_blank" rel="noopener" title="GitHub">
+    <svg width="18" height="18" viewBox="0 0 24 24" fill="currentColor"><path d="M12 0C5.37 0 0 5.37 0 12c0 5.31 3.435 9.795 8.205 11.385.6.105.825-.255.825-.57 0-.285-.015-1.23-.015-2.235-3.015.555-3.795-.735-4.035-1.41-.135-.345-.72-1.41-1.23-1.695-.42-.225-1.02-.78-.015-.795.945-.015 1.62.87 1.845 1.23 1.08 1.815 2.805 1.305 3.495.99.105-.78.42-1.305.765-1.605-2.67-.3-5.46-1.335-5.46-5.925 0-1.305.465-2.385 1.23-3.225-.12-.3-.54-1.53.12-3.18 0 0 1.005-.315 3.3 1.23.96-.27 1.98-.405 3-.405s2.04.135 3 .405c2.295-1.56 3.3-1.23 3.3-1.23.66 1.65.24 2.88.12 3.18.765.84 1.23 1.905 1.23 3.225 0 4.605-2.805 5.625-5.475 5.925.435.375.81 1.095.81 2.22 0 1.605-.015 2.895-.015 3.3 0 .315.225.69.825.57A12.02 12.02 0 0 0 24 12c0-6.63-5.37-12-12-12z"/></svg>
+    </a>
+      <a class="nav-cta" href="/#install">Install</a>
+    </div>
+  </details>
 </nav>
 
 <!-- HERO -->
