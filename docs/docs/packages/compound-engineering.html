@@ -77,73 +77,60 @@
 
   <main class="docs-content">
     <h1>Compound Engineering</h1>
-    <p class="page-desc">Every's AI coding methodology — 50+ agents, 42+ skills, and the full sprint lifecycle in one plugin.</p>
+    <p class="page-desc">Official Compound Engineering from Every, installed through the upstream Pi target converter.</p>
 
     <h2>What it does</h2>
     <p>
-      The Compound Engineering plugin from Every encodes their 80/20 AI coding philosophy as a complete set of slash commands: 80% of the work is planning and review, 20% is execution. The plugin ships 50+ agents and 42+ skills covering the full software development lifecycle — from ideation through brainstorming, planning, implementation, code review, debugging, optimization, and knowledge compounding.
+      LazyPi installs the official <code>@every-env/compound-plugin</code> package from Every and runs its Pi target converter. That upstream tool generates Pi-compatible skills, extensions, and agent guidance directly into your Pi config directory.
     </p>
     <p>
-      Standout capabilities include multi-agent code review with confidence gating, iterative optimization loops using LLM-as-judge, session history research across Claude Code, Codex, and Cursor, Slack context lookup for organizational knowledge, and a knowledge compounding system that documents solved problems to prevent repeat work.
+      In practice, this gives Pi the official Compound Engineering reviewer and workflow skill set — including entry points like <code>/skill:ce:plan</code>, <code>/skill:ce:work</code>, <code>/skill:ce:review</code>, <code>/skill:ce:brainstorm</code>, and <code>/skill:ce:compound</code> — plus the compatibility layer required for subagents and MCP-style access.
     </p>
     <p>
-      The plugin works across Claude Code, Pi, Cursor, Codex, and 8 other agents — so workflows transfer across tools.
+      After installing LazyPi, restart or <code>/reload</code> Pi so the generated skills and extensions are loaded into the current session.
+    </p>
+
+    <h2>Bun requirement</h2>
+    <p>
+      The official Every installer is a Bun-based CLI. LazyPi checks for <code>bun</code> before attempting this package. If Bun is missing, LazyPi will warn you and continue installing everything else, but Compound Engineering will be skipped.
     </p>
 
     <h2>Why it's included</h2>
     <p>
-      Compound Engineering is one of the most complete and battle-tested AI engineering methodologies available. Every has been building with AI agents longer than most, and the plugin reflects real lessons about what makes multi-agent coding workflows succeed. It's the closest thing to a complete playbook for AI-assisted engineering.
+      Compound Engineering remains one of the strongest AI-assisted development methodologies available, and using the upstream package keeps LazyPi aligned with Every's official implementation instead of a third-party fork or repackaging.
     </p>
 
-    <h2>Commands</h2>
-    <p>All commands are prefixed with <code>/ce-</code>.</p>
+    <h2>Removal</h2>
+    <p>
+      LazyPi tracks the files it generates for the official Pi target, so <code>npx @robzolkos/lazypi remove compound</code> removes the generated Compound Engineering files cleanly instead of leaving converted skills behind.
+    </p>
 
-    <h3>Core workflow</h3>
+    <h2>LazyPi compatibility patch</h2>
+    <p>
+      LazyPi keeps the official Every-generated skills and compatibility layer, but renames the generated delegation tool to <code>ce_subagent</code> so it can coexist with other Pi packages that also register a <code>subagent</code> tool. The Compound Engineering skills are patched to call <code>ce_subagent</code> explicitly, preserving the upstream skill-based delegation behavior without colliding with the rest of the LazyPi stack.
+    </p>
+
+    <h2>What shows up in Pi</h2>
+    <p>The official Pi target currently installs skills and compatibility files rather than a separate npm-style Pi package manifest.</p>
+
+    <h3>Primary workflow skills</h3>
     <table>
       <thead>
-        <tr><th>Command</th><th>What it does</th></tr>
+        <tr><th>Skill</th><th>What it does</th></tr>
       </thead>
       <tbody>
-        <tr><td><code>/ce-brainstorm</code></td><td>Explore requirements and approaches — main entry point</td></tr>
-        <tr><td><code>/ce-ideate</code></td><td>Divergent ideation with adversarial filtering</td></tr>
-        <tr><td><code>/ce-plan</code></td><td>Turn ideas into detailed implementation plans</td></tr>
-        <tr><td><code>/ce-work</code></td><td>Execute work items systematically</td></tr>
-        <tr><td><code>/ce-code-review</code></td><td>Multi-agent structured code review with confidence gating</td></tr>
-        <tr><td><code>/ce-debug</code></td><td>Root-cause debugging with causal chains and test-first fixes</td></tr>
-        <tr><td><code>/ce-optimize</code></td><td>Iterative optimization with parallel experiments and LLM-as-judge</td></tr>
-        <tr><td><code>/ce-compound</code></td><td>Document solved problems to compound team knowledge</td></tr>
-        <tr><td><code>/ce-compound-refresh</code></td><td>Refresh stale learnings</td></tr>
+        <tr><td><code>/skill:ce:brainstorm</code></td><td>Explore requirements and approaches before planning</td></tr>
+        <tr><td><code>/skill:ce:plan</code></td><td>Create structured implementation plans</td></tr>
+        <tr><td><code>/skill:ce:work</code></td><td>Execute planned work systematically</td></tr>
+        <tr><td><code>/skill:ce:review</code></td><td>Run multi-agent review before shipping</td></tr>
+        <tr><td><code>/skill:ce:compound</code></td><td>Capture learnings for future sessions</td></tr>
       </tbody>
     </table>
 
-    <h3>Research &amp; context</h3>
-    <table>
-      <thead>
-        <tr><th>Command</th><th>What it does</th></tr>
-      </thead>
-      <tbody>
-        <tr><td><code>/ce-sessions</code></td><td>Query session history across Claude Code, Codex, Cursor</td></tr>
-        <tr><td><code>/ce-slack-research</code></td><td>Search Slack for organizational context</td></tr>
-      </tbody>
-    </table>
-
-    <h3>Workflow utilities</h3>
-    <table>
-      <thead>
-        <tr><th>Command</th><th>What it does</th></tr>
-      </thead>
-      <tbody>
-        <tr><td><code>/ce-resolve-pr-feedback</code></td><td>Resolve PR review feedback in parallel</td></tr>
-        <tr><td><code>/ce-todo-resolve</code></td><td>Resolve todos in parallel</td></tr>
-        <tr><td><code>/ce-todo-triage</code></td><td>Triage and prioritize todos</td></tr>
-        <tr><td><code>/ce-polish-beta</code></td><td>Human-in-the-loop polish phase after code review</td></tr>
-        <tr><td><code>/ce-demo-reel</code></td><td>Capture GIF/terminal/screenshot demo reels for PRs</td></tr>
-        <tr><td><code>/ce-changelog</code></td><td>Create engaging changelogs for recent merges</td></tr>
-        <tr><td><code>/ce-onboarding</code></td><td>Generate ONBOARDING.md for new contributors</td></tr>
-        <tr><td><code>/ce-setup</code></td><td>Diagnose environment, install missing tools, bootstrap config</td></tr>
-        <tr><td><code>/ce-update</code></td><td>Check plugin version and fix stale cache</td></tr>
-      </tbody>
-    </table>
+    <h3>Additional tooling</h3>
+    <p>
+      The install also adds many specialist reviewer and research skills, an official Pi compatibility extension, MCPorter config output, and an AGENTS block that documents the tool mapping used by the upstream plugin.
+    </p>
 
     <div class="learn-more">
       <a href="https://github.com/EveryInc/compound-engineering-plugin" target="_blank" rel="noopener">→ GitHub — EveryInc/compound-engineering-plugin</a>
