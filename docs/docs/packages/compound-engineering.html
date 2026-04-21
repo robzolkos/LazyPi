@@ -105,31 +105,68 @@
       LazyPi tracks the files it generates for the official Pi target, so <code>npx @robzolkos/lazypi remove compound</code> removes the generated Compound Engineering files cleanly instead of leaving converted skills behind.
     </p>
 
-    <h2>LazyPi compatibility patch</h2>
+    <h2>What shows up in Pi</h2>
     <p>
-      LazyPi keeps the official Every-generated skills and compatibility layer, but renames the generated delegation tool to <code>ce_subagent</code> so it can coexist with other Pi packages that also register a <code>subagent</code> tool. The Compound Engineering skills are patched to call <code>ce_subagent</code> explicitly, preserving the upstream skill-based delegation behavior without colliding with the rest of the LazyPi stack.
+      The official Pi target installs a large skill library and supporting tooling rather than a single npm-style Pi package manifest entry. In practice, you get the core Compound Engineering workflows plus a broad bench of reviewer, researcher, planning, testing, and shipping skills that those workflows can call.
     </p>
 
-    <h2>What shows up in Pi</h2>
-    <p>The official Pi target currently installs skills and compatibility files rather than a separate npm-style Pi package manifest.</p>
-
-    <h3>Primary workflow skills</h3>
+    <h3>Core Compound Engineering workflow skills</h3>
     <table>
       <thead>
         <tr><th>Skill</th><th>What it does</th></tr>
       </thead>
       <tbody>
-        <tr><td><code>/skill:ce:brainstorm</code></td><td>Explore requirements and approaches before planning</td></tr>
-        <tr><td><code>/skill:ce:plan</code></td><td>Create structured implementation plans</td></tr>
-        <tr><td><code>/skill:ce:work</code></td><td>Execute planned work systematically</td></tr>
-        <tr><td><code>/skill:ce:review</code></td><td>Run multi-agent review before shipping</td></tr>
-        <tr><td><code>/skill:ce:compound</code></td><td>Capture learnings for future sessions</td></tr>
+        <tr><td><code>/skill:ce:brainstorm</code></td><td>Explore requirements, constraints, and options before committing to a build</td></tr>
+        <tr><td><code>/skill:ce:ideate</code></td><td>Generate and critique grounded ideas before narrowing to a direction</td></tr>
+        <tr><td><code>/skill:ce:plan</code></td><td>Create a structured implementation plan with repo research and plan review</td></tr>
+        <tr><td><code>/skill:ce:work</code></td><td>Execute implementation work against an approved plan</td></tr>
+        <tr><td><code>/skill:ce:review</code></td><td>Run tiered multi-agent code review before shipping</td></tr>
+        <tr><td><code>/skill:ce-debug</code></td><td>Investigate bugs and root causes systematically</td></tr>
+        <tr><td><code>/skill:ce:compound</code></td><td>Capture a solved problem as reusable institutional knowledge</td></tr>
+        <tr><td><code>/skill:ce-compound-refresh</code></td><td>Refresh and consolidate stale learning docs under <code>docs/solutions/</code></td></tr>
+        <tr><td><code>/skill:ce-setup</code></td><td>Verify the Compound Engineering environment and troubleshoot setup issues</td></tr>
       </tbody>
     </table>
 
-    <h3>Additional tooling</h3>
+    <h3>Research, planning, and review helpers</h3>
+    <table>
+      <thead>
+        <tr><th>Skill</th><th>What it does</th></tr>
+      </thead>
+      <tbody>
+        <tr><td><code>/skill:repo-research-analyst</code></td><td>Research repo structure, patterns, conventions, and relevant files</td></tr>
+        <tr><td><code>/skill:learnings-researcher</code></td><td>Search <code>docs/solutions/</code> for prior institutional learnings</td></tr>
+        <tr><td><code>/skill:framework-docs-researcher</code></td><td>Pull official framework or library guidance</td></tr>
+        <tr><td><code>/skill:best-practices-researcher</code></td><td>Gather external best practices and implementation examples</td></tr>
+        <tr><td><code>/skill:spec-flow-analyzer</code></td><td>Check specs and plans for missing flows, edges, and handoffs</td></tr>
+        <tr><td><code>/skill:document-review</code></td><td>Review requirements and plan documents with multiple personas</td></tr>
+        <tr><td><code>/skill:architecture-strategist</code></td><td>Stress-test architectural decisions and system-wide impact</td></tr>
+        <tr><td><code>/skill:security-sentinel</code></td><td>Audit for security risks and missing defenses</td></tr>
+        <tr><td><code>/skill:performance-oracle</code></td><td>Review performance, scalability, and bottlenecks</td></tr>
+        <tr><td><code>/skill:data-integrity-guardian</code></td><td>Review data safety, migration risk, and persistence concerns</td></tr>
+      </tbody>
+    </table>
+
+    <h3>Shipping, communication, and utility skills</h3>
+    <table>
+      <thead>
+        <tr><th>Skill</th><th>What it does</th></tr>
+      </thead>
+      <tbody>
+        <tr><td><code>/skill:ce-pr-description</code></td><td>Draft or refresh a value-first pull request title and body</td></tr>
+        <tr><td><code>/skill:resolve-pr-feedback</code></td><td>Work through PR review comments and thread resolution</td></tr>
+        <tr><td><code>/skill:ce-demo-reel</code></td><td>Create screenshots, GIFs, or recordings for visual proof</td></tr>
+        <tr><td><code>/skill:ce-optimize</code></td><td>Run iterative metric-driven optimization loops</td></tr>
+        <tr><td><code>/skill:proof</code></td><td>Push docs into Proof for human-in-the-loop review and iteration</td></tr>
+        <tr><td><code>/skill:test-browser</code></td><td>Run browser-based testing for affected pages</td></tr>
+        <tr><td><code>/skill:test-xcode</code></td><td>Build and test iOS apps on simulator with Xcode tooling</td></tr>
+        <tr><td><code>/skill:git-commit</code></td><td>Create clear commits with strong messages</td></tr>
+        <tr><td><code>/skill:git-commit-push-pr</code></td><td>Commit, push, and open a PR in one workflow</td></tr>
+      </tbody>
+    </table>
+
     <p>
-      The install also adds many specialist reviewer and research skills, an official Pi compatibility extension, MCPorter config output, and an AGENTS block that documents the tool mapping used by the upstream plugin.
+      Those tables are the most visible entry points, not the full inventory. The official install currently brings in dozens more specialist personas and helpers, including language-specific reviewers, design tools, deployment verification, session history search, Slack research, todo workflows, onboarding generation, and autonomous workflows like <code>/skill:lfg</code>.
     </p>
 
     <div class="learn-more">
