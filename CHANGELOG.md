@@ -1,5 +1,13 @@
 # Changelog
 
+## [0.1.4](https://github.com/robzolkos/LazyPi/compare/v0.1.3...v0.1.4) (2026-04-21)
+
+
+### Bug Fixes
+
+* publish npm from release-please workflow ([ff83cf4](https://github.com/robzolkos/LazyPi/commit/ff83cf431e2da6f6715357b274e26d8198bcb951))
+* publish npm packages on version tags ([21fb715](https://github.com/robzolkos/LazyPi/commit/21fb715e06b17694cfea10f5809a551e28ea26b9))
+
 ## 0.1.3 (2026-04-21)
 
 
