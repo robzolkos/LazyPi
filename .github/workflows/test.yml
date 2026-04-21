@@ -56,7 +56,6 @@ jobs:
             "npm:pi-interactive-shell",
             "npm:@tmustier/pi-ralph-wiggum",
             "npm:pi-btw",
-            "npm:@every-env/compound-plugin",
             "npm:@devkade/pi-plan",
             "npm:pi-simplify",
             "npm:pi-add-dir",
@@ -73,5 +72,67 @@ jobs:
             missing.forEach(s => console.error(" -", s));
             process.exit(1);
           }
-          console.log(`All ${expected.length} expected packages found.`);
+
+          if (sources.has("npm:@every-env/compound-plugin")) {
+            console.error("Official Compound Engineering should not be recorded in settings.json because it is managed via bunx output files.");
+            process.exit(1);
+          }
+
+          console.log(`All ${expected.length} expected Pi packages found in settings.json.`);
           EOF
+
+      - name: Assert official Compound Engineering installed
+        run: |
+          test -f ~/.pi/agent/.lazypi/compound-engineering.json
+          test -f ~/.pi/agent/extensions/compound-engineering-compat.ts
+          test -f ~/.pi/agent/skills/ce-plan/SKILL.md
+          grep -q '"source": "npm:@every-env/compound-plugin"' ~/.pi/agent/.lazypi/compound-engineering.json
+          grep -q '^name: ce:plan$' ~/.pi/agent/skills/ce-plan/SKILL.md
+          grep -q 'name: "ce_subagent"' ~/.pi/agent/extensions/compound-engineering-compat.ts
+          grep -q 'Claude Task(agent, args) maps to the ce_subagent extension tool' ~/.pi/agent/AGENTS.md
+          grep -q 'Run ce_subagent with agent="repo-research-analyst"' ~/.pi/agent/skills/ce-plan/SKILL.md
+
+      - name: Assert CE compat tool preserves skill delegation semantics
+        run: |
+          TMPDIR=$(mktemp -d)
+          mkdir -p "$TMPDIR/proj"
+          cd "$TMPDIR/proj"
+          node "$GITHUB_WORKSPACE/bin/lazypi.mjs" --yes --only compound -l
+          node - <<'EOF'
+          const fs = require('fs');
+          const source = fs.readFileSync('.pi/extensions/compound-engineering-compat.ts', 'utf8');
+          if (!source.includes('name: "ce_subagent"')) {
+            throw new Error('ce_subagent tool registration missing');
+          }
+          if (!source.includes('const prompt = "/skill:" + agent + " " + taskText')) {
+            throw new Error('ce_subagent no longer delegates via /skill:<agent>');
+          }
+          if (!source.includes('const script = "cd " + shellEscape(cwd) + " && pi --no-session -p " + shellEscape(prompt)')) {
+            throw new Error('ce_subagent no longer shells out through pi --no-session -p');
+          }
+          console.log('verified ce_subagent preserves /skill-based delegation semantics');
+          EOF
+
+      - name: Doctor warns when bun missing
+        run: |
+          FILTERED_PATH=$(printf '%s' "$PATH" | tr ':' '\n' | grep -v '/.bun/bin' | paste -sd ':' -)
+          PATH="$FILTERED_PATH" node bin/lazypi.mjs doctor >/tmp/lazypi-doctor-no-bun.log 2>&1 || true
+          grep -q 'bun is not on PATH — official Compound Engineering from Every will be skipped by LazyPi' /tmp/lazypi-doctor-no-bun.log
+
+      - name: Compound-only install patches compat extension without requiring pi-subagents
+        run: |
+          TMPDIR=$(mktemp -d)
+          mkdir -p "$TMPDIR/proj"
+          cd "$TMPDIR/proj"
+          node "$GITHUB_WORKSPACE/bin/lazypi.mjs" --yes --only compound -l
+          test ! -f .pi/settings.json || ! grep -q 'npm:pi-subagents' .pi/settings.json
+          grep -q 'name: "ce_subagent"' .pi/extensions/compound-engineering-compat.ts
+
+      - name: Remove official Compound Engineering
+        run: node bin/lazypi.mjs remove compound
+
+      - name: Assert official Compound Engineering removed cleanly
+        run: |
+          test ! -e ~/.pi/agent/.lazypi/compound-engineering.json
+          test ! -e ~/.pi/agent/extensions/compound-engineering-compat.ts
+          test ! -d ~/.pi/agent/skills/ce-plan

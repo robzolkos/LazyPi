@@ -1,7 +1,7 @@
 #!/usr/bin/env node
-import { copyFileSync, existsSync, mkdirSync, readFileSync, writeFileSync } from "node:fs";
+import { copyFileSync, existsSync, mkdirSync, readdirSync, readFileSync, rmSync, statSync, writeFileSync } from "node:fs";
 import { homedir, platform } from "node:os";
-import { dirname, join } from "node:path";
+import { dirname, join, relative, resolve } from "node:path";
 import { spawnSync } from "node:child_process";
 import { argv, cwd, exit, stdout, stderr } from "node:process";
 import {
@@ -44,13 +44,21 @@ const PACKAGES = [
 	{ id: "interactive-shell", category: "ui", source: "npm:pi-interactive-shell", description: "Interactive shell overlays", hint: "Run Pi, Codex, editors, SSH, and long-running CLIs in observable overlays with hands-free and dispatch modes." },
 	{ id: "autoresearch", category: "research", source: "git:github.com/davebcn87/pi-autoresearch@5a29db080131449edc6d25a6b351b12879063366", description: "Autonomous experiment loop", hint: "Long-running autonomous research loop." },
 	{ id: "ralph-wiggum", category: "research", source: "npm:@tmustier/pi-ralph-wiggum", description: "Ralph Wiggum agent loop", hint: "Long-running iterative dev loops with goals, checklists, and optional self-reflection." },
-	{ id: "compound", category: "frameworks", source: "npm:@every-env/compound-plugin", description: "Compound Engineering workflow", hint: "Structured multi-step engineering workflow." },
+	{ id: "compound", category: "frameworks", source: "npm:@every-env/compound-plugin", description: "Official Compound Engineering", hint: "Official Every Pi target via Bun (skipped if Bun is unavailable)." },
 	{ id: "pi-themes", category: "themes", source: "npm:pi-themes", description: "Theme collection + picker", hint: "10 themes (Catppuccin, Dracula, Gruvbox, Nord, One Dark, Solarized, Tokyo Night) with a /themes picker command." },
 	{ id: "hackerman", category: "themes", source: "git:github.com/javierportillo/pi-hackerman@63b0a3ef2c7b14985ffeb6cac44614ba59cd5693", description: "Hackerman theme", hint: "Neon hacker-style color theme ported from the VS Code Hackerman Theme." },
 	{ id: "cyber-ui", category: "themes", source: "npm:pi-cyber-ui", description: "Cyber UI theme", hint: "Cyber-inspired dark theme with custom editor, compact footer, and working animation." },
 	{ id: "curated-themes", category: "themes", source: "npm:@victor-software-house/pi-curated-themes", description: "65 curated dark themes", hint: "65 dark terminal themes adapted from iTerm2-Color-Schemes." },
 	{ id: "terminal-theme", category: "themes", source: "npm:pi-terminal-theme", description: "Terminal ANSI theme", hint: "Maps Pi colors to ANSI 0–15 so Pi inherits your terminal's own color palette." },
 ];
+
+const COMPOUND_PKG_ID = "compound";
+const COMPOUND_SOURCE = "npm:@every-env/compound-plugin";
+const COMPOUND_PLUGIN_NAME = "compound-engineering";
+const COMPOUND_STATE_VERSION = 1;
+const COMPOUND_MANAGED_RELATIVE_PATHS = ["AGENTS.md", "prompts", "skills", "extensions", "compound-engineering"];
+const COMPOUND_COMPAT_EXTENSION_RELATIVE_PATH = join("extensions", "compound-engineering-compat.ts");
+const COMPOUND_SUBAGENT_TOOL_NAME = "ce_subagent";
 
 // ---------------------------------------------------------------------------
 // Output helpers
@@ -305,6 +313,191 @@ function readInstalledSources(local) {
 	return { sources, path: current.path, exists: true };
 }
 
+function compoundInstallRoot(local) {
+	return local ? join(cwd(), ".pi") : join(homedir(), ".pi", "agent");
+}
+
+function compoundStatePath(local) {
+	return join(compoundInstallRoot(local), ".lazypi", "compound-engineering.json");
+}
+
+function readCompoundState(local) {
+	const path = compoundStatePath(local);
+	if (!existsSync(path)) return { path, exists: false, parsed: null, error: null };
+	try {
+		return { path, exists: true, parsed: JSON.parse(readFileSync(path, "utf8")), error: null };
+	} catch (err) {
+		return { path, exists: true, parsed: null, error: err instanceof Error ? err.message : String(err) };
+	}
+}
+
+function writeCompoundState(local, state) {
+	const path = compoundStatePath(local);
+	mkdirSync(dirname(path), { recursive: true });
+	writeFileSync(path, JSON.stringify(state, null, 2) + "\n", "utf8");
+	return path;
+}
+
+function clearCompoundState(local) {
+	const path = compoundStatePath(local);
+	if (existsSync(path)) rmSync(path, { force: true });
+	const parent = dirname(path);
+	if (existsSync(parent) && readdirSync(parent).length === 0) rmSync(parent, { recursive: true, force: true });
+}
+
+function isCompoundInstalled(local) {
+	const state = readCompoundState(local);
+	return Boolean(state.exists && !state.error && state.parsed);
+}
+
+function normalizeRelativePath(path) {
+	return path.split("\\").join("/");
+}
+
+function collectManagedFiles(root, relativePath, files) {
+	const absolutePath = join(root, relativePath);
+	if (!existsSync(absolutePath)) return;
+	const stats = statSync(absolutePath);
+	if (stats.isFile()) {
+		files.set(normalizeRelativePath(relative(root, absolutePath)), readFileSync(absolutePath).toString("base64"));
+		return;
+	}
+	for (const name of readdirSync(absolutePath)) {
+		collectManagedFiles(root, join(relativePath, name), files);
+	}
+}
+
+function snapshotCompoundManagedFiles(local) {
+	const root = resolve(compoundInstallRoot(local));
+	const files = new Map();
+	for (const relativePath of COMPOUND_MANAGED_RELATIVE_PATHS) collectManagedFiles(root, relativePath, files);
+	return { root, files };
+}
+
+function pruneEmptyDirs(path) {
+	if (!existsSync(path) || !statSync(path).isDirectory()) return;
+	for (const entry of readdirSync(path)) pruneEmptyDirs(join(path, entry));
+	if (readdirSync(path).length === 0) rmSync(path, { recursive: true, force: true });
+}
+
+function removeEmptyManagedDirs(local) {
+	const root = compoundInstallRoot(local);
+	for (const dir of ["prompts", "skills", "extensions", "compound-engineering", ".lazypi"]) pruneEmptyDirs(join(root, dir));
+}
+
+function compoundCompatExtensionPath(local) {
+	return join(compoundInstallRoot(local), COMPOUND_COMPAT_EXTENSION_RELATIVE_PATH);
+}
+
+function patchCompoundCompatExtension(local) {
+	const path = compoundCompatExtensionPath(local);
+	if (!existsSync(path)) return { ok: false, reason: `missing ${COMPOUND_COMPAT_EXTENSION_RELATIVE_PATH}` };
+	const original = readFileSync(path, "utf8");
+	let patched = original;
+	patched = patched.replace('name: "subagent"', `name: "${COMPOUND_SUBAGENT_TOOL_NAME}"`);
+	patched = patched.replace('label: "Subagent"', 'label: "CE Subagent"');
+	patched = patched.replace('description: "Run one or more skill-based subagent tasks. Supports single, parallel, and chained execution."', 'description: "Run one or more Compound Engineering skill-based subagent tasks. Supports single, parallel, and chained execution."');
+	if (patched === original || patched.includes('name: "subagent"')) {
+		return { ok: false, reason: `could not rename subagent tool to ${COMPOUND_SUBAGENT_TOOL_NAME}` };
+	}
+	writeFileSync(path, patched, "utf8");
+	return { ok: true, patched: true, path };
+}
+
+function patchCompoundTextFile(path, replacements) {
+	if (!existsSync(path)) return;
+	const original = readFileSync(path, "utf8");
+	let next = original;
+	for (const [pattern, replacement] of replacements) next = next.replace(pattern, replacement);
+	if (next !== original) writeFileSync(path, next, "utf8");
+}
+
+function patchCompoundGeneratedContent(local) {
+	const root = compoundInstallRoot(local);
+	patchCompoundTextFile(join(root, "AGENTS.md"), [
+		[/\bsubagent extension tool\b/g, `${COMPOUND_SUBAGENT_TOOL_NAME} extension tool`],
+		[/\bmulti_tool_use\.parallel\b/g, `${COMPOUND_SUBAGENT_TOOL_NAME} in parallel mode`],
+	]);
+	patchCompoundTextFile(join(root, "skills", "ce-plan", "SKILL.md"), [
+		[/Run subagent with/g, `Run ${COMPOUND_SUBAGENT_TOOL_NAME} with`],
+	]);
+	patchCompoundTextFile(join(root, "skills", "document-review", "SKILL.md"), [
+		[/Dispatch all agents in \*\*parallel\*\* using the platform's task\/agent tool/g, `Dispatch all agents in **parallel** using the \`${COMPOUND_SUBAGENT_TOOL_NAME}\` tool`],
+	]);
+	patchCompoundTextFile(join(root, "skills", "ce-review", "SKILL.md"), [
+		[/Omit the `mode` parameter when dispatching sub-agents/g, `Omit the \`mode\` parameter when dispatching with \`${COMPOUND_SUBAGENT_TOOL_NAME}\``],
+		[/Spawn each selected persona reviewer as a parallel sub-agent/g, `Spawn each selected persona reviewer with \`${COMPOUND_SUBAGENT_TOOL_NAME}\` in parallel`],
+	]);
+	patchCompoundTextFile(join(root, "skills", "ce-optimize", "SKILL.md"), [
+		[/Dispatch a subagent with the filled prompt/g, `Dispatch ${COMPOUND_SUBAGENT_TOOL_NAME} with the filled prompt`],
+		[/fall back to subagent/g, `fall back to ${COMPOUND_SUBAGENT_TOOL_NAME}`],
+	]);
+	patchCompoundTextFile(join(root, "skills", "ce-compound-refresh", "SKILL.md"), [
+		[/When spawning any subagent/g, `When spawning any subagent via \`${COMPOUND_SUBAGENT_TOOL_NAME}\``],
+	]);
+}
+
+function installCompound(local, interactive = false) {
+	if (!hasCmd("bun")) {
+		const reason = "bun is not on PATH — official Compound Engineering from Every will be skipped.";
+		if (interactive) log.warn(reason);
+		else console.log(`${yellow("  !")} ${reason}`);
+		return { status: "skipped", reason };
+	}
+
+	const targetRoot = resolve(compoundInstallRoot(local));
+	mkdirSync(targetRoot, { recursive: true });
+	const before = snapshotCompoundManagedFiles(local);
+	const args = ["@every-env/compound-plugin", "install", COMPOUND_PLUGIN_NAME, "--to", "pi", "--pi-home", targetRoot];
+	const status = spawnSync("bunx", args, { stdio: "inherit" }).status ?? 1;
+	if (status !== 0) return { status: "failed", code: status };
+
+	const patchResult = patchCompoundCompatExtension(local);
+	if (!patchResult.ok) return { status: "failed", code: 1, reason: patchResult.reason };
+	patchCompoundGeneratedContent(local);
+
+	const after = snapshotCompoundManagedFiles(local);
+	const createdFiles = [];
+	const modifiedFiles = [];
+	for (const [path, contentBase64] of after.files.entries()) {
+		if (!before.files.has(path)) createdFiles.push(path);
+		else if (before.files.get(path) !== contentBase64) modifiedFiles.push({ path, previousContentBase64: before.files.get(path) });
+	}
+
+	writeCompoundState(local, {
+		version: COMPOUND_STATE_VERSION,
+		source: COMPOUND_SOURCE,
+		root: targetRoot,
+		installedAt: new Date().toISOString(),
+		createdFiles: createdFiles.sort(),
+		modifiedFiles: modifiedFiles.sort((a, b) => a.path.localeCompare(b.path)),
+	});
+	return { status: "installed", count: createdFiles.length + modifiedFiles.length };
+}
+
+function removeCompound(local) {
+	const state = readCompoundState(local);
+	if (!state.exists) return 0;
+	if (state.error || !state.parsed) {
+		console.error(red(`Compound Engineering state file is invalid: ${state.error}`));
+		return 1;
+	}
+
+	const root = resolve(compoundInstallRoot(local));
+	const createdFiles = [...(state.parsed.createdFiles ?? [])].sort((a, b) => b.length - a.length);
+	for (const relativePath of createdFiles) rmSync(join(root, relativePath), { recursive: true, force: true });
+
+	for (const entry of state.parsed.modifiedFiles ?? []) {
+		const target = join(root, entry.path);
+		mkdirSync(dirname(target), { recursive: true });
+		writeFileSync(target, Buffer.from(entry.previousContentBase64, "base64"));
+	}
+
+	clearCompoundState(local);
+	removeEmptyManagedDirs(local);
+	return 0;
+}
+
 const DIFF_REVIEW_RELATIVE_DIR = join("git", "github.com", "badlogic", "pi-diff-review");
 const DIFF_REVIEW_GLIMPSE_FILE = join("node_modules", "glimpseui", "src", "chromium-backend.mjs");
 
@@ -356,8 +549,8 @@ function runPi(args) {
 	return result.status ?? 1;
 }
 
-function isPackageInstalled(pkg, installedPiSources) {
-	return installedPiSources.has(pkg.source);
+function isPackageInstalled(pkg, installedPiSources, local) {
+	return pkg.id === COMPOUND_PKG_ID ? isCompoundInstalled(local) : installedPiSources.has(pkg.source);
 }
 
 // ---------------------------------------------------------------------------
@@ -531,8 +724,9 @@ async function cmdInstall(flags) {
 	const { sources: installedSources, error: settingsError } = readInstalledSources(flags.local);
 	if (settingsError) log.warn(`Could not parse ${settingsPath(flags.local)} — ${settingsError}`);
 
-	const toInstall = selected.filter((p) => !isPackageInstalled(p, installedSources));
-	const alreadyInstalled = selected.filter((p) => isPackageInstalled(p, installedSources));
+	const forceIds = new Set(Array.isArray(flags.forceIds) ? flags.forceIds : []);
+	const toInstall = selected.filter((p) => forceIds.has(p.id) || !isPackageInstalled(p, installedSources, flags.local));
+	const alreadyInstalled = selected.filter((p) => !forceIds.has(p.id) && isPackageInstalled(p, installedSources, flags.local));
 	const scope = flags.local ? "project (.pi/settings.json)" : "global (~/.pi/agent/settings.json)";
 
 	const preInstallAuth = detectAuth();
@@ -586,8 +780,34 @@ async function cmdInstall(flags) {
 
 	const piArgs = flags.local ? ["install", "-l"] : ["install"];
 	const failed = [];
+	const skipped = [];
 
 	for (const pkg of toInstall) {
+		if (pkg.id === COMPOUND_PKG_ID) {
+			const action = `bunx @every-env/compound-plugin install ${COMPOUND_PLUGIN_NAME} --to pi`;
+			if (interactive) log.step(action);
+			else console.log(`\n→ ${action}`);
+			if (forceIds.has(COMPOUND_PKG_ID) && isCompoundInstalled(flags.local)) {
+				const removeStatus = removeCompound(flags.local);
+				if (removeStatus !== 0) {
+					failed.push(pkg);
+					if (interactive) log.error(`failed to refresh ${pkg.id}`);
+					else console.error(red(`  ✗ failed to refresh ${pkg.id}`));
+					continue;
+				}
+			}
+			const result = installCompound(flags.local, interactive);
+			if (result.status === "failed") {
+				failed.push(pkg);
+				const detail = result.reason ? ` (${result.reason})` : "";
+				if (interactive) log.error(`failed to install ${pkg.id}${detail}`);
+				else console.error(red(`  ✗ failed to install ${pkg.id}${detail}`));
+			} else if (result.status === "skipped") {
+				skipped.push(pkg);
+			}
+			continue;
+		}
+
 		const action = `pi install ${pkg.source}`;
 		if (interactive) log.step(action);
 		else console.log(`\n→ ${action}`);
@@ -620,10 +840,19 @@ async function cmdInstall(flags) {
 		}
 	}
 
+	const installedCount = toInstall.length - failed.length - skipped.length;
 	if (failed.length === 0) {
+		if (skipped.length > 0) {
+			const skipList = skipped.map((p) => `- ${p.id} (${p.source})`).join("\n");
+			if (interactive) note(skipList, "Skipped");
+			else {
+				console.log(yellow("\nSkipped packages:"));
+				console.log(skipList);
+			}
+		}
 		printCheatsheet(selected, interactive);
 		const authState = detectAuth();
-		printNextSteps(authState, toInstall.length, interactive);
+		printNextSteps(authState, installedCount, interactive);
 		return 0;
 	}
 
@@ -691,8 +920,8 @@ function cmdStatus(flags) {
 	}
 
 	const piCatalogSources = new Set(PACKAGES.map((p) => p.source));
-	const installed = PACKAGES.filter((p) => isPackageInstalled(p, sources));
-	const missing = PACKAGES.filter((p) => !isPackageInstalled(p, sources));
+	const installed = PACKAGES.filter((p) => isPackageInstalled(p, sources, flags.local));
+	const missing = PACKAGES.filter((p) => !isPackageInstalled(p, sources, flags.local));
 	const others = [...sources].filter((src) => !piCatalogSources.has(src));
 
 	printHeader(`Installed from LazyPi catalog (${installed.length}/${PACKAGES.length}):`);
@@ -721,7 +950,7 @@ async function cmdUpdate(flags) {
 	if (!(await ensurePi(flags))) return 127;
 
 	console.log(bold("Step 1/2: reconcile LazyPi catalog"));
-	const installCode = await cmdInstall({ ...flags, command: "install", yes: true });
+	const installCode = await cmdInstall({ ...flags, command: "install", yes: true, forceIds: [COMPOUND_PKG_ID] });
 	if (installCode !== 0) return installCode;
 
 	console.log(bold("\nStep 2/2: pi update"));
@@ -755,6 +984,9 @@ function cmdDoctor(flags) {
 	if (hasCmd("git")) pass("git is on PATH");
 	else warn("git is not on PATH — required by git-based catalog packages");
 
+	if (hasCmd("bun")) pass("bun is on PATH — required for official Compound Engineering from Every");
+	else warn("bun is not on PATH — official Compound Engineering from Every will be skipped by LazyPi");
+
 	printHeader("Pi");
 	if (hasCmd("pi")) {
 		pass("`pi` is on PATH");
@@ -785,6 +1017,19 @@ function cmdDoctor(flags) {
 		console.log(`  ${dim("·")} diff-review not installed`);
 	}
 
+	const compoundState = readCompoundState(flags.local);
+	if (compoundState.error) {
+		fail(`Compound Engineering state file is invalid — ${compoundState.error}`);
+	} else if (compoundState.exists) {
+		pass(`Compound Engineering managed state found at ${compoundState.path}`);
+		const compatPath = compoundCompatExtensionPath(flags.local);
+		if (!existsSync(compatPath)) fail(`Compound Engineering compat extension is missing at ${compatPath}`);
+		else if (readFileSync(compatPath, "utf8").includes(`name: "${COMPOUND_SUBAGENT_TOOL_NAME}"`)) pass(`Compound Engineering compat tool renamed to ${COMPOUND_SUBAGENT_TOOL_NAME}`);
+		else fail(`Compound Engineering compat extension still registers the conflicting subagent tool`);
+	} else {
+		console.log(`  ${dim("·")} Compound Engineering not installed`);
+	}
+
 	printHeader("Auth");
 	const auth = detectAuth();
 	for (const { provider, envVar } of auth.envProviders) pass(`env var ${envVar} → ${provider}`);
@@ -810,7 +1055,7 @@ async function cmdRemove(flags, targets) {
 			return 2;
 		}
 		const { sources } = readInstalledSources(flags.local);
-		const installedPkgs = PACKAGES.filter((p) => isPackageInstalled(p, sources));
+		const installedPkgs = PACKAGES.filter((p) => isPackageInstalled(p, sources, flags.local));
 		if (installedPkgs.length === 0) {
 			console.log(yellow("No catalog packages are installed."));
 			return 0;
@@ -838,6 +1083,15 @@ async function cmdRemove(flags, targets) {
 		// Resolve a catalog id to its source string, or pass through raw sources
 		const pkg = PACKAGES.find((p) => p.id === target);
 		const source = pkg ? pkg.source : target;
+
+		if ((pkg && pkg.id === COMPOUND_PKG_ID) || source === COMPOUND_SOURCE) {
+			const result = removeCompound(flags.local);
+			if (result !== 0) {
+				console.error(red(`Failed to remove ${target}`));
+				exitCode = 1;
+			}
+			continue;
+		}
 
 		const piArgs = flags.local ? ["remove", "-l", source] : ["remove", source];
 		const result = spawnSync("pi", piArgs, { stdio: "inherit" });
