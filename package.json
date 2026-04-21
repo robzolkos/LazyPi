@@ -3,6 +3,14 @@
   "version": "0.1.5",
   "description": "Opinionated one-shot installer for a full-featured Pi coding agent setup.",
   "license": "MIT",
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/robzolkos/LazyPi"
+  },
+  "bugs": {
+    "url": "https://github.com/robzolkos/LazyPi/issues"
+  },
+  "homepage": "https://github.com/robzolkos/LazyPi",
   "type": "module",
   "bin": {
     "lazypi": "bin/lazypi.mjs"
