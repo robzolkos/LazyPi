@@ -54,7 +54,7 @@ There is nothing to "uninstall" for LazyPi itself — `npx` doesn't leave it aro
 
 ## Troubleshooting
 
-Run the built-in health check (`npx @robzolkos/lazypi doctor`).
+Run the built-in health check with `npx @robzolkos/lazypi doctor`.
 
 ## Releasing
 
