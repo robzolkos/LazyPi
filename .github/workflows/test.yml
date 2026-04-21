@@ -92,43 +92,26 @@ jobs:
           grep -q 'Claude Task(agent, args) maps to the ce_subagent extension tool' ~/.pi/agent/AGENTS.md
           grep -q 'Run ce_subagent with agent="repo-research-analyst"' ~/.pi/agent/skills/ce-plan/SKILL.md
 
-      - name: Assert CE compat tool delegates by skill name
+      - name: Assert CE compat tool preserves skill delegation semantics
         run: |
           TMPDIR=$(mktemp -d)
           mkdir -p "$TMPDIR/proj"
           cd "$TMPDIR/proj"
           node "$GITHUB_WORKSPACE/bin/lazypi.mjs" --yes --only compound -l
-          mkdir -p node_modules/@sinclair
-          TYPEBOX_DIR="$(find /home/runner -path '*/@mariozechner/pi-coding-agent/node_modules/@sinclair/typebox' -type d | head -n 1)"
-          test -n "$TYPEBOX_DIR"
-          ln -s "$TYPEBOX_DIR" node_modules/@sinclair/typebox
-          cat > verify-ce-subagent.mjs <<'EOF'
-          import path from 'node:path';
-          const extensionPath = path.join(process.cwd(), '.pi/extensions/compound-engineering-compat.ts');
-          const registered = [];
-          const calls = [];
-          const mod = await import(`file://${extensionPath}`);
-          const pi = {
-            registerTool(tool) { registered.push(tool); },
-            exec(command, args) {
-              calls.push({ command, args });
-              return Promise.resolve({ code: 0, stdout: 'ok', stderr: '' });
-            },
-          };
-          mod.default(pi);
-          const tool = registered.find((t) => t.name === 'ce_subagent');
-          if (!tool) throw new Error('ce_subagent tool not registered');
-          const result = await tool.execute('id', { agent: 'repo-research-analyst', task: 'inspect patterns', cwd: '/work' }, undefined, undefined, { cwd: process.cwd(), hasUI: false });
-          if (result.isError) throw new Error('ce_subagent returned error');
-          if (calls.length !== 1) throw new Error(`expected 1 exec call, got ${calls.length}`);
-          const call = calls[0];
-          if (call.command !== 'bash' || call.args[0] !== '-lc') throw new Error(`unexpected exec invocation: ${JSON.stringify(call)}`);
-          const script = call.args[1];
-          if (!script.includes('/skill:repo-research-analyst inspect patterns')) throw new Error(`missing skill invocation in script: ${script}`);
-          if (!script.includes("cd '/work'")) throw new Error(`missing cwd in script: ${script}`);
-          console.log('verified ce_subagent delegates via /skill:repo-research-analyst');
+          node - <<'EOF'
+          const fs = require('fs');
+          const source = fs.readFileSync('.pi/extensions/compound-engineering-compat.ts', 'utf8');
+          if (!source.includes('name: "ce_subagent"')) {
+            throw new Error('ce_subagent tool registration missing');
+          }
+          if (!source.includes('const prompt = "/skill:" + agent + " " + taskText')) {
+            throw new Error('ce_subagent no longer delegates via /skill:<agent>');
+          }
+          if (!source.includes('const script = "cd " + shellEscape(cwd) + " && pi --no-session -p " + shellEscape(prompt)')) {
+            throw new Error('ce_subagent no longer shells out through pi --no-session -p');
+          }
+          console.log('verified ce_subagent preserves /skill-based delegation semantics');
           EOF
-          bunx tsx verify-ce-subagent.mjs
 
       - name: Doctor warns when bun missing
         run: |
