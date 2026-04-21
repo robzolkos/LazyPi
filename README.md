@@ -54,6 +54,20 @@ There is nothing to "uninstall" for LazyPi itself — `npx` doesn't leave it aro
 
 Run the built-in health check (`npx @robzolkos/lazypi doctor`).
 
+## Releasing
+
+LazyPi uses **Release Please** plus **npm trusted publishing**.
+
+### How it works
+
+1. You merge normal PRs into `master`
+2. You run the `release-please` workflow manually from GitHub Actions
+3. Release Please creates or updates a release PR
+4. That release PR bumps `package.json` and `package-lock.json` and can update `CHANGELOG.md`
+5. You merge the release PR through the normal protected-branch flow
+6. Release Please creates the git tag and GitHub Release
+7. The `publish.yml` workflow publishes the tagged release to npm using trusted publishing
+
 ---
 
 For the full list of included packages and themes, see [lazypi.org](https://lazypi.org).
