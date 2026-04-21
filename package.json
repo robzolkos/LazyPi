@@ -15,6 +15,9 @@
   "engines": {
     "node": ">=20"
   },
+  "scripts": {
+    "docs:serve": "node scripts/serve-docs.mjs"
+  },
   "dependencies": {
     "@clack/prompts": "^1.2.0"
   },
