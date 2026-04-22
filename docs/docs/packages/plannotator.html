@@ -4,7 +4,7 @@
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <link rel="icon" type="image/svg+xml" href="/favicon.svg">
-  <title>Simplify — LazyPi Docs</title>
+  <title>Plannotator — LazyPi Docs</title>
   <link rel="stylesheet" href="/docs.css">
 </head>
 <body>
@@ -60,11 +60,10 @@
       <a href="/docs/packages/memory.html" class="sidebar-link">Memory</a>
       <a href="/docs/packages/diff-review.html" class="sidebar-link">Diff Review</a>
       <a href="/docs/packages/plan.html" class="sidebar-link">Plan</a>
-      <a href="/docs/packages/simplify.html" class="sidebar-link active">Simplify</a>
+      <a href="/docs/packages/simplify.html" class="sidebar-link">Simplify</a>
       <a href="/docs/packages/add-dir.html" class="sidebar-link">Add Directory</a>
-
       <a href="/docs/packages/prompt-templates.html" class="sidebar-link">Prompt Templates</a>
-      <a href="/docs/packages/plannotator.html" class="sidebar-link">Plannotator</a>
+      <a href="/docs/packages/plannotator.html" class="sidebar-link active">Plannotator</a>
       <a href="/docs/packages/powerbar.html" class="sidebar-link">Powerbar</a>
       <a href="/docs/packages/extension-settings.html" class="sidebar-link">Extension Settings</a>
       <a href="/docs/packages/usage.html" class="sidebar-link">Usage Tracker</a>
@@ -79,20 +78,20 @@
   </aside>
 
   <main class="docs-content">
-    <h1>Simplify</h1>
-    <p class="page-desc">Reviews recently changed code for clarity, consistency, and maintainability — never changes behavior.</p>
+    <h1>Plannotator</h1>
+    <p class="page-desc">Visual plan review, diff review, and markdown annotation for Pi through a local browser UI.</p>
 
     <h2>What it does</h2>
     <p>
-      Pi-simplify reads every file that changed in your working tree, applies clarity and consistency improvements one at a time, then runs your test suite after each change to verify nothing broke. It operates on a strict constraint: it may only improve how the code reads, never what it does.
+      Plannotator adds a file-based planning workflow to Pi. Instead of keeping a plan trapped inside the chat buffer, the agent writes it to disk as markdown, then opens a browser UI where you can highlight text, leave comments, request changes, and explicitly approve the plan before execution continues.
     </p>
     <p>
-      This means simplify is safe to run after any implementation pass. It won't introduce regressions because it won't change logic. What it will do is catch naming inconsistencies, overly complex expressions, unnecessary nesting, and other readability issues that are easy to miss when you're focused on getting the feature to work.
+      It also includes the same browser workflow for reviewing git diffs and annotating markdown files or the agent's last response. That makes it especially good for long plans, code review, design feedback, and any situation where inline annotation is easier than writing free-form chat feedback.
     </p>
 
     <h2>Why it's included</h2>
     <p>
-      Implementation and cleanup are cognitively different tasks. Trying to do both at once usually means the cleanup doesn't happen. Simplify makes it a one-command step after implementation — run it, review the diff, and you're done.
+      LazyPi already ships Pi's lightweight terminal-first workflow. Plannotator complements that by giving you a higher-bandwidth review surface when a task is too big or too visual for raw chat. It is one of the clearest ways to stay in control of larger agent-driven changes without giving up the speed of Pi.
     </p>
 
     <h2>Commands</h2>
@@ -102,36 +101,41 @@
       </thead>
       <tbody>
         <tr>
-          <td><code>/simplify</code></td>
-          <td>Review all uncommitted changes</td>
+          <td><code>/plannotator</code></td>
+          <td>Toggle Plannotator's plan mode for the current session</td>
         </tr>
         <tr>
-          <td><code>/simplify --staged</code></td>
-          <td>Review only staged changes</td>
+          <td><code>/plannotator-review</code></td>
+          <td>Open the current git diff in Plannotator's browser review UI</td>
         </tr>
         <tr>
-          <td><code>/simplify src/foo.ts src/bar.ts</code></td>
-          <td>Review specific files</td>
+          <td><code>/plannotator-annotate &lt;file&gt;</code></td>
+          <td>Open a markdown file for inline annotation and structured feedback</td>
         </tr>
         <tr>
-          <td><code>/simplify --ref=main</code></td>
-          <td>Diff against a specific branch and review those changes</td>
+          <td><code>/plannotator-last</code></td>
+          <td>Annotate the assistant's most recent response in the same UI</td>
         </tr>
       </tbody>
     </table>
 
+    <p>
+      You can also start Pi in plan mode directly with <code>pi --plan</code>. Plannotator then gates execution until the plan is reviewed and approved.
+    </p>
+
     <div class="learn-more">
-      <a href="https://github.com/MattDevy/pi-extensions" target="_blank" rel="noopener">→ GitHub — MattDevy/pi-extensions</a>
+      <a href="https://plannotator.ai/blog/plannotator-meets-pi/" target="_blank" rel="noopener">→ Plannotator Meets Pi</a>
+      <a href="https://github.com/backnotprop/plannotator/tree/main/apps/pi-extension" target="_blank" rel="noopener">→ GitHub — backnotprop/plannotator</a>
     </div>
 
     <nav class="prev-next">
-      <a href="/docs/packages/plan.html" class="prev-next-link">
+      <a href="/docs/packages/prompt-templates.html" class="prev-next-link">
         <span class="prev-next-label">Previous</span>
-        ← Plan
+        ← Prompt Templates
       </a>
-      <a href="/docs/packages/add-dir.html" class="prev-next-link next">
+      <a href="/docs/packages/powerbar.html" class="prev-next-link next">
         <span class="prev-next-label">Next</span>
-        Add Directory →
+        Powerbar →
       </a>
     </nav>
 

@@ -4,7 +4,7 @@
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <link rel="icon" type="image/svg+xml" href="/favicon.svg">
-  <title>Simplify — LazyPi Docs</title>
+  <title>Extension Settings — LazyPi Docs</title>
   <link rel="stylesheet" href="/docs.css">
 </head>
 <body>
@@ -60,13 +60,12 @@
       <a href="/docs/packages/memory.html" class="sidebar-link">Memory</a>
       <a href="/docs/packages/diff-review.html" class="sidebar-link">Diff Review</a>
       <a href="/docs/packages/plan.html" class="sidebar-link">Plan</a>
-      <a href="/docs/packages/simplify.html" class="sidebar-link active">Simplify</a>
+      <a href="/docs/packages/simplify.html" class="sidebar-link">Simplify</a>
       <a href="/docs/packages/add-dir.html" class="sidebar-link">Add Directory</a>
-
       <a href="/docs/packages/prompt-templates.html" class="sidebar-link">Prompt Templates</a>
       <a href="/docs/packages/plannotator.html" class="sidebar-link">Plannotator</a>
       <a href="/docs/packages/powerbar.html" class="sidebar-link">Powerbar</a>
-      <a href="/docs/packages/extension-settings.html" class="sidebar-link">Extension Settings</a>
+      <a href="/docs/packages/extension-settings.html" class="sidebar-link active">Extension Settings</a>
       <a href="/docs/packages/usage.html" class="sidebar-link">Usage Tracker</a>
       <a href="/docs/packages/raw-paste.html" class="sidebar-link">Raw Paste</a>
       <a href="/docs/packages/todo.html" class="sidebar-link">Todo List</a>
@@ -79,20 +78,20 @@
   </aside>
 
   <main class="docs-content">
-    <h1>Simplify</h1>
-    <p class="page-desc">Reviews recently changed code for clarity, consistency, and maintainability — never changes behavior.</p>
+    <h1>Extension Settings</h1>
+    <p class="page-desc">Centralized settings UI and storage layer that other Pi extensions can register with.</p>
 
     <h2>What it does</h2>
     <p>
-      Pi-simplify reads every file that changed in your working tree, applies clarity and consistency improvements one at a time, then runs your test suite after each change to verify nothing broke. It operates on a strict constraint: it may only improve how the code reads, never what it does.
+      Pi Extension Settings gives Pi extensions a shared place to declare configurable options and a standard UI for editing them. Instead of each package inventing its own config file or command syntax, extensions can register settings and let users manage them from one screen.
     </p>
     <p>
-      This means simplify is safe to run after any implementation pass. It won't introduce regressions because it won't change logic. What it will do is catch naming inconsistencies, overly complex expressions, unnecessary nesting, and other readability issues that are easy to miss when you're focused on getting the feature to work.
+      In the LazyPi stack it mainly acts as a companion package for Powerbar. Powerbar registers its options at load time, and Extension Settings provides the persistent storage and interactive settings editor those options depend on.
     </p>
 
     <h2>Why it's included</h2>
     <p>
-      Implementation and cleanup are cognitively different tasks. Trying to do both at once usually means the cleanup doesn't happen. Simplify makes it a one-command step after implementation — run it, review the diff, and you're done.
+      Some packages are best understood as infrastructure rather than headline features. Extension Settings is one of those. It is included because it makes Powerbar configurable out of the box and provides a cleaner foundation for any future LazyPi extensions that expose settings.
     </p>
 
     <h2>Commands</h2>
@@ -102,36 +101,24 @@
       </thead>
       <tbody>
         <tr>
-          <td><code>/simplify</code></td>
-          <td>Review all uncommitted changes</td>
-        </tr>
-        <tr>
-          <td><code>/simplify --staged</code></td>
-          <td>Review only staged changes</td>
-        </tr>
-        <tr>
-          <td><code>/simplify src/foo.ts src/bar.ts</code></td>
-          <td>Review specific files</td>
-        </tr>
-        <tr>
-          <td><code>/simplify --ref=main</code></td>
-          <td>Diff against a specific branch and review those changes</td>
+          <td><code>/extension-settings</code></td>
+          <td>Open the shared settings UI for installed extensions</td>
         </tr>
       </tbody>
     </table>
 
     <div class="learn-more">
-      <a href="https://github.com/MattDevy/pi-extensions" target="_blank" rel="noopener">→ GitHub — MattDevy/pi-extensions</a>
+      <a href="https://github.com/juanibiapina/pi-extension-settings" target="_blank" rel="noopener">→ GitHub — juanibiapina/pi-extension-settings</a>
     </div>
 
     <nav class="prev-next">
-      <a href="/docs/packages/plan.html" class="prev-next-link">
+      <a href="/docs/packages/powerbar.html" class="prev-next-link">
         <span class="prev-next-label">Previous</span>
-        ← Plan
+        ← Powerbar
       </a>
-      <a href="/docs/packages/add-dir.html" class="prev-next-link next">
+      <a href="/docs/packages/usage.html" class="prev-next-link next">
         <span class="prev-next-label">Next</span>
-        Add Directory →
+        Usage Tracker →
       </a>
     </nav>
 
