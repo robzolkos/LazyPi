@@ -1,5 +1,12 @@
 # Changelog
 
+## [0.1.7](https://github.com/robzolkos/LazyPi/compare/v0.1.6...v0.1.7) (2026-04-22)
+
+
+### Miscellaneous Chores
+
+* release 0.1.7 ([a4380db](https://github.com/robzolkos/LazyPi/commit/a4380db745768cbcb82f76c1d0b51739ee7b0b5f))
+
 ## [0.1.6](https://github.com/robzolkos/LazyPi/compare/v0.1.5...v0.1.6) (2026-04-21)
 
 
