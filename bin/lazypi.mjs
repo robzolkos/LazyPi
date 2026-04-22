@@ -1055,10 +1055,12 @@ async function cmdUpdate(flags) {
 // ---------------------------------------------------------------------------
 function cmdDoctor(flags) {
 	let problems = 0;
+	let warnings = 0;
 	const pass = (msg) => console.log(`  ${green("✓")} ${msg}`);
-	const warn = (msg) => {
+	const warn = (msg, { fatal = true } = {}) => {
 		console.log(`  ${yellow("!")} ${msg}`);
-		problems++;
+		if (fatal) problems++;
+		else warnings++;
 	};
 	const fail = (msg) => {
 		console.log(`  ${red("✗")} ${msg}`);
@@ -1129,14 +1131,18 @@ function cmdDoctor(flags) {
 	const auth = detectAuth();
 	for (const { provider, envVar } of auth.envProviders) pass(`env var ${envVar} → ${provider}`);
 	if (auth.fileProviders.length > 0) pass(`${auth.path} → ${auth.fileProviders.join(", ")}`);
-	if (!auth.authed) warn("No credentials detected — run `pi` then `/login`, or export a provider API key");
+	if (!auth.authed) warn("No credentials detected — run `pi` then `/login`, or export a provider API key", { fatal: false });
 
 	console.log("");
-	if (problems === 0) {
+	if (problems === 0 && warnings === 0) {
 		console.log(green("All checks passed."));
 		return 0;
 	}
-	console.log(yellow(`${problems} problem(s) found.`));
+	if (problems === 0) {
+		console.log(yellow(`${warnings} warning(s) found.`));
+		return 0;
+	}
+	console.log(yellow(`${problems} problem(s) found${warnings ? `, ${warnings} warning(s)` : ""}.`));
 	return 1;
 }
 
