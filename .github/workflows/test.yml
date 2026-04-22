@@ -32,3 +32,96 @@ jobs:
 
       - name: Run test suite
         run: npm test
+
+  windows-smoke:
+    runs-on: windows-latest
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 20
+
+      - name: Install pi
+        run: npm install -g @mariozechner/pi-coding-agent
+
+      - name: Install npm dependencies
+        run: npm ci
+
+      - name: Run unit tests
+        run: npm test
+
+      - name: Run lazypi --yes --except compound
+        run: node bin/lazypi.mjs --yes --except compound
+
+      - name: Assert settings.json exists
+        shell: pwsh
+        run: |
+          $settingsPath = Join-Path $HOME ".pi/agent/settings.json"
+          if (!(Test-Path $settingsPath)) {
+            throw "settings.json was not created at $settingsPath"
+          }
+
+      - name: Assert expected packages installed on Windows
+        shell: pwsh
+        run: |
+          $settingsPath = Join-Path $HOME ".pi/agent/settings.json"
+          $settings = Get-Content $settingsPath -Raw | ConvertFrom-Json
+          $sources = @{}
+          foreach ($entry in @($settings.packages)) {
+            if ($entry -is [string]) {
+              $sources[$entry] = $true
+            } elseif ($null -ne $entry.source) {
+              $sources[$entry.source] = $true
+            }
+          }
+
+          $expected = @(
+            "npm:pi-subagents",
+            "npm:pi-ask-user",
+            "npm:pi-mcp-adapter",
+            "npm:pi-web-access",
+            "npm:pi-memory-md",
+            "git:github.com/badlogic/pi-diff-review@1584211692c49780ecd0f490a82762b0823fd475",
+            "npm:@devkade/pi-plan",
+            "npm:pi-simplify",
+            "npm:pi-add-dir",
+            "npm:pi-prompt-template-model",
+            "npm:@plannotator/pi-extension",
+            "npm:@juanibiapina/pi-powerbar",
+            "npm:@juanibiapina/pi-extension-settings",
+            "npm:@tmustier/pi-usage-extension",
+            "npm:@tmustier/pi-raw-paste",
+            "git:github.com/tintinweb/pi-manage-todo-list@b75c449aa85ce328e9a8b632f62bf642aed40359",
+            "npm:pi-btw",
+            "npm:pi-interactive-shell",
+            "git:github.com/davebcn87/pi-autoresearch",
+            "npm:@tmustier/pi-ralph-wiggum",
+            "npm:pi-themes",
+            "git:github.com/javierportillo/pi-hackerman@63b0a3ef2c7b14985ffeb6cac44614ba59cd5693",
+            "npm:pi-cyber-ui",
+            "npm:@victor-software-house/pi-curated-themes",
+            "npm:pi-terminal-theme"
+          )
+
+          $missing = $expected | Where-Object { -not $sources.ContainsKey($_) }
+          if ($missing.Count -gt 0) {
+            throw "Missing packages: $($missing -join ', ')"
+          }
+
+          if ($sources.ContainsKey("npm:@every-env/compound-plugin")) {
+            throw "compound should not be recorded in settings.json"
+          }
+
+          Write-Host "All $($expected.Count) expected Windows package sources found."
+
+      - name: Doctor passes on Windows
+        run: node bin/lazypi.mjs doctor
+
+      - name: Status reflects compound exclusion
+        shell: pwsh
+        run: |
+          $status = node bin/lazypi.mjs status | Out-String
+          if ($status -notmatch "Installed from LazyPi catalog \(25/26\):") {
+            throw "Unexpected status output:`n$status"
+          }

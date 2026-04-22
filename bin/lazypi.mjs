@@ -250,8 +250,22 @@ ${bold("Examples:")}
 // ---------------------------------------------------------------------------
 // Pi / settings plumbing
 // ---------------------------------------------------------------------------
+// On Windows, package-manager CLIs and global Node bins are usually `.cmd`
+// shims. Node's child_process docs note that those need to be launched via a
+// shell, so we route spawned commands through the platform shell there while
+// keeping direct execution on Unix.
+export function buildSpawnOptions(options = {}, platformName = platform()) {
+	const resolved = { ...options };
+	if (platformName === "win32" && resolved.shell == null) resolved.shell = true;
+	return resolved;
+}
+
+export function spawnCommand(command, args = [], options = {}) {
+	return spawnSync(command, args, buildSpawnOptions(options));
+}
+
 function hasCmd(name) {
-	const probe = spawnSync(platform() === "win32" ? "where" : "which", [name], { stdio: "ignore" });
+	const probe = spawnCommand(platform() === "win32" ? "where" : "which", [name], { stdio: "ignore" });
 	return probe.status === 0;
 }
 
@@ -474,7 +488,7 @@ function runCompoundPlugin(command, local) {
 	const args = command === "cleanup"
 		? [COMPOUND_UPSTREAM_PACKAGE, "cleanup", "--target", "pi", "--pi-home", targetRoot]
 		: [COMPOUND_UPSTREAM_PACKAGE, "install", COMPOUND_PLUGIN_NAME, "--to", "pi", "--pi-home", targetRoot];
-	return spawnSync("bunx", args, { stdio: "inherit" }).status ?? 1;
+	return spawnCommand("bunx", args, { stdio: "inherit" }).status ?? 1;
 }
 
 function installCompound(local, interactive = false) {
@@ -572,7 +586,7 @@ function repairDiffReview(local, interactive = false) {
 	if (!state.needsRepair || state.dir == null) return 0;
 	const prefix = interactive ? "" : "  ";
 	console.log(`${prefix}${yellow(`Repairing diff-review (${state.reason})`)}`);
-	const result = spawnSync("npm", ["install", "--no-save", "--ignore-scripts", "glimpseui@0.6.2"], {
+	const result = spawnCommand("npm", ["install", "--no-save", "--ignore-scripts", "glimpseui@0.6.2"], {
 		cwd: state.dir,
 		stdio: "inherit",
 	});
@@ -581,7 +595,7 @@ function repairDiffReview(local, interactive = false) {
 }
 
 function runPi(args) {
-	const result = spawnSync("pi", args, { stdio: "inherit" });
+	const result = spawnCommand("pi", args, { stdio: "inherit" });
 	return result.status ?? 1;
 }
 
@@ -748,7 +762,7 @@ async function ensurePi(flags) {
 	}
 
 	log.step("Installing Pi via `npm install -g @mariozechner/pi-coding-agent`");
-	const code = spawnSync("npm", ["install", "-g", "@mariozechner/pi-coding-agent"], { stdio: "inherit" }).status;
+	const code = spawnCommand("npm", ["install", "-g", "@mariozechner/pi-coding-agent"], { stdio: "inherit" }).status;
 	if (code !== 0) {
 		log.error("Failed to install Pi. On some systems a global npm install needs sudo:\n  sudo npm install -g @mariozechner/pi-coding-agent");
 		return false;
@@ -887,7 +901,7 @@ async function cmdInstall(flags) {
 			const removeAction = `pi remove ${legacySource}`;
 			if (interactive) log.step(removeAction);
 			else console.log(`\n→ ${removeAction}`);
-			migrationStatus = spawnSync("pi", flags.local ? ["remove", "-l", legacySource] : ["remove", legacySource], { stdio: "inherit" }).status ?? 1;
+			migrationStatus = spawnCommand("pi", flags.local ? ["remove", "-l", legacySource] : ["remove", legacySource], { stdio: "inherit" }).status ?? 1;
 			if (migrationStatus !== 0) break;
 		}
 		if (migrationStatus !== 0) {
@@ -903,7 +917,7 @@ async function cmdInstall(flags) {
 		const env = pkg.source.startsWith("git:")
 			? { ...process.env, npm_config_ignore_scripts: "true" }
 			: process.env;
-		const installStatus = spawnSync("pi", [...piArgs, pkg.source], { stdio: "inherit", env }).status;
+		const installStatus = spawnCommand("pi", [...piArgs, pkg.source], { stdio: "inherit", env }).status;
 		const repairStatus = installStatus === 0 && pkg.id === "diff-review"
 			? repairDiffReview(flags.local, interactive)
 			: 0;
@@ -1053,7 +1067,7 @@ function updateLocalPiPackages(local) {
 		const env = source.startsWith("git:")
 			? { ...process.env, npm_config_ignore_scripts: "true" }
 			: process.env;
-		const installStatus = spawnSync("pi", ["install", "-l", source], { stdio: "inherit", env }).status ?? 1;
+		const installStatus = spawnCommand("pi", ["install", "-l", source], { stdio: "inherit", env }).status ?? 1;
 		if (installStatus !== 0) return installStatus;
 	}
 	return 0;
@@ -1108,7 +1122,7 @@ function cmdDoctor(flags) {
 	printHeader("Pi");
 	if (hasCmd("pi")) {
 		pass("`pi` is on PATH");
-		const v = spawnSync("pi", ["--version"], { encoding: "utf8" });
+		const v = spawnCommand("pi", ["--version"], { encoding: "utf8" });
 		const vout = (v.stdout ?? "").trim() || (v.stderr ?? "").trim();
 		if (vout) pass(`pi --version: ${vout}`);
 		else warn("Could not read `pi --version` output");
@@ -1238,7 +1252,7 @@ async function cmdRemove(flags, targets) {
 		const uniqueSources = [...new Set(sourcesToRemove.length > 0 ? sourcesToRemove : [source])];
 		for (const resolvedSource of uniqueSources) {
 			const piArgs = flags.local ? ["remove", "-l", resolvedSource] : ["remove", resolvedSource];
-			const result = spawnSync("pi", piArgs, { stdio: "inherit" });
+			const result = spawnCommand("pi", piArgs, { stdio: "inherit" });
 			if (result.status !== 0) {
 				console.error(red(`Failed to remove ${target}`));
 				exitCode = 1;
