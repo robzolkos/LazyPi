@@ -87,10 +87,25 @@ jobs:
           test -f ~/.pi/agent/extensions/compound-engineering-compat.ts
           test -f ~/.pi/agent/skills/ce-plan/SKILL.md
           grep -q '"source": "npm:@every-env/compound-plugin"' ~/.pi/agent/.lazypi/compound-engineering.json
-          grep -q '^name: ce:plan$' ~/.pi/agent/skills/ce-plan/SKILL.md
+          grep -q '^name: ce-plan$' ~/.pi/agent/skills/ce-plan/SKILL.md
+          ! grep -q '^name: ce:plan$' ~/.pi/agent/skills/ce-plan/SKILL.md
           grep -q 'name: "ce_subagent"' ~/.pi/agent/extensions/compound-engineering-compat.ts
           grep -q 'Claude Task(agent, args) maps to the ce_subagent extension tool' ~/.pi/agent/AGENTS.md
           grep -q 'Run ce_subagent with agent="repo-research-analyst"' ~/.pi/agent/skills/ce-plan/SKILL.md
+
+      - name: Rerun repairs existing Compound skill names
+        run: |
+          python - <<'PY'
+          from pathlib import Path
+          path = Path.home() / ".pi" / "agent" / "skills" / "ce-plan" / "SKILL.md"
+          text = path.read_text()
+          path.write_text(text.replace("name: ce-plan", "name: ce:plan", 1))
+          PY
+          grep -q '^name: ce:plan$' ~/.pi/agent/skills/ce-plan/SKILL.md
+          node bin/lazypi.mjs --yes
+          grep -q '^name: ce-plan$' ~/.pi/agent/skills/ce-plan/SKILL.md
+          ! grep -q '^name: ce:plan$' ~/.pi/agent/skills/ce-plan/SKILL.md
+          node bin/lazypi.mjs doctor
 
       - name: Assert CE compat tool preserves skill delegation semantics
         run: |
