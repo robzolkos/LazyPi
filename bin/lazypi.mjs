@@ -42,7 +42,14 @@ const PACKAGES = [
 	{ id: "todos", category: "ui", source: "git:github.com/tintinweb/pi-manage-todo-list@b75c449aa85ce328e9a8b632f62bf642aed40359", description: "Todo list management", hint: "Track multi-step work with live progress widget and session persistence." },
 	{ id: "btw", category: "ui", source: "npm:pi-btw", description: "Side-chat popover", hint: "Ask quick questions without polluting your conversation history." },
 	{ id: "interactive-shell", category: "ui", source: "npm:pi-interactive-shell", description: "Interactive shell overlays", hint: "Run Pi, Codex, editors, SSH, and long-running CLIs in observable overlays with hands-free and dispatch modes." },
-	{ id: "autoresearch", category: "research", source: "git:github.com/davebcn87/pi-autoresearch", description: "Autonomous experiment loop", hint: "Long-running autonomous research loop." },
+	{
+		id: "autoresearch",
+		category: "research",
+		source: "git:github.com/davebcn87/pi-autoresearch",
+		legacySources: ["git:github.com/davebcn87/pi-autoresearch@5a29db080131449edc6d25a6b351b12879063366"],
+		description: "Autonomous experiment loop",
+		hint: "Long-running autonomous research loop.",
+	},
 	{ id: "ralph-wiggum", category: "research", source: "npm:@tmustier/pi-ralph-wiggum", description: "Ralph Wiggum agent loop", hint: "Long-running iterative dev loops with goals, checklists, and optional self-reflection." },
 	{ id: "compound", category: "frameworks", source: "npm:@every-env/compound-plugin", description: "Official Compound Engineering", hint: "Official Every Pi target via Bun (skipped if Bun is unavailable)." },
 	{ id: "pi-themes", category: "themes", source: "npm:pi-themes", description: "Theme collection + picker", hint: "10 themes (Catppuccin, Dracula, Gruvbox, Nord, One Dark, Solarized, Tokyo Night) with a /themes picker command." },
@@ -628,8 +635,26 @@ function runPi(args) {
 	return result.status ?? 1;
 }
 
+function legacySourcesForPackage(pkg) {
+	return Array.isArray(pkg.legacySources) ? pkg.legacySources : [];
+}
+
+function isLegacySourceForPackage(pkg, source) {
+	return legacySourcesForPackage(pkg).includes(source);
+}
+
+function findLegacyInstalledSources(pkg, installedPiSources) {
+	return [...installedPiSources].filter((source) => isLegacySourceForPackage(pkg, source));
+}
+
 function isPackageInstalled(pkg, installedPiSources, local) {
 	return pkg.id === COMPOUND_PKG_ID ? isCompoundInstalled(local) : installedPiSources.has(pkg.source);
+}
+
+function isPackagePresent(pkg, installedPiSources, local) {
+	return pkg.id === COMPOUND_PKG_ID
+		? isCompoundInstalled(local)
+		: installedPiSources.has(pkg.source) || findLegacyInstalledSources(pkg, installedPiSources).length > 0;
 }
 
 // ---------------------------------------------------------------------------
@@ -806,6 +831,8 @@ async function cmdInstall(flags) {
 	const forceIds = new Set(Array.isArray(flags.forceIds) ? flags.forceIds : []);
 	const toInstall = selected.filter((p) => forceIds.has(p.id) || !isPackageInstalled(p, installedSources, flags.local));
 	const alreadyInstalled = selected.filter((p) => !forceIds.has(p.id) && isPackageInstalled(p, installedSources, flags.local));
+	const legacyInstalled = selected.filter((p) => !forceIds.has(p.id) && !isPackageInstalled(p, installedSources, flags.local) && isPackagePresent(p, installedSources, flags.local));
+	const installLabel = legacyInstalled.length > 0 ? `${toInstall.length} (${legacyInstalled.length} source migration${legacyInstalled.length === 1 ? "" : "s"})` : String(toInstall.length);
 	const scope = flags.local ? "project (.pi/settings.json)" : "global (~/.pi/agent/settings.json)";
 
 	const preInstallAuth = detectAuth();
@@ -813,7 +840,7 @@ async function cmdInstall(flags) {
 		`Target:            ${scope}`,
 		`Selected:          ${selected.length}/${PACKAGES.length}`,
 		`Already installed: ${alreadyInstalled.length}`,
-		`Will install:      ${toInstall.length}`,
+		`Will install:      ${installLabel}`,
 		`Pi credentials:    ${formatAuthSummary(preInstallAuth)}`,
 	].join("\n");
 	if (interactive) note(summary, "Plan");
@@ -897,6 +924,22 @@ async function cmdInstall(flags) {
 			} else if (result.status === "skipped") {
 				skipped.push(pkg);
 			}
+			continue;
+		}
+
+		const legacySources = findLegacyInstalledSources(pkg, installedSources);
+		let migrationStatus = 0;
+		for (const legacySource of legacySources) {
+			const removeAction = `pi remove ${legacySource}`;
+			if (interactive) log.step(removeAction);
+			else console.log(`\n→ ${removeAction}`);
+			migrationStatus = spawnSync("pi", flags.local ? ["remove", "-l", legacySource] : ["remove", legacySource], { stdio: "inherit" }).status ?? 1;
+			if (migrationStatus !== 0) break;
+		}
+		if (migrationStatus !== 0) {
+			failed.push(pkg);
+			if (interactive) log.error(`failed to migrate ${pkg.id}`);
+			else console.error(red(`  ✗ failed to migrate ${pkg.id}`));
 			continue;
 		}
 
@@ -1011,15 +1054,23 @@ function cmdStatus(flags) {
 		return 1;
 	}
 
-	const piCatalogSources = new Set(PACKAGES.map((p) => p.source));
+	const piCatalogSources = new Set(PACKAGES.flatMap((p) => [p.source, ...legacySourcesForPackage(p)]));
 	const installed = PACKAGES.filter((p) => isPackageInstalled(p, sources, flags.local));
-	const missing = PACKAGES.filter((p) => !isPackageInstalled(p, sources, flags.local));
-	const others = [...sources].filter((src) => !piCatalogSources.has(src));
+	const legacy = PACKAGES.filter((p) => !isPackageInstalled(p, sources, flags.local) && findLegacyInstalledSources(p, sources).length > 0);
+	const missing = PACKAGES.filter((p) => !isPackagePresent(p, sources, flags.local));
+	const others = [...sources].filter((src) => !piCatalogSources.has(src) && !PACKAGES.some((pkg) => isLegacySourceForPackage(pkg, src)));
 
 	printHeader(`Installed from LazyPi catalog (${installed.length}/${PACKAGES.length}):`);
 	if (installed.length === 0) console.log(dim("  none"));
 	for (const pkg of installed) {
 		console.log(`  ${green("✓")} [${pkg.category}] ${pkg.id.padEnd(20)} ${dim(pkg.source)}`);
+	}
+
+	printHeader(`Installed with legacy catalog sources (${legacy.length}):`);
+	if (legacy.length === 0) console.log(dim("  none"));
+	for (const pkg of legacy) {
+		const legacySources = findLegacyInstalledSources(pkg, sources).map((src) => dim(src)).join(", ");
+		console.log(`  ${yellow("!")} [${pkg.category}] ${pkg.id.padEnd(20)} ${legacySources}`);
 	}
 
 	printHeader(`Missing from LazyPi catalog (${missing.length}):`);
@@ -1156,7 +1207,7 @@ async function cmdRemove(flags, targets) {
 			return 2;
 		}
 		const { sources } = readInstalledSources(flags.local);
-		const installedPkgs = PACKAGES.filter((p) => isPackageInstalled(p, sources, flags.local));
+		const installedPkgs = PACKAGES.filter((p) => isPackagePresent(p, sources, flags.local));
 		if (installedPkgs.length === 0) {
 			console.log(yellow("No catalog packages are installed."));
 			return 0;
@@ -1179,6 +1230,7 @@ async function cmdRemove(flags, targets) {
 		targets = picked;
 	}
 
+	const { sources: installedSources } = readInstalledSources(flags.local);
 	let exitCode = 0;
 	for (const target of targets) {
 		// Resolve a catalog id to its source string, or pass through raw sources
@@ -1194,11 +1246,21 @@ async function cmdRemove(flags, targets) {
 			continue;
 		}
 
-		const piArgs = flags.local ? ["remove", "-l", source] : ["remove", source];
-		const result = spawnSync("pi", piArgs, { stdio: "inherit" });
-		if (result.status !== 0) {
-			console.error(red(`Failed to remove ${target}`));
-			exitCode = 1;
+		const sourcesToRemove = pkg
+			? [
+				...(installedSources.has(pkg.source) ? [pkg.source] : []),
+				...findLegacyInstalledSources(pkg, installedSources),
+			]
+			: [source];
+		const uniqueSources = [...new Set(sourcesToRemove.length > 0 ? sourcesToRemove : [source])];
+		for (const resolvedSource of uniqueSources) {
+			const piArgs = flags.local ? ["remove", "-l", resolvedSource] : ["remove", resolvedSource];
+			const result = spawnSync("pi", piArgs, { stdio: "inherit" });
+			if (result.status !== 0) {
+				console.error(red(`Failed to remove ${target}`));
+				exitCode = 1;
+				break;
+			}
 		}
 	}
 	return exitCode;
