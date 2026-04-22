@@ -1,5 +1,12 @@
 # Changelog
 
+## [0.1.8](https://github.com/robzolkos/LazyPi/compare/v0.1.7...v0.1.8) (2026-04-22)
+
+
+### Bug Fixes
+
+* migrate legacy LazyPi autoresearch installs to the unpinned source ([#22](https://github.com/robzolkos/LazyPi/issues/22)) ([56cf0a6](https://github.com/robzolkos/LazyPi/commit/56cf0a6dba1fca75c7d7a7dca5344f433373be9e))
+
 ## [0.1.7](https://github.com/robzolkos/LazyPi/compare/v0.1.6...v0.1.7) (2026-04-22)
 
 
