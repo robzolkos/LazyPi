@@ -393,6 +393,7 @@ function patchCompoundCompatExtension(local) {
 	const path = compoundCompatExtensionPath(local);
 	if (!existsSync(path)) return { ok: false, reason: `missing ${COMPOUND_COMPAT_EXTENSION_RELATIVE_PATH}` };
 	const original = readFileSync(path, "utf8");
+	if (original.includes(`name: "${COMPOUND_SUBAGENT_TOOL_NAME}"`)) return { ok: true, patched: false, path };
 	let patched = original;
 	patched = patched.replace('name: "subagent"', `name: "${COMPOUND_SUBAGENT_TOOL_NAME}"`);
 	patched = patched.replace('label: "Subagent"', 'label: "CE Subagent"');
@@ -410,6 +411,72 @@ function patchCompoundTextFile(path, replacements) {
 	let next = original;
 	for (const [pattern, replacement] of replacements) next = next.replace(pattern, replacement);
 	if (next !== original) writeFileSync(path, next, "utf8");
+}
+
+function listCompoundSkillNameConflicts(local) {
+	const root = compoundInstallRoot(local);
+	const skillsRoot = join(root, "skills");
+	if (!existsSync(skillsRoot)) return [];
+	const conflicts = [];
+	for (const entry of readdirSync(skillsRoot)) {
+		const skillDir = join(skillsRoot, entry);
+		if (!statSync(skillDir).isDirectory()) continue;
+		const skillFile = join(skillDir, "SKILL.md");
+		if (!existsSync(skillFile)) continue;
+		const original = readFileSync(skillFile, "utf8");
+		const frontmatterMatch = original.match(/^---\n([\s\S]*?)\n---/);
+		if (!frontmatterMatch) continue;
+		const nameMatch = frontmatterMatch[1].match(/^name:\s*(.+)\s*$/m);
+		if (!nameMatch) continue;
+		const currentName = nameMatch[1].trim().replace(/^['"]|['"]$/g, "");
+		if (!currentName || currentName === entry) continue;
+		conflicts.push({
+			path: normalizeRelativePath(relative(root, skillFile)),
+			absolutePath: skillFile,
+			currentName,
+			expectedName: entry,
+		});
+	}
+	return conflicts;
+}
+
+function normalizeCompoundSkillFrontmatter(local) {
+	const conflicts = listCompoundSkillNameConflicts(local);
+	const nameMap = new Map(conflicts.map((conflict) => [conflict.currentName, conflict.expectedName]));
+	const patchedFiles = [];
+	for (const conflict of conflicts) {
+		const original = readFileSync(conflict.absolutePath, "utf8");
+		const next = original.replace(/^name:\s*.+$/m, `name: ${conflict.expectedName}`);
+		if (next === original) continue;
+		writeFileSync(conflict.absolutePath, next, "utf8");
+		patchedFiles.push(conflict.path);
+	}
+	return { nameMap, patchedFiles };
+}
+
+function patchCompoundSkillReferences(local, nameMap) {
+	if (nameMap.size === 0) return [];
+	const root = compoundInstallRoot(local);
+	const replacements = [...nameMap.entries()].sort((a, b) => b[0].length - a[0].length);
+	const patchedFiles = [];
+	const visit = (relativePath) => {
+		const absolutePath = join(root, relativePath);
+		if (!existsSync(absolutePath)) return;
+		const stats = statSync(absolutePath);
+		if (stats.isDirectory()) {
+			for (const name of readdirSync(absolutePath)) visit(join(relativePath, name));
+			return;
+		}
+		if (!/\.(md|json|ts|ya?ml|txt|sh)$/i.test(relativePath)) return;
+		const original = readFileSync(absolutePath, "utf8");
+		let next = original;
+		for (const [oldName, newName] of replacements) next = next.split(oldName).join(newName);
+		if (next === original) return;
+		writeFileSync(absolutePath, next, "utf8");
+		patchedFiles.push(normalizeRelativePath(relative(root, absolutePath)));
+	};
+	for (const relativePath of COMPOUND_MANAGED_RELATIVE_PATHS) visit(relativePath);
+	return patchedFiles;
 }
 
 function patchCompoundGeneratedContent(local) {
@@ -435,6 +502,18 @@ function patchCompoundGeneratedContent(local) {
 	patchCompoundTextFile(join(root, "skills", "ce-compound-refresh", "SKILL.md"), [
 		[/When spawning any subagent/g, `When spawning any subagent via \`${COMPOUND_SUBAGENT_TOOL_NAME}\``],
 	]);
+	const { nameMap } = normalizeCompoundSkillFrontmatter(local);
+	patchCompoundSkillReferences(local, nameMap);
+}
+
+function repairInstalledCompound(local) {
+	if (!isCompoundInstalled(local)) return { status: "missing" };
+	const patchResult = patchCompoundCompatExtension(local);
+	if (!patchResult.ok) return { status: "failed", code: 1, reason: patchResult.reason };
+	patchCompoundGeneratedContent(local);
+	const remainingConflicts = listCompoundSkillNameConflicts(local).length;
+	if (remainingConflicts > 0) return { status: "failed", code: 1, reason: `${remainingConflicts} skill name conflict(s) remain after repair` };
+	return { status: "repaired" };
 }
 
 function installCompound(local, interactive = false) {
@@ -754,6 +833,19 @@ async function cmdInstall(flags) {
 		}
 	}
 
+	if (selected.some((p) => p.id === COMPOUND_PKG_ID) && isCompoundInstalled(flags.local) && !forceIds.has(COMPOUND_PKG_ID)) {
+		const repairResult = repairInstalledCompound(flags.local);
+		if (repairResult.status === "failed") {
+			const message = `Failed to repair existing Compound Engineering install${repairResult.reason ? ` (${repairResult.reason})` : ""}.`;
+			if (interactive) {
+				log.error(message);
+				outro(red("Aborted."));
+			} else {
+				console.error(red(message));
+			}
+			return repairResult.code ?? 1;
+		}
+	}
 
 	if (toInstall.length === 0) {
 		if (selected.some((p) => p.id === "pi-themes")) {
@@ -963,10 +1055,12 @@ async function cmdUpdate(flags) {
 // ---------------------------------------------------------------------------
 function cmdDoctor(flags) {
 	let problems = 0;
+	let warnings = 0;
 	const pass = (msg) => console.log(`  ${green("✓")} ${msg}`);
-	const warn = (msg) => {
+	const warn = (msg, { fatal = true } = {}) => {
 		console.log(`  ${yellow("!")} ${msg}`);
-		problems++;
+		if (fatal) problems++;
+		else warnings++;
 	};
 	const fail = (msg) => {
 		console.log(`  ${red("✗")} ${msg}`);
@@ -1026,6 +1120,9 @@ function cmdDoctor(flags) {
 		if (!existsSync(compatPath)) fail(`Compound Engineering compat extension is missing at ${compatPath}`);
 		else if (readFileSync(compatPath, "utf8").includes(`name: "${COMPOUND_SUBAGENT_TOOL_NAME}"`)) pass(`Compound Engineering compat tool renamed to ${COMPOUND_SUBAGENT_TOOL_NAME}`);
 		else fail(`Compound Engineering compat extension still registers the conflicting subagent tool`);
+		const skillNameConflicts = listCompoundSkillNameConflicts(flags.local);
+		if (skillNameConflicts.length === 0) pass("Compound skill names normalized to Pi's current skill spec");
+		else fail(`Compound generated skills still have ${skillNameConflicts.length} Pi-incompatible name conflict(s)`);
 	} else {
 		console.log(`  ${dim("·")} Compound Engineering not installed`);
 	}
@@ -1034,14 +1131,18 @@ function cmdDoctor(flags) {
 	const auth = detectAuth();
 	for (const { provider, envVar } of auth.envProviders) pass(`env var ${envVar} → ${provider}`);
 	if (auth.fileProviders.length > 0) pass(`${auth.path} → ${auth.fileProviders.join(", ")}`);
-	if (!auth.authed) warn("No credentials detected — run `pi` then `/login`, or export a provider API key");
+	if (!auth.authed) warn("No credentials detected — run `pi` then `/login`, or export a provider API key", { fatal: false });
 
 	console.log("");
-	if (problems === 0) {
+	if (problems === 0 && warnings === 0) {
 		console.log(green("All checks passed."));
 		return 0;
 	}
-	console.log(yellow(`${problems} problem(s) found.`));
+	if (problems === 0) {
+		console.log(yellow(`${warnings} warning(s) found.`));
+		return 0;
+	}
+	console.log(yellow(`${problems} problem(s) found${warnings ? `, ${warnings} warning(s)` : ""}.`));
 	return 1;
 }
 

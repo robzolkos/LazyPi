@@ -87,10 +87,25 @@ jobs:
           test -f ~/.pi/agent/extensions/compound-engineering-compat.ts
           test -f ~/.pi/agent/skills/ce-plan/SKILL.md
           grep -q '"source": "npm:@every-env/compound-plugin"' ~/.pi/agent/.lazypi/compound-engineering.json
-          grep -q '^name: ce:plan$' ~/.pi/agent/skills/ce-plan/SKILL.md
+          grep -q '^name: ce-plan$' ~/.pi/agent/skills/ce-plan/SKILL.md
+          ! grep -q '^name: ce:plan$' ~/.pi/agent/skills/ce-plan/SKILL.md
           grep -q 'name: "ce_subagent"' ~/.pi/agent/extensions/compound-engineering-compat.ts
           grep -q 'Claude Task(agent, args) maps to the ce_subagent extension tool' ~/.pi/agent/AGENTS.md
           grep -q 'Run ce_subagent with agent="repo-research-analyst"' ~/.pi/agent/skills/ce-plan/SKILL.md
+
+      - name: Rerun repairs existing Compound skill names
+        run: |
+          python - <<'PY'
+          from pathlib import Path
+          path = Path.home() / ".pi" / "agent" / "skills" / "ce-plan" / "SKILL.md"
+          text = path.read_text()
+          path.write_text(text.replace("name: ce-plan", "name: ce:plan", 1))
+          PY
+          grep -q '^name: ce:plan$' ~/.pi/agent/skills/ce-plan/SKILL.md
+          node bin/lazypi.mjs --yes
+          grep -q '^name: ce-plan$' ~/.pi/agent/skills/ce-plan/SKILL.md
+          ! grep -q '^name: ce:plan$' ~/.pi/agent/skills/ce-plan/SKILL.md
+          node bin/lazypi.mjs doctor
 
       - name: Assert CE compat tool preserves skill delegation semantics
         run: |
@@ -112,6 +127,21 @@ jobs:
           }
           console.log('verified ce_subagent preserves /skill-based delegation semantics');
           EOF
+
+      - name: Doctor warns when auth missing but succeeds
+        run: |
+          set -euo pipefail
+          AUTH_PATH="$HOME/.pi/agent/auth.json"
+          BACKUP_PATH="$HOME/.pi/agent/auth.json.lazypi-test-backup"
+          cleanup() {
+            if [ -f "$BACKUP_PATH" ]; then mv "$BACKUP_PATH" "$AUTH_PATH"; fi
+          }
+          trap cleanup EXIT
+          if [ -f "$AUTH_PATH" ]; then mv "$AUTH_PATH" "$BACKUP_PATH"; fi
+          env -u ANTHROPIC_API_KEY -u OPENAI_API_KEY -u GOOGLE_API_KEY -u GEMINI_API_KEY -u OPENROUTER_API_KEY -u TOGETHER_API_KEY -u GROQ_API_KEY -u MISTRAL_API_KEY \
+            node bin/lazypi.mjs doctor >/tmp/lazypi-doctor-no-auth.log 2>&1
+          grep -q 'No credentials detected — run `pi` then `/login`, or export a provider API key' /tmp/lazypi-doctor-no-auth.log
+          grep -q '1 warning(s) found\.' /tmp/lazypi-doctor-no-auth.log
 
       - name: Doctor warns when bun missing
         run: |
