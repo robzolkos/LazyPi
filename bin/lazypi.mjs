@@ -1117,7 +1117,7 @@ function cmdDoctor(flags) {
 	else warn("git is not on PATH — required by git-based catalog packages");
 
 	if (hasCmd("bun")) pass("bun is on PATH — required for official Compound Engineering from Every");
-	else warn("bun is not on PATH — official Compound Engineering from Every will be skipped by LazyPi");
+	else warn("bun is not on PATH — official Compound Engineering from Every will be skipped by LazyPi", { fatal: false });
 
 	printHeader("Pi");
 	if (hasCmd("pi")) {
