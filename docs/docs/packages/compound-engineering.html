@@ -84,7 +84,10 @@
       LazyPi installs the official <code>@every-env/compound-plugin</code> package from Every and runs its Pi target converter. That upstream tool generates Pi-compatible skills, extensions, and agent guidance directly into your Pi config directory.
     </p>
     <p>
-      In practice, this gives Pi the official Compound Engineering reviewer and workflow skill set — including entry points like <code>/skill:ce:plan</code>, <code>/skill:ce:work</code>, <code>/skill:ce:review</code>, <code>/skill:ce:brainstorm</code>, and <code>/skill:ce:compound</code> — plus the compatibility layer required for subagents and MCP-style access.
+      In practice, this gives Pi the official Compound Engineering reviewer and workflow skill set — including entry points like <code>/skill:ce-plan</code>, <code>/skill:ce-work</code>, <code>/skill:ce-review</code>, <code>/skill:ce-brainstorm</code>, and <code>/skill:ce-compound</code> — plus the compatibility layer required for subagents and MCP-style access.
+    </p>
+    <p>
+      LazyPi also normalizes the upstream colon-style Compound skill IDs into Pi-compatible hyphenated IDs (for example <code>ce:plan</code> → <code>ce-plan</code>) so current Pi releases do not emit skill-name warnings. That normalization is re-applied on every Compound reinstall or <code>lazypi update</code>.
     </p>
     <p>
       After installing LazyPi, restart or <code>/reload</code> Pi so the generated skills and extensions are loaded into the current session.
@@ -116,13 +119,13 @@
         <tr><th>Skill</th><th>What it does</th></tr>
       </thead>
       <tbody>
-        <tr><td><code>/skill:ce:brainstorm</code></td><td>Explore requirements, constraints, and options before committing to a build</td></tr>
-        <tr><td><code>/skill:ce:ideate</code></td><td>Generate and critique grounded ideas before narrowing to a direction</td></tr>
-        <tr><td><code>/skill:ce:plan</code></td><td>Create a structured implementation plan with repo research and plan review</td></tr>
-        <tr><td><code>/skill:ce:work</code></td><td>Execute implementation work against an approved plan</td></tr>
-        <tr><td><code>/skill:ce:review</code></td><td>Run tiered multi-agent code review before shipping</td></tr>
+        <tr><td><code>/skill:ce-brainstorm</code></td><td>Explore requirements, constraints, and options before committing to a build</td></tr>
+        <tr><td><code>/skill:ce-ideate</code></td><td>Generate and critique grounded ideas before narrowing to a direction</td></tr>
+        <tr><td><code>/skill:ce-plan</code></td><td>Create a structured implementation plan with repo research and plan review</td></tr>
+        <tr><td><code>/skill:ce-work</code></td><td>Execute implementation work against an approved plan</td></tr>
+        <tr><td><code>/skill:ce-review</code></td><td>Run tiered multi-agent code review before shipping</td></tr>
         <tr><td><code>/skill:ce-debug</code></td><td>Investigate bugs and root causes systematically</td></tr>
-        <tr><td><code>/skill:ce:compound</code></td><td>Capture a solved problem as reusable institutional knowledge</td></tr>
+        <tr><td><code>/skill:ce-compound</code></td><td>Capture a solved problem as reusable institutional knowledge</td></tr>
         <tr><td><code>/skill:ce-compound-refresh</code></td><td>Refresh and consolidate stale learning docs under <code>docs/solutions/</code></td></tr>
         <tr><td><code>/skill:ce-setup</code></td><td>Verify the Compound Engineering environment and troubleshoot setup issues</td></tr>
       </tbody>
