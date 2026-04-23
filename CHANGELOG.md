@@ -1,5 +1,12 @@
 # Changelog
 
+## [0.2.0](https://github.com/robzolkos/LazyPi/compare/v0.1.8...v0.2.0) (2026-04-23)
+
+
+### Features
+
+* migrate compound to upstream CE3 ([#26](https://github.com/robzolkos/LazyPi/issues/26)) ([e56c641](https://github.com/robzolkos/LazyPi/commit/e56c641c99026684c5e749a1387e404c6ed2cf4b))
+
 ## [0.1.8](https://github.com/robzolkos/LazyPi/compare/v0.1.7...v0.1.8) (2026-04-22)
 
 
