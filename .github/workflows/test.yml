@@ -10,17 +10,16 @@ concurrency:
   cancel-in-progress: true
 
 jobs:
-  e2e:
-    runs-on: ${{ matrix.os }}
-    strategy:
-      matrix:
-        os: [ubuntu-latest]
+  test:
+    runs-on: ubuntu-latest
+    timeout-minutes: 30
     steps:
       - uses: actions/checkout@v4
 
       - uses: actions/setup-node@v4
         with:
           node-version: 20
+          cache: npm
 
       - name: Install bun
         uses: oven-sh/setup-bun@v2
@@ -28,141 +27,8 @@ jobs:
       - name: Install pi
         run: npm install -g @mariozechner/pi-coding-agent
 
-      - name: Install npm dependencies
+      - name: Install dependencies
         run: npm ci
 
-      - name: Run lazypi --yes
-        run: node bin/lazypi.mjs --yes
-
-      - name: Assert settings.json exists
-        run: test -f ~/.pi/agent/settings.json
-
-      - name: Assert expected packages installed
-        run: |
-          node - <<'EOF'
-          const fs = require("fs");
-          const settings = JSON.parse(fs.readFileSync(`${process.env.HOME}/.pi/agent/settings.json`, "utf8"));
-          const sources = new Set((settings.packages ?? []).map(p => typeof p === "string" ? p : p.source));
-
-          const expected = [
-            "npm:pi-subagents",
-            "npm:pi-mcp-adapter",
-            "npm:pi-web-access",
-            "npm:pi-memory-md",
-            "npm:@plannotator/pi-extension",
-            "npm:@juanibiapina/pi-powerbar",
-            "npm:@tmustier/pi-usage-extension",
-            "npm:@tmustier/pi-raw-paste",
-            "npm:pi-interactive-shell",
-            "npm:@tmustier/pi-ralph-wiggum",
-            "npm:pi-btw",
-            "npm:@devkade/pi-plan",
-            "npm:pi-simplify",
-            "npm:pi-add-dir",
-            "npm:pi-prompt-template-model",
-            "npm:pi-themes",
-            "npm:pi-cyber-ui",
-            "npm:@victor-software-house/pi-curated-themes",
-            "npm:pi-terminal-theme",
-          ];
-
-          const missing = expected.filter(s => !sources.has(s));
-          if (missing.length) {
-            console.error("Missing packages in settings.json:");
-            missing.forEach(s => console.error(" -", s));
-            process.exit(1);
-          }
-
-          if (sources.has("npm:@every-env/compound-plugin")) {
-            console.error("Official Compound Engineering should not be recorded in settings.json because it is managed via bunx output files.");
-            process.exit(1);
-          }
-
-          console.log(`All ${expected.length} expected Pi packages found in settings.json.`);
-          EOF
-
-      - name: Assert official Compound Engineering installed
-        run: |
-          test -f ~/.pi/agent/.lazypi/compound-engineering.json
-          test -f ~/.pi/agent/extensions/compound-engineering-compat.ts
-          test -f ~/.pi/agent/skills/ce-plan/SKILL.md
-          grep -q '"source": "npm:@every-env/compound-plugin"' ~/.pi/agent/.lazypi/compound-engineering.json
-          grep -q '^name: ce-plan$' ~/.pi/agent/skills/ce-plan/SKILL.md
-          ! grep -q '^name: ce:plan$' ~/.pi/agent/skills/ce-plan/SKILL.md
-          grep -q 'name: "ce_subagent"' ~/.pi/agent/extensions/compound-engineering-compat.ts
-          grep -q 'Claude Task(agent, args) maps to the ce_subagent extension tool' ~/.pi/agent/AGENTS.md
-          grep -q 'Run ce_subagent with agent="repo-research-analyst"' ~/.pi/agent/skills/ce-plan/SKILL.md
-
-      - name: Rerun repairs existing Compound skill names
-        run: |
-          python - <<'PY'
-          from pathlib import Path
-          path = Path.home() / ".pi" / "agent" / "skills" / "ce-plan" / "SKILL.md"
-          text = path.read_text()
-          path.write_text(text.replace("name: ce-plan", "name: ce:plan", 1))
-          PY
-          grep -q '^name: ce:plan$' ~/.pi/agent/skills/ce-plan/SKILL.md
-          node bin/lazypi.mjs --yes
-          grep -q '^name: ce-plan$' ~/.pi/agent/skills/ce-plan/SKILL.md
-          ! grep -q '^name: ce:plan$' ~/.pi/agent/skills/ce-plan/SKILL.md
-          node bin/lazypi.mjs doctor
-
-      - name: Assert CE compat tool preserves skill delegation semantics
-        run: |
-          TMPDIR=$(mktemp -d)
-          mkdir -p "$TMPDIR/proj"
-          cd "$TMPDIR/proj"
-          node "$GITHUB_WORKSPACE/bin/lazypi.mjs" --yes --only compound -l
-          node - <<'EOF'
-          const fs = require('fs');
-          const source = fs.readFileSync('.pi/extensions/compound-engineering-compat.ts', 'utf8');
-          if (!source.includes('name: "ce_subagent"')) {
-            throw new Error('ce_subagent tool registration missing');
-          }
-          if (!source.includes('const prompt = "/skill:" + agent + " " + taskText')) {
-            throw new Error('ce_subagent no longer delegates via /skill:<agent>');
-          }
-          if (!source.includes('const script = "cd " + shellEscape(cwd) + " && pi --no-session -p " + shellEscape(prompt)')) {
-            throw new Error('ce_subagent no longer shells out through pi --no-session -p');
-          }
-          console.log('verified ce_subagent preserves /skill-based delegation semantics');
-          EOF
-
-      - name: Doctor warns when auth missing but succeeds
-        run: |
-          set -euo pipefail
-          AUTH_PATH="$HOME/.pi/agent/auth.json"
-          BACKUP_PATH="$HOME/.pi/agent/auth.json.lazypi-test-backup"
-          cleanup() {
-            if [ -f "$BACKUP_PATH" ]; then mv "$BACKUP_PATH" "$AUTH_PATH"; fi
-          }
-          trap cleanup EXIT
-          if [ -f "$AUTH_PATH" ]; then mv "$AUTH_PATH" "$BACKUP_PATH"; fi
-          env -u ANTHROPIC_API_KEY -u OPENAI_API_KEY -u GOOGLE_API_KEY -u GEMINI_API_KEY -u OPENROUTER_API_KEY -u TOGETHER_API_KEY -u GROQ_API_KEY -u MISTRAL_API_KEY \
-            node bin/lazypi.mjs doctor >/tmp/lazypi-doctor-no-auth.log 2>&1
-          grep -q 'No credentials detected — run `pi` then `/login`, or export a provider API key' /tmp/lazypi-doctor-no-auth.log
-          grep -q '1 warning(s) found\.' /tmp/lazypi-doctor-no-auth.log
-
-      - name: Doctor warns when bun missing
-        run: |
-          FILTERED_PATH=$(printf '%s' "$PATH" | tr ':' '\n' | grep -v '/.bun/bin' | paste -sd ':' -)
-          PATH="$FILTERED_PATH" node bin/lazypi.mjs doctor >/tmp/lazypi-doctor-no-bun.log 2>&1 || true
-          grep -q 'bun is not on PATH — official Compound Engineering from Every will be skipped by LazyPi' /tmp/lazypi-doctor-no-bun.log
-
-      - name: Compound-only install patches compat extension without requiring pi-subagents
-        run: |
-          TMPDIR=$(mktemp -d)
-          mkdir -p "$TMPDIR/proj"
-          cd "$TMPDIR/proj"
-          node "$GITHUB_WORKSPACE/bin/lazypi.mjs" --yes --only compound -l
-          test ! -f .pi/settings.json || ! grep -q 'npm:pi-subagents' .pi/settings.json
-          grep -q 'name: "ce_subagent"' .pi/extensions/compound-engineering-compat.ts
-
-      - name: Remove official Compound Engineering
-        run: node bin/lazypi.mjs remove compound
-
-      - name: Assert official Compound Engineering removed cleanly
-        run: |
-          test ! -e ~/.pi/agent/.lazypi/compound-engineering.json
-          test ! -e ~/.pi/agent/extensions/compound-engineering-compat.ts
-          test ! -d ~/.pi/agent/skills/ce-plan
+      - name: Run test suite
+        run: npm test

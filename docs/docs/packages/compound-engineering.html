@@ -80,99 +80,66 @@
 
   <main class="docs-content">
     <h1>Compound Engineering</h1>
-    <p class="page-desc">Official Compound Engineering from Every, installed through the upstream Pi target converter.</p>
+    <p class="page-desc">Official Compound Engineering 3 from Every, installed through the upstream Pi target.</p>
 
-    <h2>What it does</h2>
+    <h2>What LazyPi installs</h2>
     <p>
-      LazyPi installs the official <code>@every-env/compound-plugin</code> package from Every and runs its Pi target converter. That upstream tool generates Pi-compatible skills, extensions, and agent guidance directly into your Pi config directory.
+      LazyPi uses the upstream <code>@every-env/compound-plugin</code> Bun CLI directly. When you install <code>compound</code>, LazyPi runs the upstream cleanup step first and then installs the official Pi target output into your Pi directory.
     </p>
     <p>
-      In practice, this gives Pi the official Compound Engineering reviewer and workflow skill set — including entry points like <code>/skill:ce-plan</code>, <code>/skill:ce-work</code>, <code>/skill:ce-review</code>, <code>/skill:ce-brainstorm</code>, and <code>/skill:ce-compound</code> — plus the compatibility layer required for subagents and MCP-style access.
-    </p>
-    <p>
-      LazyPi also normalizes the upstream colon-style Compound skill IDs into Pi-compatible hyphenated IDs (for example <code>ce:plan</code> → <code>ce-plan</code>) so current Pi releases do not emit skill-name warnings. That normalization is re-applied on every Compound reinstall or <code>lazypi update</code>.
-    </p>
-    <p>
-      After installing LazyPi, restart or <code>/reload</code> Pi so the generated skills and extensions are loaded into the current session.
+      LazyPi also auto-installs the two runtime dependencies Compound Engineering expects: <a href="/docs/packages/subagents.html">pi-subagents</a> and <code>pi-ask-user</code>. That means <code>npx @robzolkos/lazypi --only compound</code> is enough to get a working CE 3 setup.
     </p>
 
     <h2>Bun requirement</h2>
     <p>
-      The official Every installer is a Bun-based CLI. LazyPi checks for <code>bun</code> before attempting this package. If Bun is missing, LazyPi will warn you and continue installing everything else, but Compound Engineering will be skipped.
+      The official installer is Bun-based. If <code>bun</code> is missing, LazyPi warns and skips Compound Engineering while continuing with the rest of the catalog.
     </p>
 
-    <h2>Why it's included</h2>
+    <h2>Installed layout</h2>
     <p>
-      Compound Engineering remains one of the strongest AI-assisted development methodologies available, and using the upstream package keeps LazyPi aligned with Every's official implementation instead of a third-party fork or repackaging.
+      CE 3 is treated as upstream output, not a LazyPi-managed compatibility fork. After install, the canonical files live under your Pi root:
+    </p>
+    <ul>
+      <li><code>.pi/skills/</code> — Compound Engineering skills</li>
+      <li><code>.pi/agents/</code> — Compound Engineering agents</li>
+      <li><code>.pi/compound-engineering/install-manifest.json</code> — upstream install manifest</li>
+    </ul>
+    <p>
+      LazyPi uses that upstream manifest as the source of truth for detection, updates, health checks, and removal.
+    </p>
+
+    <h2>Updates and migration</h2>
+    <p>
+      <code>npx @robzolkos/lazypi update</code> refreshes Compound Engineering by running upstream cleanup and upstream install again. If LazyPi detects an older pre-CE-3 install, it migrates in place and removes the old LazyPi state file after the CE 3 manifest is present.
     </p>
 
     <h2>Removal</h2>
     <p>
-      LazyPi tracks the files it generates for the official Pi target, so <code>npx @robzolkos/lazypi remove compound</code> removes the generated Compound Engineering files cleanly instead of leaving converted skills behind.
+      <code>npx @robzolkos/lazypi remove compound</code> removes the files listed in the upstream manifest, clears legacy LazyPi state, and deletes the upstream backup directory under <code>.pi/compound-engineering/legacy-backup/</code>.
     </p>
 
     <h2>What shows up in Pi</h2>
     <p>
-      The official Pi target installs a large skill library and supporting tooling rather than a single npm-style Pi package manifest entry. In practice, you get the core Compound Engineering workflows plus a broad bench of reviewer, researcher, planning, testing, and shipping skills that those workflows can call.
+      The install brings in the official Compound Engineering workflow skills plus the supporting specialists those workflows rely on.
     </p>
 
-    <h3>Core Compound Engineering workflow skills</h3>
     <table>
       <thead>
         <tr><th>Skill</th><th>What it does</th></tr>
       </thead>
       <tbody>
-        <tr><td><code>/skill:ce-brainstorm</code></td><td>Explore requirements, constraints, and options before committing to a build</td></tr>
-        <tr><td><code>/skill:ce-ideate</code></td><td>Generate and critique grounded ideas before narrowing to a direction</td></tr>
-        <tr><td><code>/skill:ce-plan</code></td><td>Create a structured implementation plan with repo research and plan review</td></tr>
-        <tr><td><code>/skill:ce-work</code></td><td>Execute implementation work against an approved plan</td></tr>
-        <tr><td><code>/skill:ce-review</code></td><td>Run tiered multi-agent code review before shipping</td></tr>
+        <tr><td><code>/skill:ce-brainstorm</code></td><td>Explore requirements and options before committing to a build</td></tr>
+        <tr><td><code>/skill:ce-plan</code></td><td>Create structured implementation plans</td></tr>
+        <tr><td><code>/skill:ce-work</code></td><td>Execute implementation work against a plan</td></tr>
+        <tr><td><code>/skill:ce-review</code></td><td>Run multi-agent review before shipping</td></tr>
         <tr><td><code>/skill:ce-debug</code></td><td>Investigate bugs and root causes systematically</td></tr>
-        <tr><td><code>/skill:ce-compound</code></td><td>Capture a solved problem as reusable institutional knowledge</td></tr>
-        <tr><td><code>/skill:ce-compound-refresh</code></td><td>Refresh and consolidate stale learning docs under <code>docs/solutions/</code></td></tr>
-        <tr><td><code>/skill:ce-setup</code></td><td>Verify the Compound Engineering environment and troubleshoot setup issues</td></tr>
-      </tbody>
-    </table>
-
-    <h3>Research, planning, and review helpers</h3>
-    <table>
-      <thead>
-        <tr><th>Skill</th><th>What it does</th></tr>
-      </thead>
-      <tbody>
-        <tr><td><code>/skill:repo-research-analyst</code></td><td>Research repo structure, patterns, conventions, and relevant files</td></tr>
-        <tr><td><code>/skill:learnings-researcher</code></td><td>Search <code>docs/solutions/</code> for prior institutional learnings</td></tr>
-        <tr><td><code>/skill:framework-docs-researcher</code></td><td>Pull official framework or library guidance</td></tr>
-        <tr><td><code>/skill:best-practices-researcher</code></td><td>Gather external best practices and implementation examples</td></tr>
-        <tr><td><code>/skill:spec-flow-analyzer</code></td><td>Check specs and plans for missing flows, edges, and handoffs</td></tr>
-        <tr><td><code>/skill:document-review</code></td><td>Review requirements and plan documents with multiple personas</td></tr>
-        <tr><td><code>/skill:architecture-strategist</code></td><td>Stress-test architectural decisions and system-wide impact</td></tr>
-        <tr><td><code>/skill:security-sentinel</code></td><td>Audit for security risks and missing defenses</td></tr>
-        <tr><td><code>/skill:performance-oracle</code></td><td>Review performance, scalability, and bottlenecks</td></tr>
-        <tr><td><code>/skill:data-integrity-guardian</code></td><td>Review data safety, migration risk, and persistence concerns</td></tr>
-      </tbody>
-    </table>
-
-    <h3>Shipping, communication, and utility skills</h3>
-    <table>
-      <thead>
-        <tr><th>Skill</th><th>What it does</th></tr>
-      </thead>
-      <tbody>
-        <tr><td><code>/skill:ce-pr-description</code></td><td>Draft or refresh a value-first pull request title and body</td></tr>
-        <tr><td><code>/skill:resolve-pr-feedback</code></td><td>Work through PR review comments and thread resolution</td></tr>
-        <tr><td><code>/skill:ce-demo-reel</code></td><td>Create screenshots, GIFs, or recordings for visual proof</td></tr>
-        <tr><td><code>/skill:ce-optimize</code></td><td>Run iterative metric-driven optimization loops</td></tr>
-        <tr><td><code>/skill:proof</code></td><td>Push docs into Proof for human-in-the-loop review and iteration</td></tr>
-        <tr><td><code>/skill:test-browser</code></td><td>Run browser-based testing for affected pages</td></tr>
-        <tr><td><code>/skill:test-xcode</code></td><td>Build and test iOS apps on simulator with Xcode tooling</td></tr>
-        <tr><td><code>/skill:git-commit</code></td><td>Create clear commits with strong messages</td></tr>
-        <tr><td><code>/skill:git-commit-push-pr</code></td><td>Commit, push, and open a PR in one workflow</td></tr>
+        <tr><td><code>/skill:ce-compound</code></td><td>Capture reusable learnings from solved problems</td></tr>
+        <tr><td><code>/skill:ce-compound-refresh</code></td><td>Refresh stale learnings under <code>docs/solutions/</code></td></tr>
       </tbody>
     </table>
 
     <p>
-      Those tables are the most visible entry points, not the full inventory. The official install currently brings in dozens more specialist personas and helpers, including language-specific reviewers, design tools, deployment verification, session history search, Slack research, todo workflows, onboarding generation, and autonomous workflows like <code>/skill:lfg</code>.
+      The exact inventory can evolve with upstream Compound Engineering releases, but LazyPi no longer renames skills, rewrites generated files, or ships a compatibility layer on top of the upstream Pi output.
     </p>
 
     <div class="learn-more">

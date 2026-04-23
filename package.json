@@ -24,7 +24,8 @@
     "node": ">=20"
   },
   "scripts": {
-    "docs:serve": "node scripts/serve-docs.mjs"
+    "docs:serve": "node scripts/serve-docs.mjs",
+    "test": "node --test"
   },
   "dependencies": {
     "@clack/prompts": "^1.2.0"
