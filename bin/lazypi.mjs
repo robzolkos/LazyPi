@@ -1,7 +1,7 @@
 #!/usr/bin/env node
 import { copyFileSync, existsSync, mkdirSync, readdirSync, readFileSync, rmSync, statSync, writeFileSync } from "node:fs";
 import { homedir, platform } from "node:os";
-import { dirname, join, relative, resolve } from "node:path";
+import { dirname, join, resolve } from "node:path";
 import { spawnSync } from "node:child_process";
 import { argv, cwd, exit, stdout, stderr } from "node:process";
 import {
@@ -26,6 +26,7 @@ const CATEGORIES = ["core", "ui", "research", "frameworks", "themes"];
 
 const PACKAGES = [
 	{ id: "subagents", category: "core", source: "npm:pi-subagents", description: "Sub-agent execution", hint: "Run isolated sub-agents for parallel work." },
+	{ id: "pi-ask-user", category: "core", source: "npm:pi-ask-user", description: "Ask-user prompts", hint: "Interactive user questions for agent workflows." },
 	{ id: "mcp", category: "core", source: "npm:pi-mcp-adapter", description: "MCP server integration", hint: "Connect Pi to any MCP-compatible tool server." },
 	{ id: "web-access", category: "core", source: "npm:pi-web-access", description: "Web search and page fetch", hint: "Built-in web search and URL fetching." },
 	{ id: "memory", category: "core", source: "npm:pi-memory-md", description: "Markdown-backed memory", hint: "Persistent memory stored as Markdown files." },
@@ -61,11 +62,12 @@ const PACKAGES = [
 
 const COMPOUND_PKG_ID = "compound";
 const COMPOUND_SOURCE = "npm:@every-env/compound-plugin";
+const COMPOUND_UPSTREAM_PACKAGE = "@every-env/compound-plugin@3.0.0";
 const COMPOUND_PLUGIN_NAME = "compound-engineering";
-const COMPOUND_STATE_VERSION = 1;
-const COMPOUND_MANAGED_RELATIVE_PATHS = ["AGENTS.md", "prompts", "skills", "extensions", "compound-engineering"];
-const COMPOUND_COMPAT_EXTENSION_RELATIVE_PATH = join("extensions", "compound-engineering-compat.ts");
-const COMPOUND_SUBAGENT_TOOL_NAME = "ce_subagent";
+const COMPOUND_DEPENDENCY_IDS = ["subagents", "pi-ask-user"];
+const COMPOUND_MANIFEST_RELATIVE_PATH = join("compound-engineering", "install-manifest.json");
+const COMPOUND_LEGACY_STATE_RELATIVE_PATH = join(".lazypi", "compound-engineering.json");
+const PACKAGE_DEPENDENCIES = new Map([[COMPOUND_PKG_ID, COMPOUND_DEPENDENCY_IDS]]);
 
 // ---------------------------------------------------------------------------
 // Output helpers
@@ -180,6 +182,23 @@ function resolveSelection(flags) {
 		return new Set(PACKAGES.filter((p) => !matchesSelector(p, flags.except)).map((p) => p.id));
 	}
 	return new Set(PACKAGES.map((p) => p.id));
+}
+
+function expandPackageDependencies(selectedIds) {
+	const expanded = new Set(selectedIds);
+	let changed = true;
+	while (changed) {
+		changed = false;
+		for (const [pkgId, dependencyIds] of PACKAGE_DEPENDENCIES.entries()) {
+			if (!expanded.has(pkgId)) continue;
+			for (const dependencyId of dependencyIds) {
+				if (expanded.has(dependencyId)) continue;
+				expanded.add(dependencyId);
+				changed = true;
+			}
+		}
+	}
+	return expanded;
 }
 
 // ---------------------------------------------------------------------------
@@ -324,12 +343,7 @@ function compoundInstallRoot(local) {
 	return local ? join(cwd(), ".pi") : join(homedir(), ".pi", "agent");
 }
 
-function compoundStatePath(local) {
-	return join(compoundInstallRoot(local), ".lazypi", "compound-engineering.json");
-}
-
-function readCompoundState(local) {
-	const path = compoundStatePath(local);
+function readJsonFileWithMetadata(path) {
 	if (!existsSync(path)) return { path, exists: false, parsed: null, error: null };
 	try {
 		return { path, exists: true, parsed: JSON.parse(readFileSync(path, "utf8")), error: null };
@@ -338,47 +352,54 @@ function readCompoundState(local) {
 	}
 }
 
-function writeCompoundState(local, state) {
-	const path = compoundStatePath(local);
-	mkdirSync(dirname(path), { recursive: true });
-	writeFileSync(path, JSON.stringify(state, null, 2) + "\n", "utf8");
-	return path;
+function compoundManifestPath(local) {
+	return join(compoundInstallRoot(local), COMPOUND_MANIFEST_RELATIVE_PATH);
 }
 
-function clearCompoundState(local) {
-	const path = compoundStatePath(local);
+function readCompoundManifest(local) {
+	return readJsonFileWithMetadata(compoundManifestPath(local));
+}
+
+function compoundLegacyStatePath(local) {
+	return join(compoundInstallRoot(local), COMPOUND_LEGACY_STATE_RELATIVE_PATH);
+}
+
+function readCompoundLegacyState(local) {
+	return readJsonFileWithMetadata(compoundLegacyStatePath(local));
+}
+
+function clearCompoundLegacyState(local) {
+	const path = compoundLegacyStatePath(local);
 	if (existsSync(path)) rmSync(path, { force: true });
 	const parent = dirname(path);
 	if (existsSync(parent) && readdirSync(parent).length === 0) rmSync(parent, { recursive: true, force: true });
 }
 
+function compoundInstallState(local) {
+	const manifest = readCompoundManifest(local);
+	const legacy = readCompoundLegacyState(local);
+	if (manifest.exists) {
+		if (manifest.error) return { mode: "invalid-manifest", manifest, legacy };
+		if (manifest.parsed) return { mode: "manifest", manifest, legacy };
+	}
+	if (legacy.exists) {
+		if (legacy.error) return { mode: "invalid-legacy", manifest, legacy };
+		if (legacy.parsed) return { mode: "legacy", manifest, legacy };
+	}
+	return { mode: "none", manifest, legacy };
+}
+
 function isCompoundInstalled(local) {
-	const state = readCompoundState(local);
-	return Boolean(state.exists && !state.error && state.parsed);
+	const { mode } = compoundInstallState(local);
+	return mode === "manifest" || mode === "legacy";
+}
+
+function compoundNeedsMigration(local) {
+	return compoundInstallState(local).mode === "legacy";
 }
 
 function normalizeRelativePath(path) {
-	return path.split("\\").join("/");
-}
-
-function collectManagedFiles(root, relativePath, files) {
-	const absolutePath = join(root, relativePath);
-	if (!existsSync(absolutePath)) return;
-	const stats = statSync(absolutePath);
-	if (stats.isFile()) {
-		files.set(normalizeRelativePath(relative(root, absolutePath)), readFileSync(absolutePath).toString("base64"));
-		return;
-	}
-	for (const name of readdirSync(absolutePath)) {
-		collectManagedFiles(root, join(relativePath, name), files);
-	}
-}
-
-function snapshotCompoundManagedFiles(local) {
-	const root = resolve(compoundInstallRoot(local));
-	const files = new Map();
-	for (const relativePath of COMPOUND_MANAGED_RELATIVE_PATHS) collectManagedFiles(root, relativePath, files);
-	return { root, files };
+	return path.split("\\").join("/").replace(/^\.\//, "");
 }
 
 function pruneEmptyDirs(path) {
@@ -389,138 +410,70 @@ function pruneEmptyDirs(path) {
 
 function removeEmptyManagedDirs(local) {
 	const root = compoundInstallRoot(local);
-	for (const dir of ["prompts", "skills", "extensions", "compound-engineering", ".lazypi"]) pruneEmptyDirs(join(root, dir));
-}
-
-function compoundCompatExtensionPath(local) {
-	return join(compoundInstallRoot(local), COMPOUND_COMPAT_EXTENSION_RELATIVE_PATH);
-}
-
-function patchCompoundCompatExtension(local) {
-	const path = compoundCompatExtensionPath(local);
-	if (!existsSync(path)) return { ok: false, reason: `missing ${COMPOUND_COMPAT_EXTENSION_RELATIVE_PATH}` };
-	const original = readFileSync(path, "utf8");
-	if (original.includes(`name: "${COMPOUND_SUBAGENT_TOOL_NAME}"`)) return { ok: true, patched: false, path };
-	let patched = original;
-	patched = patched.replace('name: "subagent"', `name: "${COMPOUND_SUBAGENT_TOOL_NAME}"`);
-	patched = patched.replace('label: "Subagent"', 'label: "CE Subagent"');
-	patched = patched.replace('description: "Run one or more skill-based subagent tasks. Supports single, parallel, and chained execution."', 'description: "Run one or more Compound Engineering skill-based subagent tasks. Supports single, parallel, and chained execution."');
-	if (patched === original || patched.includes('name: "subagent"')) {
-		return { ok: false, reason: `could not rename subagent tool to ${COMPOUND_SUBAGENT_TOOL_NAME}` };
+	for (const dir of ["prompts", "skills", "extensions", "agents", "compound-engineering", ".lazypi"]) {
+		pruneEmptyDirs(join(root, dir));
 	}
-	writeFileSync(path, patched, "utf8");
-	return { ok: true, patched: true, path };
 }
 
-function patchCompoundTextFile(path, replacements) {
-	if (!existsSync(path)) return;
-	const original = readFileSync(path, "utf8");
-	let next = original;
-	for (const [pattern, replacement] of replacements) next = next.replace(pattern, replacement);
-	if (next !== original) writeFileSync(path, next, "utf8");
-}
-
-function listCompoundSkillNameConflicts(local) {
-	const root = compoundInstallRoot(local);
-	const skillsRoot = join(root, "skills");
-	if (!existsSync(skillsRoot)) return [];
-	const conflicts = [];
-	for (const entry of readdirSync(skillsRoot)) {
-		const skillDir = join(skillsRoot, entry);
-		if (!statSync(skillDir).isDirectory()) continue;
-		const skillFile = join(skillDir, "SKILL.md");
-		if (!existsSync(skillFile)) continue;
-		const original = readFileSync(skillFile, "utf8");
-		const frontmatterMatch = original.match(/^---\n([\s\S]*?)\n---/);
-		if (!frontmatterMatch) continue;
-		const nameMatch = frontmatterMatch[1].match(/^name:\s*(.+)\s*$/m);
-		if (!nameMatch) continue;
-		const currentName = nameMatch[1].trim().replace(/^['"]|['"]$/g, "");
-		if (!currentName || currentName === entry) continue;
-		conflicts.push({
-			path: normalizeRelativePath(relative(root, skillFile)),
-			absolutePath: skillFile,
-			currentName,
-			expectedName: entry,
-		});
+function coerceCompoundManagedPath(entry) {
+	if (typeof entry === "string") return normalizeRelativePath(entry);
+	if (!entry || typeof entry !== "object") return null;
+	for (const key of ["path", "relativePath", "file"]) {
+		if (typeof entry[key] === "string") return normalizeRelativePath(entry[key]);
 	}
-	return conflicts;
+	return null;
 }
 
-function normalizeCompoundSkillFrontmatter(local) {
-	const conflicts = listCompoundSkillNameConflicts(local);
-	const nameMap = new Map(conflicts.map((conflict) => [conflict.currentName, conflict.expectedName]));
-	const patchedFiles = [];
-	for (const conflict of conflicts) {
-		const original = readFileSync(conflict.absolutePath, "utf8");
-		const next = original.replace(/^name:\s*.+$/m, `name: ${conflict.expectedName}`);
-		if (next === original) continue;
-		writeFileSync(conflict.absolutePath, next, "utf8");
-		patchedFiles.push(conflict.path);
-	}
-	return { nameMap, patchedFiles };
-}
-
-function patchCompoundSkillReferences(local, nameMap) {
-	if (nameMap.size === 0) return [];
-	const root = compoundInstallRoot(local);
-	const replacements = [...nameMap.entries()].sort((a, b) => b[0].length - a[0].length);
-	const patchedFiles = [];
-	const visit = (relativePath) => {
-		const absolutePath = join(root, relativePath);
-		if (!existsSync(absolutePath)) return;
-		const stats = statSync(absolutePath);
-		if (stats.isDirectory()) {
-			for (const name of readdirSync(absolutePath)) visit(join(relativePath, name));
+function compoundManifestManagedPaths(manifest) {
+	const seen = new Set(["AGENTS.md"]);
+	const add = (entry, baseDir = null) => {
+		const path = coerceCompoundManagedPath(entry);
+		if (path) {
+			seen.add(baseDir != null && !path.includes("/") ? normalizeRelativePath(join(baseDir, path)) : path);
 			return;
 		}
-		if (!/\.(md|json|ts|ya?ml|txt|sh)$/i.test(relativePath)) return;
-		const original = readFileSync(absolutePath, "utf8");
-		let next = original;
-		for (const [oldName, newName] of replacements) next = next.split(oldName).join(newName);
-		if (next === original) return;
-		writeFileSync(absolutePath, next, "utf8");
-		patchedFiles.push(normalizeRelativePath(relative(root, absolutePath)));
+		if (typeof entry === "string" && baseDir != null) seen.add(normalizeRelativePath(join(baseDir, entry)));
 	};
-	for (const relativePath of COMPOUND_MANAGED_RELATIVE_PATHS) visit(relativePath);
-	return patchedFiles;
+	for (const source of [manifest, manifest?.installManifest]) {
+		if (!source || typeof source !== "object") continue;
+		for (const key of ["files", "managedFiles", "paths", "createdFiles", "artifacts"]) {
+			if (!Array.isArray(source[key])) continue;
+			for (const entry of source[key]) add(entry);
+		}
+		for (const entry of source.skills ?? []) add(entry, "skills");
+		for (const entry of source.prompts ?? []) add(entry, "prompts");
+		for (const entry of source.extensions ?? []) add(entry, "extensions");
+		for (const entry of source.agents ?? []) add(entry, "agents");
+	}
+	return [...seen].sort((a, b) => b.length - a.length);
 }
 
-function patchCompoundGeneratedContent(local) {
-	const root = compoundInstallRoot(local);
-	patchCompoundTextFile(join(root, "AGENTS.md"), [
-		[/\bsubagent extension tool\b/g, `${COMPOUND_SUBAGENT_TOOL_NAME} extension tool`],
-		[/\bmulti_tool_use\.parallel\b/g, `${COMPOUND_SUBAGENT_TOOL_NAME} in parallel mode`],
-	]);
-	patchCompoundTextFile(join(root, "skills", "ce-plan", "SKILL.md"), [
-		[/Run subagent with/g, `Run ${COMPOUND_SUBAGENT_TOOL_NAME} with`],
-	]);
-	patchCompoundTextFile(join(root, "skills", "document-review", "SKILL.md"), [
-		[/Dispatch all agents in \*\*parallel\*\* using the platform's task\/agent tool/g, `Dispatch all agents in **parallel** using the \`${COMPOUND_SUBAGENT_TOOL_NAME}\` tool`],
-	]);
-	patchCompoundTextFile(join(root, "skills", "ce-review", "SKILL.md"), [
-		[/Omit the `mode` parameter when dispatching sub-agents/g, `Omit the \`mode\` parameter when dispatching with \`${COMPOUND_SUBAGENT_TOOL_NAME}\``],
-		[/Spawn each selected persona reviewer as a parallel sub-agent/g, `Spawn each selected persona reviewer with \`${COMPOUND_SUBAGENT_TOOL_NAME}\` in parallel`],
-	]);
-	patchCompoundTextFile(join(root, "skills", "ce-optimize", "SKILL.md"), [
-		[/Dispatch a subagent with the filled prompt/g, `Dispatch ${COMPOUND_SUBAGENT_TOOL_NAME} with the filled prompt`],
-		[/fall back to subagent/g, `fall back to ${COMPOUND_SUBAGENT_TOOL_NAME}`],
-	]);
-	patchCompoundTextFile(join(root, "skills", "ce-compound-refresh", "SKILL.md"), [
-		[/When spawning any subagent/g, `When spawning any subagent via \`${COMPOUND_SUBAGENT_TOOL_NAME}\``],
-	]);
-	const { nameMap } = normalizeCompoundSkillFrontmatter(local);
-	patchCompoundSkillReferences(local, nameMap);
+function legacyCompoundCreatedPaths(state) {
+	return [...new Set((state?.createdFiles ?? []).map((path) => normalizeRelativePath(path)).filter(Boolean))].sort((a, b) => b.length - a.length);
 }
 
-function repairInstalledCompound(local) {
-	if (!isCompoundInstalled(local)) return { status: "missing" };
-	const patchResult = patchCompoundCompatExtension(local);
-	if (!patchResult.ok) return { status: "failed", code: 1, reason: patchResult.reason };
-	patchCompoundGeneratedContent(local);
-	const remainingConflicts = listCompoundSkillNameConflicts(local).length;
-	if (remainingConflicts > 0) return { status: "failed", code: 1, reason: `${remainingConflicts} skill name conflict(s) remain after repair` };
-	return { status: "repaired" };
+function removeManagedPaths(root, relativePaths) {
+	for (const relativePath of [...new Set(relativePaths.filter(Boolean))].sort((a, b) => b.length - a.length)) {
+		rmSync(join(root, relativePath), { recursive: true, force: true });
+	}
+}
+
+function restoreLegacyCompoundModifiedFiles(root, state) {
+	for (const entry of state?.modifiedFiles ?? []) {
+		if (!entry || typeof entry.path !== "string" || typeof entry.previousContentBase64 !== "string") continue;
+		const target = join(root, normalizeRelativePath(entry.path));
+		mkdirSync(dirname(target), { recursive: true });
+		writeFileSync(target, Buffer.from(entry.previousContentBase64, "base64"));
+	}
+}
+
+function runCompoundPlugin(command, local) {
+	const targetRoot = resolve(compoundInstallRoot(local));
+	mkdirSync(targetRoot, { recursive: true });
+	const args = command === "cleanup"
+		? [COMPOUND_UPSTREAM_PACKAGE, "cleanup", "--target", "pi", "--pi-home", targetRoot]
+		: [COMPOUND_UPSTREAM_PACKAGE, "install", COMPOUND_PLUGIN_NAME, "--to", "pi", "--pi-home", targetRoot];
+	return spawnSync("bunx", args, { stdio: "inherit" }).status ?? 1;
 }
 
 function installCompound(local, interactive = false) {
@@ -531,55 +484,51 @@ function installCompound(local, interactive = false) {
 		return { status: "skipped", reason };
 	}
 
-	const targetRoot = resolve(compoundInstallRoot(local));
-	mkdirSync(targetRoot, { recursive: true });
-	const before = snapshotCompoundManagedFiles(local);
-	const args = ["@every-env/compound-plugin", "install", COMPOUND_PLUGIN_NAME, "--to", "pi", "--pi-home", targetRoot];
-	const status = spawnSync("bunx", args, { stdio: "inherit" }).status ?? 1;
-	if (status !== 0) return { status: "failed", code: status };
+	const cleanupStatus = runCompoundPlugin("cleanup", local);
+	if (cleanupStatus !== 0) return { status: "failed", code: cleanupStatus, reason: "upstream cleanup failed" };
 
-	const patchResult = patchCompoundCompatExtension(local);
-	if (!patchResult.ok) return { status: "failed", code: 1, reason: patchResult.reason };
-	patchCompoundGeneratedContent(local);
+	const installStatus = runCompoundPlugin("install", local);
+	if (installStatus !== 0) return { status: "failed", code: installStatus, reason: "upstream install failed" };
 
-	const after = snapshotCompoundManagedFiles(local);
-	const createdFiles = [];
-	const modifiedFiles = [];
-	for (const [path, contentBase64] of after.files.entries()) {
-		if (!before.files.has(path)) createdFiles.push(path);
-		else if (before.files.get(path) !== contentBase64) modifiedFiles.push({ path, previousContentBase64: before.files.get(path) });
-	}
+	const manifest = readCompoundManifest(local);
+	if (manifest.error) return { status: "failed", code: 1, reason: `manifest is invalid (${manifest.error})` };
+	if (!manifest.exists || !manifest.parsed) return { status: "failed", code: 1, reason: `missing ${COMPOUND_MANIFEST_RELATIVE_PATH}` };
 
-	writeCompoundState(local, {
-		version: COMPOUND_STATE_VERSION,
-		source: COMPOUND_SOURCE,
-		root: targetRoot,
-		installedAt: new Date().toISOString(),
-		createdFiles: createdFiles.sort(),
-		modifiedFiles: modifiedFiles.sort((a, b) => a.path.localeCompare(b.path)),
-	});
-	return { status: "installed", count: createdFiles.length + modifiedFiles.length };
+	clearCompoundLegacyState(local);
+	removeEmptyManagedDirs(local);
+	return { status: "installed" };
 }
 
 function removeCompound(local) {
-	const state = readCompoundState(local);
-	if (!state.exists) return 0;
-	if (state.error || !state.parsed) {
-		console.error(red(`Compound Engineering state file is invalid: ${state.error}`));
+	const installState = compoundInstallState(local);
+	const root = resolve(compoundInstallRoot(local));
+
+	if (installState.mode === "invalid-manifest") {
+		console.error(red(`Compound Engineering manifest is invalid: ${installState.manifest.error}`));
 		return 1;
 	}
+	if (installState.mode === "invalid-legacy") {
+		console.error(red(`Compound Engineering legacy state is invalid: ${installState.legacy.error}`));
+		return 1;
+	}
+	if (installState.mode === "none") return 0;
 
-	const root = resolve(compoundInstallRoot(local));
-	const createdFiles = [...(state.parsed.createdFiles ?? [])].sort((a, b) => b.length - a.length);
-	for (const relativePath of createdFiles) rmSync(join(root, relativePath), { recursive: true, force: true });
-
-	for (const entry of state.parsed.modifiedFiles ?? []) {
-		const target = join(root, entry.path);
-		mkdirSync(dirname(target), { recursive: true });
-		writeFileSync(target, Buffer.from(entry.previousContentBase64, "base64"));
+	if (installState.mode === "manifest") {
+		const managedPaths = compoundManifestManagedPaths(installState.manifest.parsed);
+		if (managedPaths.length === 0) {
+			console.error(red(`Compound Engineering manifest does not list managed paths: ${installState.manifest.path}`));
+			return 1;
+		}
+		removeManagedPaths(root, [...managedPaths, COMPOUND_MANIFEST_RELATIVE_PATH, join("compound-engineering", "legacy-backup")]);
 	}
 
-	clearCompoundState(local);
+	if (installState.mode === "legacy") {
+		removeManagedPaths(root, legacyCompoundCreatedPaths(installState.legacy.parsed));
+		restoreLegacyCompoundModifiedFiles(root, installState.legacy.parsed);
+		removeManagedPaths(root, [join("compound-engineering", "legacy-backup")]);
+	}
+
+	clearCompoundLegacyState(local);
 	removeEmptyManagedDirs(local);
 	return 0;
 }
@@ -647,14 +596,29 @@ function findLegacyInstalledSources(pkg, installedPiSources) {
 	return [...installedPiSources].filter((source) => isLegacySourceForPackage(pkg, source));
 }
 
+function packageInstallStatus(pkg, installedPiSources, local) {
+	if (pkg.id === COMPOUND_PKG_ID) {
+		const { mode } = compoundInstallState(local);
+		return {
+			installed: mode === "manifest",
+			legacy: mode === "legacy",
+			present: mode === "manifest" || mode === "legacy",
+		};
+	}
+	const legacySources = findLegacyInstalledSources(pkg, installedPiSources);
+	return {
+		installed: installedPiSources.has(pkg.source),
+		legacy: legacySources.length > 0,
+		present: installedPiSources.has(pkg.source) || legacySources.length > 0,
+	};
+}
+
 function isPackageInstalled(pkg, installedPiSources, local) {
-	return pkg.id === COMPOUND_PKG_ID ? isCompoundInstalled(local) : installedPiSources.has(pkg.source);
+	return packageInstallStatus(pkg, installedPiSources, local).installed;
 }
 
 function isPackagePresent(pkg, installedPiSources, local) {
-	return pkg.id === COMPOUND_PKG_ID
-		? isCompoundInstalled(local)
-		: installedPiSources.has(pkg.source) || findLegacyInstalledSources(pkg, installedPiSources).length > 0;
+	return packageInstallStatus(pkg, installedPiSources, local).present;
 }
 
 // ---------------------------------------------------------------------------
@@ -800,7 +764,7 @@ async function ensurePi(flags) {
 // install
 // ---------------------------------------------------------------------------
 async function cmdInstall(flags) {
-	let selectedIds = resolveSelection(flags);
+	let selectedIds = expandPackageDependencies(resolveSelection(flags));
 
 	const usedSelectionFlag = Boolean(flags.only || flags.except);
 	const interactive = !flags.yes && !usedSelectionFlag && isInteractive();
@@ -814,7 +778,7 @@ async function cmdInstall(flags) {
 	if (interactive) {
 		const choice = await askLazyOrPick(PACKAGES.length);
 		if (choice === "pick") {
-			selectedIds = await runPicker(selectedIds);
+			selectedIds = expandPackageDependencies(await runPicker(selectedIds));
 		}
 	}
 
@@ -829,10 +793,22 @@ async function cmdInstall(flags) {
 	if (settingsError) log.warn(`Could not parse ${settingsPath(flags.local)} — ${settingsError}`);
 
 	const forceIds = new Set(Array.isArray(flags.forceIds) ? flags.forceIds : []);
-	const toInstall = selected.filter((p) => forceIds.has(p.id) || !isPackageInstalled(p, installedSources, flags.local));
-	const alreadyInstalled = selected.filter((p) => !forceIds.has(p.id) && isPackageInstalled(p, installedSources, flags.local));
-	const legacyInstalled = selected.filter((p) => !forceIds.has(p.id) && !isPackageInstalled(p, installedSources, flags.local) && isPackagePresent(p, installedSources, flags.local));
-	const installLabel = legacyInstalled.length > 0 ? `${toInstall.length} (${legacyInstalled.length} source migration${legacyInstalled.length === 1 ? "" : "s"})` : String(toInstall.length);
+	const toInstall = selected.filter((pkg) => {
+		if (forceIds.has(pkg.id)) return true;
+		if (pkg.id === COMPOUND_PKG_ID) return !isCompoundInstalled(flags.local) || compoundNeedsMigration(flags.local);
+		return !isPackageInstalled(pkg, installedSources, flags.local);
+	});
+	const alreadyInstalled = selected.filter((pkg) => {
+		if (forceIds.has(pkg.id)) return false;
+		if (pkg.id === COMPOUND_PKG_ID) return isCompoundInstalled(flags.local) && !compoundNeedsMigration(flags.local);
+		return isPackageInstalled(pkg, installedSources, flags.local);
+	});
+	const legacyInstalled = selected.filter((pkg) => {
+		if (forceIds.has(pkg.id)) return false;
+		if (pkg.id === COMPOUND_PKG_ID) return compoundNeedsMigration(flags.local);
+		return !isPackageInstalled(pkg, installedSources, flags.local) && isPackagePresent(pkg, installedSources, flags.local);
+	});
+	const installLabel = legacyInstalled.length > 0 ? `${toInstall.length} (${legacyInstalled.length} migration${legacyInstalled.length === 1 ? "" : "s"})` : String(toInstall.length);
 	const scope = flags.local ? "project (.pi/settings.json)" : "global (~/.pi/agent/settings.json)";
 
 	const preInstallAuth = detectAuth();
@@ -857,20 +833,6 @@ async function cmdInstall(flags) {
 				console.error(red(message));
 			}
 			return 2;
-		}
-	}
-
-	if (selected.some((p) => p.id === COMPOUND_PKG_ID) && isCompoundInstalled(flags.local) && !forceIds.has(COMPOUND_PKG_ID)) {
-		const repairResult = repairInstalledCompound(flags.local);
-		if (repairResult.status === "failed") {
-			const message = `Failed to repair existing Compound Engineering install${repairResult.reason ? ` (${repairResult.reason})` : ""}.`;
-			if (interactive) {
-				log.error(message);
-				outro(red("Aborted."));
-			} else {
-				console.error(red(message));
-			}
-			return repairResult.code ?? 1;
 		}
 	}
 
@@ -903,18 +865,9 @@ async function cmdInstall(flags) {
 
 	for (const pkg of toInstall) {
 		if (pkg.id === COMPOUND_PKG_ID) {
-			const action = `bunx @every-env/compound-plugin install ${COMPOUND_PLUGIN_NAME} --to pi`;
+			const action = `bunx ${COMPOUND_UPSTREAM_PACKAGE} cleanup --target pi && bunx ${COMPOUND_UPSTREAM_PACKAGE} install ${COMPOUND_PLUGIN_NAME} --to pi`;
 			if (interactive) log.step(action);
 			else console.log(`\n→ ${action}`);
-			if (forceIds.has(COMPOUND_PKG_ID) && isCompoundInstalled(flags.local)) {
-				const removeStatus = removeCompound(flags.local);
-				if (removeStatus !== 0) {
-					failed.push(pkg);
-					if (interactive) log.error(`failed to refresh ${pkg.id}`);
-					else console.error(red(`  ✗ failed to refresh ${pkg.id}`));
-					continue;
-				}
-			}
 			const result = installCompound(flags.local, interactive);
 			if (result.status === "failed") {
 				failed.push(pkg);
@@ -1055,9 +1008,9 @@ function cmdStatus(flags) {
 	}
 
 	const piCatalogSources = new Set(PACKAGES.flatMap((p) => [p.source, ...legacySourcesForPackage(p)]));
-	const installed = PACKAGES.filter((p) => isPackageInstalled(p, sources, flags.local));
-	const legacy = PACKAGES.filter((p) => !isPackageInstalled(p, sources, flags.local) && findLegacyInstalledSources(p, sources).length > 0);
-	const missing = PACKAGES.filter((p) => !isPackagePresent(p, sources, flags.local));
+	const installed = PACKAGES.filter((pkg) => packageInstallStatus(pkg, sources, flags.local).installed);
+	const legacy = PACKAGES.filter((pkg) => packageInstallStatus(pkg, sources, flags.local).legacy);
+	const missing = PACKAGES.filter((pkg) => !packageInstallStatus(pkg, sources, flags.local).present);
 	const others = [...sources].filter((src) => !piCatalogSources.has(src) && !PACKAGES.some((pkg) => isLegacySourceForPackage(pkg, src)));
 
 	printHeader(`Installed from LazyPi catalog (${installed.length}/${PACKAGES.length}):`);
@@ -1069,8 +1022,10 @@ function cmdStatus(flags) {
 	printHeader(`Installed with legacy catalog sources (${legacy.length}):`);
 	if (legacy.length === 0) console.log(dim("  none"));
 	for (const pkg of legacy) {
-		const legacySources = findLegacyInstalledSources(pkg, sources).map((src) => dim(src)).join(", ");
-		console.log(`  ${yellow("!")} [${pkg.category}] ${pkg.id.padEnd(20)} ${legacySources}`);
+		const detail = pkg.id === COMPOUND_PKG_ID
+			? dim("legacy LazyPi state detected — run `lazypi update` to migrate to CE 3")
+			: findLegacyInstalledSources(pkg, sources).map((src) => dim(src)).join(", ");
+		console.log(`  ${yellow("!")} [${pkg.category}] ${pkg.id.padEnd(20)} ${detail}`);
 	}
 
 	printHeader(`Missing from LazyPi catalog (${missing.length}):`);
@@ -1086,6 +1041,23 @@ function cmdStatus(flags) {
 	return 0;
 }
 
+function updateLocalPiPackages(local) {
+	const { sources, error } = readInstalledSources(local);
+	if (error) {
+		console.error(red(`Could not parse ${settingsPath(local)} — ${error}`));
+		return 1;
+	}
+	for (const source of sources) {
+		console.log(`\n→ pi install ${source}`);
+		const env = source.startsWith("git:")
+			? { ...process.env, npm_config_ignore_scripts: "true" }
+			: process.env;
+		const installStatus = spawnSync("pi", ["install", "-l", source], { stdio: "inherit", env }).status ?? 1;
+		if (installStatus !== 0) return installStatus;
+	}
+	return 0;
+}
+
 // ---------------------------------------------------------------------------
 // update
 // ---------------------------------------------------------------------------
@@ -1097,7 +1069,7 @@ async function cmdUpdate(flags) {
 	if (installCode !== 0) return installCode;
 
 	console.log(bold("\nStep 2/2: pi update"));
-	const piUpdateCode = runPi(flags.local ? ["update", "-l"] : ["update"]);
+	const piUpdateCode = flags.local ? updateLocalPiPackages(true) : runPi(["update"]);
 	return piUpdateCode === 0 ? repairDiffReview(flags.local, false) : piUpdateCode;
 }
 
@@ -1162,18 +1134,28 @@ function cmdDoctor(flags) {
 		console.log(`  ${dim("·")} diff-review not installed`);
 	}
 
-	const compoundState = readCompoundState(flags.local);
-	if (compoundState.error) {
-		fail(`Compound Engineering state file is invalid — ${compoundState.error}`);
-	} else if (compoundState.exists) {
-		pass(`Compound Engineering managed state found at ${compoundState.path}`);
-		const compatPath = compoundCompatExtensionPath(flags.local);
-		if (!existsSync(compatPath)) fail(`Compound Engineering compat extension is missing at ${compatPath}`);
-		else if (readFileSync(compatPath, "utf8").includes(`name: "${COMPOUND_SUBAGENT_TOOL_NAME}"`)) pass(`Compound Engineering compat tool renamed to ${COMPOUND_SUBAGENT_TOOL_NAME}`);
-		else fail(`Compound Engineering compat extension still registers the conflicting subagent tool`);
-		const skillNameConflicts = listCompoundSkillNameConflicts(flags.local);
-		if (skillNameConflicts.length === 0) pass("Compound skill names normalized to Pi's current skill spec");
-		else fail(`Compound generated skills still have ${skillNameConflicts.length} Pi-incompatible name conflict(s)`);
+	const compound = compoundInstallState(flags.local);
+	if (compound.mode === "invalid-manifest") {
+		fail(`Compound Engineering manifest is invalid — ${compound.manifest.error}`);
+	} else if (compound.mode === "invalid-legacy") {
+		fail(`Compound Engineering legacy state is invalid — ${compound.legacy.error}`);
+	} else if (compound.mode === "manifest") {
+		pass(`Compound Engineering manifest found at ${compound.manifest.path}`);
+		const compoundRoot = compoundInstallRoot(flags.local);
+		const skillsDir = join(compoundRoot, "skills");
+		const agentsDir = join(compoundRoot, "agents");
+		if (existsSync(skillsDir)) pass(`Compound Engineering skills directory exists at ${skillsDir}`);
+		else fail(`Compound Engineering skills directory is missing at ${skillsDir}`);
+		if (existsSync(agentsDir)) pass(`Compound Engineering agents directory exists at ${agentsDir}`);
+		else fail(`Compound Engineering agents directory is missing at ${agentsDir}`);
+		const subagentsPkg = PACKAGES.find((pkg) => pkg.id === "subagents");
+		if (subagentsPkg && sources.has(subagentsPkg.source)) pass("pi-subagents installed");
+		else fail("pi-subagents is missing — Compound Engineering requires it");
+		const askUserPkg = PACKAGES.find((pkg) => pkg.id === "pi-ask-user");
+		if (askUserPkg && sources.has(askUserPkg.source)) pass("pi-ask-user installed");
+		else fail("pi-ask-user is missing — Compound Engineering requires it");
+	} else if (compound.mode === "legacy") {
+		warn(`Legacy Compound Engineering marker found at ${compound.legacy.path} — run ${bold("npx @robzolkos/lazypi update")} to migrate to CE 3`);
 	} else {
 		console.log(`  ${dim("·")} Compound Engineering not installed`);
 	}
