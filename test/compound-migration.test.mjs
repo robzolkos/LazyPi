@@ -60,14 +60,19 @@ function assertSuccess(result, message = "command should succeed") {
 	assert.equal(result.status, 0, `${message}\nSTDOUT:\n${result.stdout}\nSTDERR:\n${result.stderr}`);
 }
 
-requireCommand("pi");
-requireCommand("bun");
+const skipCompoundIntegration = process.env.LAZYPI_SKIP_COMPOUND_INTEGRATION === "1";
+const compoundTest = skipCompoundIntegration ? test.skip : test;
 
-const upstreamVersion = spawnSync("bash", ["-lc", "bunx @every-env/compound-plugin@3.0.0 --help | sed -n '1p'"], { encoding: "utf8", timeout: 180_000 });
-assert.equal(upstreamVersion.status, 0, upstreamVersion.stderr || upstreamVersion.stdout);
-assert.match(upstreamVersion.stdout, /v3\.0\.0/);
+if (!skipCompoundIntegration) {
+	requireCommand("pi");
+	requireCommand("bun");
 
-test("fresh CE3 install uses real upstream v3 and reports healthy status", { timeout: 600_000 }, () => {
+	const upstreamVersion = spawnSync("bash", ["-lc", "bunx @every-env/compound-plugin@3.0.0 --help | sed -n '1p'"], { encoding: "utf8", timeout: 180_000 });
+	assert.equal(upstreamVersion.status, 0, upstreamVersion.stderr || upstreamVersion.stdout);
+	assert.match(upstreamVersion.stdout, /v3\.0\.0/);
+}
+
+compoundTest("fresh CE3 install uses real upstream v3 and reports healthy status", { timeout: 600_000 }, () => {
 	const { workspace, home } = createWorkspace();
 	const installResult = runCli(["--yes", "--only", "compound", "-l"], { cwd: workspace, home });
 	assertSuccess(installResult, "fresh compound install failed");
@@ -108,7 +113,7 @@ test("fresh CE3 install uses real upstream v3 and reports healthy status", { tim
 	assert.doesNotMatch(doctorResult.stdout, /ce_subagent|compat extension/);
 });
 
-test("legacy LazyPi state migrates to CE3 on real update flow", { timeout: 600_000 }, () => {
+compoundTest("legacy LazyPi state migrates to CE3 on real update flow", { timeout: 600_000 }, () => {
 	const { workspace, home } = createWorkspace();
 	mkdirSync(join(workspace, ".pi", ".lazypi"), { recursive: true });
 	mkdirSync(join(workspace, ".pi", "extensions"), { recursive: true });
@@ -127,7 +132,7 @@ test("legacy LazyPi state migrates to CE3 on real update flow", { timeout: 600_0
 	assert.equal(existsSync(join(workspace, ".pi", "compound-engineering", "legacy-backup")), true);
 });
 
-test("remove compound deletes real CE3 artifacts and backup directory", { timeout: 600_000 }, () => {
+compoundTest("remove compound deletes real CE3 artifacts and backup directory", { timeout: 600_000 }, () => {
 	const { workspace, home } = createWorkspace();
 	assertSuccess(runCli(["--yes", "--only", "compound", "-l"], { cwd: workspace, home }), "fresh install for removal test failed");
 	assert.equal(existsSync(join(workspace, ".pi", "compound-engineering", "install-manifest.json")), true);
