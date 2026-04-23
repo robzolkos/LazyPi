@@ -33,6 +33,9 @@ jobs:
       - name: Run test suite
         run: npm test
 
+      - name: Smoke-test packed CLI artifact
+        run: node scripts/packed-cli-smoke.mjs
+
       - name: Run lazypi --yes
         run: node bin/lazypi.mjs --yes
 

@@ -1,5 +1,5 @@
 #!/usr/bin/env node
-import { copyFileSync, existsSync, mkdirSync, readdirSync, readFileSync, rmSync, statSync, writeFileSync } from "node:fs";
+import { copyFileSync, existsSync, mkdirSync, readdirSync, readFileSync, realpathSync, rmSync, statSync, writeFileSync } from "node:fs";
 import { homedir, platform } from "node:os";
 import { dirname, join, resolve } from "node:path";
 import { spawnSync } from "node:child_process";
@@ -1289,7 +1289,16 @@ async function main() {
 	}
 }
 
-const entrypoint = argv[1] ? pathToFileURL(resolve(argv[1])).href : null;
+export function resolveEntrypointUrl(scriptPath) {
+	if (!scriptPath) return null;
+	try {
+		return pathToFileURL(realpathSync(scriptPath)).href;
+	} catch {
+		return pathToFileURL(resolve(scriptPath)).href;
+	}
+}
+
+const entrypoint = resolveEntrypointUrl(argv[1]);
 
 if (entrypoint === import.meta.url) {
 	main().then((code) => exit(code ?? 0)).catch((err) => {

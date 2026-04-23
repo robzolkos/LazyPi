@@ -29,6 +29,9 @@ jobs:
       - name: Run full test suite
         run: npm test
 
+      - name: Smoke-test packed CLI artifact
+        run: node scripts/packed-cli-smoke.mjs
+
       - name: Run lazypi --yes
         run: node bin/lazypi.mjs --yes
 
@@ -57,6 +60,9 @@ jobs:
         run: npm test
         env:
           LAZYPI_SKIP_COMPOUND_INTEGRATION: "1"
+
+      - name: Smoke-test packed CLI artifact
+        run: node scripts/packed-cli-smoke.mjs
 
       - name: Run lazypi --yes --except compound
         run: node bin/lazypi.mjs --yes --except compound
