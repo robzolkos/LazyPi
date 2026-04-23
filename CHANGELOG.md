@@ -1,5 +1,12 @@
 # Changelog
 
+## [0.2.1](https://github.com/robzolkos/LazyPi/compare/v0.2.0...v0.2.1) (2026-04-23)
+
+
+### Bug Fixes
+
+* make LazyPi installs work on Windows ([#25](https://github.com/robzolkos/LazyPi/issues/25)) ([7ecc7e9](https://github.com/robzolkos/LazyPi/commit/7ecc7e91262242a6432d1edc88f298aabbde97f1))
+
 ## [0.2.0](https://github.com/robzolkos/LazyPi/compare/v0.1.8...v0.2.0) (2026-04-23)
 
 
