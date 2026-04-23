@@ -4,6 +4,7 @@ import { homedir, platform } from "node:os";
 import { dirname, join, resolve } from "node:path";
 import { spawnSync } from "node:child_process";
 import { argv, cwd, exit, stdout, stderr } from "node:process";
+import { pathToFileURL } from "node:url";
 import {
 	cancel as clackCancel,
 	confirm as clackConfirm,
@@ -24,7 +25,7 @@ import {
 // --except to narrow it.
 const CATEGORIES = ["core", "ui", "research", "frameworks", "themes"];
 
-const PACKAGES = [
+export const PACKAGES = [
 	{ id: "subagents", category: "core", source: "npm:pi-subagents", description: "Sub-agent execution", hint: "Run isolated sub-agents for parallel work." },
 	{ id: "pi-ask-user", category: "core", source: "npm:pi-ask-user", description: "Ask-user prompts", hint: "Interactive user questions for agent workflows." },
 	{ id: "mcp", category: "core", source: "npm:pi-mcp-adapter", description: "MCP server integration", hint: "Connect Pi to any MCP-compatible tool server." },
@@ -1274,7 +1275,11 @@ async function main() {
 	}
 }
 
-main().then((code) => exit(code ?? 0)).catch((err) => {
-	stderr.write(`${err?.stack || err}\n`);
-	exit(1);
-});
+const entrypoint = argv[1] ? pathToFileURL(resolve(argv[1])).href : null;
+
+if (entrypoint === import.meta.url) {
+	main().then((code) => exit(code ?? 0)).catch((err) => {
+		stderr.write(`${err?.stack || err}\n`);
+		exit(1);
+	});
+}
