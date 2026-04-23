@@ -1,5 +1,12 @@
 # Changelog
 
+## [0.2.2](https://github.com/robzolkos/LazyPi/compare/v0.2.1...v0.2.2) (2026-04-23)
+
+
+### Bug Fixes
+
+* **cli:** smoke-test packed npx entrypoint ([#30](https://github.com/robzolkos/LazyPi/issues/30)) ([e5e020b](https://github.com/robzolkos/LazyPi/commit/e5e020b8653d5d1515c41c315dec84e11d96b9fc))
+
 ## [0.2.1](https://github.com/robzolkos/LazyPi/compare/v0.2.0...v0.2.1) (2026-04-23)
 
 
