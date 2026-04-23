@@ -32,3 +32,9 @@ jobs:
 
       - name: Run test suite
         run: npm test
+
+      - name: Run lazypi --yes
+        run: node bin/lazypi.mjs --yes
+
+      - name: Assert expected packages for full install
+        run: node scripts/assert-installed-packages.mjs --check-status
