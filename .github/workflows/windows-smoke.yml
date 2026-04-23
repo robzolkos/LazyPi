@@ -1,0 +1,36 @@
+name: windows-smoke
+
+on:
+  workflow_dispatch:
+
+concurrency:
+  group: ${{ github.workflow }}-${{ github.ref }}
+  cancel-in-progress: true
+
+jobs:
+  windows-smoke:
+    runs-on: windows-latest
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 20
+
+      - name: Install pi
+        run: npm install -g @mariozechner/pi-coding-agent
+
+      - name: Install npm dependencies
+        run: npm ci
+
+      - name: Run unit tests
+        run: npm test
+
+      - name: Run lazypi --yes --except compound
+        run: node bin/lazypi.mjs --yes --except compound
+
+      - name: Assert expected packages for all except compound
+        run: node scripts/assert-installed-packages.mjs --except=compound --check-status
+
+      - name: Doctor passes on Windows
+        run: node bin/lazypi.mjs doctor
