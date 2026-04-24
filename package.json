@@ -1,6 +1,6 @@
 {
   "name": "@robzolkos/lazypi",
-  "version": "0.2.2",
+  "version": "0.2.3",
   "description": "Opinionated one-shot installer for a full-featured Pi coding agent setup.",
   "license": "MIT",
   "repository": {
