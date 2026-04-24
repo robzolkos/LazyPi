@@ -1,5 +1,12 @@
 # Changelog
 
+## [0.2.3](https://github.com/robzolkos/LazyPi/compare/v0.2.2...v0.2.3) (2026-04-24)
+
+
+### Bug Fixes
+
+* use upstream Git source for memory package ([09c1c79](https://github.com/robzolkos/LazyPi/commit/09c1c7943af7aec81b21fb698d66746994850059))
+
 ## [0.2.2](https://github.com/robzolkos/LazyPi/compare/v0.2.1...v0.2.2) (2026-04-23)
 
 
