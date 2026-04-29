@@ -121,7 +121,6 @@ Inspect whether the package needs special handling.
 Examples already present in this repo include:
 
 - subagent settings overrides
-- diff-review repair logic
 
 If the new package needs special handling, place it near the relevant existing install/settings logic and explain it briefly in code comments only when necessary.
 
