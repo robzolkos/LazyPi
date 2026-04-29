@@ -5,11 +5,11 @@
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <link rel="icon" type="image/svg+xml" href="/favicon.svg">
   <title>LazyPi — One command. Full Pi setup.</title>
-  <meta name="description" content="Run one command and get a complete, curated Pi coding agent setup — 60+ skills, 76 themes, MCP servers, sub-agents, memory, and more.">
+  <meta name="description" content="Run one command and get a complete, curated Pi coding agent setup — 60+ skills, 76 themes, MCP servers, sub-agents, Claude Code CLI provider, memory, and more.">
 
   <!-- Open Graph -->
   <meta property="og:title" content="LazyPi — The fastest way to fall in love with Pi.">
-  <meta property="og:description" content="One command installs 60+ community skills, 76 themes, MCP servers, memory, and more. See what Pi is capable of before you spend an hour configuring it.">
+  <meta property="og:description" content="One command installs 60+ community skills, 76 themes, MCP servers, Claude Code CLI provider, memory, and more. See what Pi is capable of before you spend an hour configuring it.">
   <meta property="og:url" content="https://lazypi.org">
   <meta property="og:type" content="website">
   <meta property="og:image" content="https://lazypi.org/og.png">
@@ -17,7 +17,7 @@
   <!-- Twitter -->
   <meta name="twitter:card" content="summary_large_image">
   <meta name="twitter:title" content="LazyPi — The fastest way to fall in love with Pi.">
-  <meta name="twitter:description" content="One command installs 60+ community skills, 76 themes, MCP servers, memory, and more.">
+  <meta name="twitter:description" content="One command installs 60+ community skills, 76 themes, MCP servers, Claude Code CLI provider, memory, and more.">
   <meta name="twitter:image" content="https://lazypi.org/og.png">
   <style>
     *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
@@ -659,7 +659,7 @@
   <p class="hero-tagline">One command. Everything configured. Nothing to research.</p>
   <p class="hero-sub">
     One command installs 60+ community skills, 76 themes, MCP support, sub-agent
-    support, memory, and more. You're left with a curated starting point that gets you an exciting, useful experience immediately, without the research and configuration tax.
+    support, Claude Code CLI provider support, memory, and more. You're left with a curated starting point that gets you an exciting, useful experience immediately, without the research and configuration tax.
   </p>
 
   <div class="terminal">
@@ -750,6 +750,11 @@
         </tr>
         <tr>
           <td>Persistent memory</td>
+          <td><span class="cross">✕</span></td>
+          <td><span class="check">✓</span></td>
+        </tr>
+        <tr>
+          <td>Claude Code CLI provider</td>
           <td><span class="cross">✕</span></td>
           <td><span class="check">✓</span></td>
         </tr>
@@ -851,6 +856,12 @@
         <div class="catalog-name">pi-prompt-template-model</div>
         <div class="catalog-desc">Prompt templates with model, skill, and thinking frontmatter</div>
         <div class="catalog-author">by nicobailon</div>
+      </a>
+      <a class="catalog-card" href="https://github.com/rchern/pi-claude-cli" target="_blank" rel="noopener">
+        <span class="catalog-tag core">core</span>
+        <div class="catalog-name">pi-claude-cli</div>
+        <div class="catalog-desc">Use Claude Code CLI auth as a Pi model provider</div>
+        <div class="catalog-author">by rchern</div>
       </a>
       <a class="catalog-card" href="https://github.com/backnotprop/plannotator/tree/main/apps/pi-extension" target="_blank" rel="noopener">
         <span class="catalog-tag ui">ui</span>
