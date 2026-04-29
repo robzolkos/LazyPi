@@ -4,7 +4,7 @@
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <link rel="icon" type="image/svg+xml" href="/favicon.svg">
-  <title>Plan — LazyPi Docs</title>
+  <title>Slopchop — LazyPi Docs</title>
   <link rel="stylesheet" href="/docs.css">
 </head>
 <body>
@@ -58,14 +58,13 @@
       <a href="/docs/packages/mcp-adapter.html" class="sidebar-link">MCP Adapter</a>
       <a href="/docs/packages/web-access.html" class="sidebar-link">Web Access</a>
       <a href="/docs/packages/memory.html" class="sidebar-link">Memory</a>
-      <a href="/docs/packages/plan.html" class="sidebar-link active">Plan</a>
+      <a href="/docs/packages/plan.html" class="sidebar-link">Plan</a>
       <a href="/docs/packages/simplify.html" class="sidebar-link">Simplify</a>
       <a href="/docs/packages/add-dir.html" class="sidebar-link">Add Directory</a>
-
       <a href="/docs/packages/prompt-templates.html" class="sidebar-link">Prompt Templates</a>
       <a href="/docs/packages/claude-cli.html" class="sidebar-link">Claude Code CLI</a>
       <a href="/docs/packages/plannotator.html" class="sidebar-link">Plannotator</a>
-      <a href="/docs/packages/slopchop.html" class="sidebar-link">Slopchop</a>
+      <a href="/docs/packages/slopchop.html" class="sidebar-link active">Slopchop</a>
       <a href="/docs/packages/powerbar.html" class="sidebar-link">Powerbar</a>
       <a href="/docs/packages/extension-settings.html" class="sidebar-link">Extension Settings</a>
       <a href="/docs/packages/usage.html" class="sidebar-link">Usage Tracker</a>
@@ -80,67 +79,67 @@
   </aside>
 
   <main class="docs-content">
-    <h1>Plan</h1>
-    <p class="page-desc">Read-only planning mode that blocks code changes until you explicitly approve the plan.</p>
+    <h1>Slopchop</h1>
+    <p class="page-desc">Terminal-native diff review and annotation for turning precise feedback into the next Pi prompt.</p>
 
     <h2>What it does</h2>
     <p>
-      Pi-plan enforces a two-phase workflow: investigate first, then execute. When plan mode is active, mutating tools and bash write commands are blocked. Pi can read files, search code, and reason about the problem — but it cannot make changes until you approve.
+      Slopchop adds a <code>/slopchop</code> review surface inside Pi. After an agent turn, you can walk the current git diff, the last commit, or all files without leaving the terminal, then attach line-level, file-level, or whole-change annotations.
     </p>
     <p>
-      Once you review the plan and give approval, Pi exits plan mode and proceeds with implementation. The <code>/todos</code> command tracks plan progress as a checklist, showing which steps are complete and which are pending.
+      Each annotation is marked as either <strong>FIX</strong> for changes the agent should make or <strong>DISCUSS</strong> for explanations, rationale, and follow-up questions. When you submit the review, Slopchop inserts a structured prompt into Pi's editor instead of auto-sending it, so you can read and tweak the feedback first.
     </p>
 
     <h2>Why it's included</h2>
     <p>
-      Agents that jump straight to implementation on complex tasks tend to make confident, hard-to-reverse mistakes. Plan mode creates a natural review checkpoint that matches how senior engineers actually work: understand the problem fully before writing a line of code. It costs nothing when you don't need it and saves significant time when you do.
+      LazyPi includes tools that keep humans in control of agent work. Slopchop makes that control fast and terminal-native: inspect changed lines, ask about deleted code, separate discussion from requested fixes, and hand the agent exact next-turn feedback without switching to another review tool.
     </p>
 
-    <h2>Commands</h2>
+    <h2>Commands and shortcuts</h2>
     <table>
       <thead>
         <tr><th>Command</th><th>What it does</th></tr>
       </thead>
       <tbody>
         <tr>
-          <td><code>/plan</code></td>
-          <td>Toggle plan mode on/off</td>
+          <td><code>/slopchop</code></td>
+          <td>Open the review UI for git diff, last commit, or all files</td>
         </tr>
         <tr>
-          <td><code>/plan on</code></td>
-          <td>Enable plan mode</td>
+          <td><code>ctrl+alt+s</code></td>
+          <td>Global shortcut for opening Slopchop</td>
         </tr>
         <tr>
-          <td><code>/plan off</code></td>
-          <td>Disable plan mode</td>
+          <td><code>f</code></td>
+          <td>Add a line annotation with FIX preselected</td>
         </tr>
         <tr>
-          <td><code>/plan status</code></td>
-          <td>Show whether plan mode is currently active</td>
+          <td><code>d</code> or <code>c</code></td>
+          <td>Add a line annotation with DISCUSS preselected</td>
         </tr>
         <tr>
-          <td><code>/plan &lt;task&gt;</code></td>
-          <td>Enable plan mode and start planning the specified task immediately</td>
-        </tr>
-        <tr>
-          <td><code>/todos</code></td>
-          <td>Show tracked plan progress as a checklist of completed and pending steps</td>
+          <td><code>s</code></td>
+          <td>Insert the generated review prompt into Pi's editor</td>
         </tr>
       </tbody>
     </table>
 
+    <p>
+      Slopchop also supports slash shortcut mode for fast templated comments and an optional <code>~/.pi/agent/extensions/slopchop.json</code> file for custom review shortcuts.
+    </p>
+
     <div class="learn-more">
-      <a href="https://github.com/devkade/pi-plan" target="_blank" rel="noopener">→ GitHub — devkade/pi-plan</a>
+      <a href="https://github.com/robzolkos/pi-slopchop" target="_blank" rel="noopener">→ GitHub — robzolkos/pi-slopchop</a>
     </div>
 
     <nav class="prev-next">
-      <a href="/docs/packages/memory.html" class="prev-next-link">
+      <a href="/docs/packages/plannotator.html" class="prev-next-link">
         <span class="prev-next-label">Previous</span>
-        ← Memory
+        ← Plannotator
       </a>
-      <a href="/docs/packages/simplify.html" class="prev-next-link next">
+      <a href="/docs/packages/powerbar.html" class="prev-next-link next">
         <span class="prev-next-label">Next</span>
-        Simplify →
+        Powerbar →
       </a>
     </nav>
 
