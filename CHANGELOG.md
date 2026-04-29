@@ -1,5 +1,12 @@
 # Changelog
 
+## [0.3.0](https://github.com/robzolkos/LazyPi/compare/v0.2.3...v0.3.0) (2026-04-29)
+
+
+### Features
+
+* add Claude Code CLI package ([9f6ba29](https://github.com/robzolkos/LazyPi/commit/9f6ba29cd5c4bb2d0471fac3278554e1d25d8da7))
+
 ## [0.2.3](https://github.com/robzolkos/LazyPi/compare/v0.2.2...v0.2.3) (2026-04-24)
 
 
