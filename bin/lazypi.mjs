@@ -44,6 +44,7 @@ export const PACKAGES = [
 	{ id: "prompt-templates", category: "core", source: "npm:pi-prompt-template-model", description: "Prompt template model switching", hint: "Add model, skill, and thinking frontmatter so prompt templates switch modes automatically." },
 	{ id: "claude-cli", category: "core", source: "npm:pi-claude-cli", description: "Claude Code CLI provider", hint: "Use Claude Code CLI auth as a Pi model provider." },
 	{ id: "plannotator", category: "ui", source: "npm:@plannotator/pi-extension", description: "Planning and annotation workflow", hint: "Plan + annotate large changes interactively." },
+	{ id: "slopchop", category: "ui", source: "npm:pi-slopchop", description: "Diff review and annotation", hint: "Review diffs inside Pi and turn FIX/DISCUSS annotations into the next prompt." },
 	{ id: "powerbar", category: "ui", source: "npm:@juanibiapina/pi-powerbar", description: "Powerbar UI", hint: "Status line for Pi with live context." },
 	{ id: "extension-settings", category: "ui", source: "npm:@juanibiapina/pi-extension-settings", description: "Settings support for powerbar", hint: "Required by powerbar for its settings panel." },
 	{ id: "usage", category: "ui", source: "npm:@tmustier/pi-usage-extension", description: "Usage and cost dashboard", hint: "Track token usage and API cost in-session." },
