@@ -4,7 +4,7 @@
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <link rel="icon" type="image/svg+xml" href="/favicon.svg">
-  <title>MCP Adapter — LazyPi Docs</title>
+  <title>Claude Code CLI — LazyPi Docs</title>
   <link rel="stylesheet" href="/docs.css">
 </head>
 <body>
@@ -55,16 +55,15 @@
     <nav class="sidebar-nav">
       <a href="/docs/packages/" class="sidebar-link">All packages</a>
       <a href="/docs/packages/subagents.html" class="sidebar-link">Sub-agents</a>
-      <a href="/docs/packages/mcp-adapter.html" class="sidebar-link active">MCP Adapter</a>
+      <a href="/docs/packages/mcp-adapter.html" class="sidebar-link">MCP Adapter</a>
       <a href="/docs/packages/web-access.html" class="sidebar-link">Web Access</a>
       <a href="/docs/packages/memory.html" class="sidebar-link">Memory</a>
       <a href="/docs/packages/diff-review.html" class="sidebar-link">Diff Review</a>
       <a href="/docs/packages/plan.html" class="sidebar-link">Plan</a>
       <a href="/docs/packages/simplify.html" class="sidebar-link">Simplify</a>
       <a href="/docs/packages/add-dir.html" class="sidebar-link">Add Directory</a>
-
       <a href="/docs/packages/prompt-templates.html" class="sidebar-link">Prompt Templates</a>
-      <a href="/docs/packages/claude-cli.html" class="sidebar-link">Claude Code CLI</a>
+      <a href="/docs/packages/claude-cli.html" class="sidebar-link active">Claude Code CLI</a>
       <a href="/docs/packages/plannotator.html" class="sidebar-link">Plannotator</a>
       <a href="/docs/packages/powerbar.html" class="sidebar-link">Powerbar</a>
       <a href="/docs/packages/extension-settings.html" class="sidebar-link">Extension Settings</a>
@@ -80,54 +79,61 @@
   </aside>
 
   <main class="docs-content">
-    <h1>MCP Adapter</h1>
-    <p class="page-desc">Token-efficient MCP proxy with lazy server startup and on-demand tool discovery.</p>
+    <h1>Claude Code CLI</h1>
+    <p class="page-desc">Use the Claude Code CLI as a Pi model provider, backed by your Claude Pro or Max subscription.</p>
 
     <h2>What it does</h2>
     <p>
-      MCP (Model Context Protocol) servers expose tools to AI agents — databases, file systems, APIs, search engines, and more. The problem is that each connected server adds its full tool list to the context window on every turn, burning tokens even when those tools aren't used.
+      Pi-claude-cli registers a custom Pi provider named <code>pi-claude-cli</code>. When you select one of its Claude models in <code>/model</code>, Pi sends model requests through the local <code>claude</code> command instead of a direct Anthropic API key.
     </p>
     <p>
-      Pi-MCP-Adapter solves this by proxying all connected MCP servers through a single <code>mcp</code> tool that costs around 200 tokens. Tools are discovered on demand: the agent asks "what tools does server X have?" and the adapter fetches them only when needed. Servers are started lazily — they spin up on first use, not at session start.
-    </p>
-    <p>
-      For tools you use frequently, a direct-tool mode bypasses the proxy and exposes them as first-class tools — no extra round-trip. You can toggle this per-tool from the <code>/mcp</code> panel.
+      Each turn runs Claude Code CLI in stream-json mode, streams text and thinking back into Pi, and lets Pi execute tool calls natively. The extension also resumes Claude Code CLI sessions between turns and exposes custom Pi tools to Claude through a schema-only MCP bridge.
     </p>
 
     <h2>Why it's included</h2>
     <p>
-      MCP is how Pi connects to the outside world. Without an adapter, each connected server adds hundreds or thousands of tokens of tool definitions on every single turn. For a session with multiple MCP servers, this makes long conversations significantly more expensive. The adapter is the correct architectural solution: pay for tools when you use them, not by default.
+      Many Pi users already have Claude Code authenticated through a Claude Pro or Max subscription. Claude Code CLI makes that subscription usable as a Pi backend without setting up separate Anthropic API billing, while still keeping Pi's native tools, UI, and package ecosystem in charge.
+    </p>
+    <p>
+      It fits LazyPi as a practical bridge: install the package, make sure Claude Code CLI is available and authenticated, then pick the Claude model provider from Pi's normal model selector.
     </p>
 
-    <h2>Commands</h2>
+    <h2>Usage notes</h2>
     <table>
       <thead>
-        <tr><th>Command</th><th>What it does</th></tr>
+        <tr><th>Step</th><th>What to do</th></tr>
       </thead>
       <tbody>
         <tr>
-          <td><code>/mcp</code></td>
-          <td>Open the interactive panel — view servers, connection status, tools, toggle direct/proxy mode, reconnect, handle OAuth</td>
+          <td>Install Claude Code CLI</td>
+          <td><code>npm install -g @anthropic-ai/claude-code</code></td>
         </tr>
         <tr>
-          <td><code>/mcp reconnect &lt;server&gt;</code></td>
-          <td>Force reconnect a specific MCP server</td>
+          <td>Authenticate Claude</td>
+          <td><code>claude auth login</code></td>
+        </tr>
+        <tr>
+          <td>Select in Pi</td>
+          <td>Open <code>/model</code> and choose a Claude model under the <code>pi-claude-cli</code> provider</td>
         </tr>
       </tbody>
     </table>
+    <p>
+      The provider depends on <code>claude</code> being on your <code>PATH</code>. If Claude Code CLI is missing or not authenticated, the extension logs setup instructions and Pi can continue using your other configured providers.
+    </p>
 
     <div class="learn-more">
-      <a href="https://github.com/nicobailon/pi-mcp-adapter" target="_blank" rel="noopener">→ GitHub — nicobailon/pi-mcp-adapter</a>
+      <a href="https://github.com/rchern/pi-claude-cli" target="_blank" rel="noopener">→ GitHub — rchern/pi-claude-cli</a>
     </div>
 
     <nav class="prev-next">
-      <a href="/docs/packages/subagents.html" class="prev-next-link">
+      <a href="/docs/packages/prompt-templates.html" class="prev-next-link">
         <span class="prev-next-label">Previous</span>
-        ← Sub-agents
+        ← Prompt Templates
       </a>
-      <a href="/docs/packages/web-access.html" class="prev-next-link next">
+      <a href="/docs/packages/plannotator.html" class="prev-next-link next">
         <span class="prev-next-label">Next</span>
-        Web Access →
+        Plannotator →
       </a>
     </nav>
 

@@ -13,7 +13,7 @@ LazyPi will:
 1. Install `pi` for you if it isn't installed yet.
 2. Ask if you want to install all the packages or choose which to install.
 
-That setup includes agent tooling, memory, planning, interactive shell overlays for long-running CLIs, usage tracking, and themes.
+That setup includes agent tooling, memory, planning, a Claude Code CLI provider, interactive shell overlays for long-running CLIs, usage tracking, and themes.
 
 That's it.  Once done - run `pi` and experience a feature rich coding agent experience.
 
