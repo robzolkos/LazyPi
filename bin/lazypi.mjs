@@ -38,7 +38,6 @@ export const PACKAGES = [
 		description: "Markdown-backed memory",
 		hint: "Persistent memory stored as Markdown files.",
 	},
-	{ id: "diff-review", category: "core", source: "git:github.com/badlogic/pi-diff-review@1584211692c49780ecd0f490a82762b0823fd475", description: "Diff review command", hint: "Review diffs inside Pi before accepting changes." },
 	{ id: "plan", category: "core", source: "npm:@devkade/pi-plan", description: "/plan command", hint: "Read-only planning mode with approval-based execution." },
 	{ id: "simplify", category: "core", source: "npm:pi-simplify", description: "Code simplify review", hint: "Reviews recently changed code for clarity, consistency, and maintainability." },
 	{ id: "add-dir", category: "core", source: "npm:pi-add-dir", description: "Add external directories", hint: "Load configs and skills from additional project directories in the same Pi session." },
@@ -555,52 +554,6 @@ function removeCompound(local) {
 	return 0;
 }
 
-const DIFF_REVIEW_RELATIVE_DIR = join("git", "github.com", "badlogic", "pi-diff-review");
-const DIFF_REVIEW_GLIMPSE_FILE = join("node_modules", "glimpseui", "src", "chromium-backend.mjs");
-
-function diffReviewInstallDirs(local) {
-	return local
-		? [
-			join(cwd(), ".pi", DIFF_REVIEW_RELATIVE_DIR),
-			join(cwd(), ".pi", "agent", DIFF_REVIEW_RELATIVE_DIR),
-		]
-		: [join(homedir(), ".pi", "agent", DIFF_REVIEW_RELATIVE_DIR)];
-}
-
-function findInstalledDiffReviewDir(local) {
-	return diffReviewInstallDirs(local).find((dir) => existsSync(join(dir, "package.json"))) ?? null;
-}
-
-function diffReviewNeedsRepair(local) {
-	const dir = findInstalledDiffReviewDir(local);
-	if (dir == null) return { needsRepair: false, dir: null, reason: null };
-	const chromiumBackend = join(dir, DIFF_REVIEW_GLIMPSE_FILE);
-	if (existsSync(chromiumBackend)) return { needsRepair: false, dir, reason: null };
-	const lockPath = join(dir, "package-lock.json");
-	if (existsSync(lockPath)) {
-		try {
-			const lockText = readFileSync(lockPath, "utf8");
-			if (lockText.includes("glimpseui-0.6.0.tgz")) {
-				return { needsRepair: true, dir, reason: "package-lock pins broken glimpseui@0.6.0" };
-			}
-		} catch {}
-	}
-	return { needsRepair: true, dir, reason: `missing ${DIFF_REVIEW_GLIMPSE_FILE}` };
-}
-
-function repairDiffReview(local, interactive = false) {
-	const state = diffReviewNeedsRepair(local);
-	if (!state.needsRepair || state.dir == null) return 0;
-	const prefix = interactive ? "" : "  ";
-	console.log(`${prefix}${yellow(`Repairing diff-review (${state.reason})`)}`);
-	const result = spawnCommand("npm", ["install", "--no-save", "--ignore-scripts", "glimpseui@0.6.2"], {
-		cwd: state.dir,
-		stdio: "inherit",
-	});
-	if (result.status !== 0) return result.status ?? 1;
-	return existsSync(join(state.dir, DIFF_REVIEW_GLIMPSE_FILE)) ? 0 : 1;
-}
-
 function runPi(args) {
 	const result = spawnCommand("pi", args, { stdio: "inherit" });
 	return result.status ?? 1;
@@ -924,11 +877,7 @@ async function cmdInstall(flags) {
 		const env = pkg.source.startsWith("git:")
 			? { ...process.env, npm_config_ignore_scripts: "true" }
 			: process.env;
-		const installStatus = spawnCommand("pi", [...piArgs, pkg.source], { stdio: "inherit", env }).status;
-		const repairStatus = installStatus === 0 && pkg.id === "diff-review"
-			? repairDiffReview(flags.local, interactive)
-			: 0;
-		const status = installStatus === 0 ? repairStatus : installStatus;
+		const status = spawnCommand("pi", [...piArgs, pkg.source], { stdio: "inherit", env }).status;
 		if (status !== 0) {
 			failed.push(pkg);
 			if (interactive) log.error(`failed to install ${pkg.id}`);
@@ -1091,8 +1040,7 @@ async function cmdUpdate(flags) {
 	if (installCode !== 0) return installCode;
 
 	console.log(bold("\nStep 2/2: pi update"));
-	const piUpdateCode = flags.local ? updateLocalPiPackages(true) : runPi(["update"]);
-	return piUpdateCode === 0 ? repairDiffReview(flags.local, false) : piUpdateCode;
+	return flags.local ? updateLocalPiPackages(true) : runPi(["update"]);
 }
 
 // ---------------------------------------------------------------------------
@@ -1144,18 +1092,6 @@ function cmdDoctor(flags) {
 	else pass(`${path} is readable`);
 
 	printHeader("Catalog package health");
-	if (sources.has(PACKAGES.find((p) => p.id === "diff-review")?.source)) {
-		const diffReview = diffReviewNeedsRepair(flags.local);
-		if (diffReview.needsRepair && diffReview.dir) {
-			fail(`diff-review is installed but broken in ${diffReview.dir} — ${diffReview.reason}`);
-			console.log(`    fix: rerun ${bold("npx @robzolkos/lazypi update")} or ${bold(`(cd \"${diffReview.dir}\" && npm install --no-save --ignore-scripts glimpseui@0.6.2)`)}`);
-		} else {
-			pass("diff-review runtime dependency looks healthy");
-		}
-	} else {
-		console.log(`  ${dim("·")} diff-review not installed`);
-	}
-
 	const compound = compoundInstallState(flags.local);
 	if (compound.mode === "invalid-manifest") {
 		fail(`Compound Engineering manifest is invalid — ${compound.manifest.error}`);
