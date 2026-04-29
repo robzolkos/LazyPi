@@ -1,5 +1,12 @@
 # Changelog
 
+## [0.4.0](https://github.com/robzolkos/LazyPi/compare/v0.3.0...v0.4.0) (2026-04-29)
+
+
+### Features
+
+* add pi-slopchop package ([#39](https://github.com/robzolkos/LazyPi/issues/39)) ([d20e43d](https://github.com/robzolkos/LazyPi/commit/d20e43d1f2c25ae1ccebaa9dc278d7eb469df525))
+
 ## [0.3.0](https://github.com/robzolkos/LazyPi/compare/v0.2.3...v0.3.0) (2026-04-29)
 
 
