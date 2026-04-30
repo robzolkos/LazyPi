@@ -37,6 +37,11 @@
       channel: Julian Goldie SEO
       duration: "9:40"
       published: "2026-03-03"
+    - id: AEmHcFH1UgQ
+      title: "Claude Code is overkill - Pi is All you Need"
+      channel: Syntax
+      duration: "58:00"
+      published: "2026-02-04"
 
 - category: Full Course Pi
   id: fullcourse
