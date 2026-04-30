@@ -1,0 +1,39 @@
+<button class="sidebar-toggle" id="sidebar-toggle" type="button" onclick="toggleSidebar()" aria-label="Toggle docs navigation">Docs</button>
+
+<aside class="sidebar" id="sidebar">
+  <div class="sidebar-header">LazyPi Docs</div>
+  <div class="sidebar-section-label">Overview</div>
+  <nav class="sidebar-nav">
+    <a href="/docs/" class="sidebar-link{% if page.url == '/docs/' %} active{% endif %}">Overview</a>
+    <a href="/docs/first-steps.html" class="sidebar-link{% if page.url == '/docs/first-steps.html' %} active{% endif %}">First Steps</a>
+    <a href="/docs/installation.html" class="sidebar-link{% if page.url == '/docs/installation.html' %} active{% endif %}">Installation</a>
+    <a href="/docs/updating.html" class="sidebar-link{% if page.url == '/docs/updating.html' %} active{% endif %}">Updating</a>
+    <a href="/docs/removing.html" class="sidebar-link{% if page.url == '/docs/removing.html' %} active{% endif %}">Removing</a>
+  </nav>
+
+  <div class="sidebar-section-label">Packages</div>
+  <nav class="sidebar-nav">
+    <a href="/docs/packages/" class="sidebar-link{% if page.url == '/docs/packages/' %} active{% endif %}">All packages</a>
+    <a href="/docs/packages/subagents.html" class="sidebar-link{% if page.url == '/docs/packages/subagents.html' %} active{% endif %}">Sub-agents</a>
+    <a href="/docs/packages/mcp-adapter.html" class="sidebar-link{% if page.url == '/docs/packages/mcp-adapter.html' %} active{% endif %}">MCP Adapter</a>
+    <a href="/docs/packages/web-access.html" class="sidebar-link{% if page.url == '/docs/packages/web-access.html' %} active{% endif %}">Web Access</a>
+    <a href="/docs/packages/memory.html" class="sidebar-link{% if page.url == '/docs/packages/memory.html' %} active{% endif %}">Memory</a>
+    <a href="/docs/packages/plan.html" class="sidebar-link{% if page.url == '/docs/packages/plan.html' %} active{% endif %}">Plan</a>
+    <a href="/docs/packages/simplify.html" class="sidebar-link{% if page.url == '/docs/packages/simplify.html' %} active{% endif %}">Simplify</a>
+    <a href="/docs/packages/add-dir.html" class="sidebar-link{% if page.url == '/docs/packages/add-dir.html' %} active{% endif %}">Add Directory</a>
+    <a href="/docs/packages/prompt-templates.html" class="sidebar-link{% if page.url == '/docs/packages/prompt-templates.html' %} active{% endif %}">Prompt Templates</a>
+    <a href="/docs/packages/claude-cli.html" class="sidebar-link{% if page.url == '/docs/packages/claude-cli.html' %} active{% endif %}">Claude Code CLI</a>
+    <a href="/docs/packages/plannotator.html" class="sidebar-link{% if page.url == '/docs/packages/plannotator.html' %} active{% endif %}">Plannotator</a>
+    <a href="/docs/packages/slopchop.html" class="sidebar-link{% if page.url == '/docs/packages/slopchop.html' %} active{% endif %}">Slopchop</a>
+    <a href="/docs/packages/powerbar.html" class="sidebar-link{% if page.url == '/docs/packages/powerbar.html' %} active{% endif %}">Powerbar</a>
+    <a href="/docs/packages/extension-settings.html" class="sidebar-link{% if page.url == '/docs/packages/extension-settings.html' %} active{% endif %}">Extension Settings</a>
+    <a href="/docs/packages/usage.html" class="sidebar-link{% if page.url == '/docs/packages/usage.html' %} active{% endif %}">Usage Tracker</a>
+    <a href="/docs/packages/raw-paste.html" class="sidebar-link{% if page.url == '/docs/packages/raw-paste.html' %} active{% endif %}">Raw Paste</a>
+    <a href="/docs/packages/todo.html" class="sidebar-link{% if page.url == '/docs/packages/todo.html' %} active{% endif %}">Todo List</a>
+    <a href="/docs/packages/btw.html" class="sidebar-link{% if page.url == '/docs/packages/btw.html' %} active{% endif %}">BTW</a>
+    <a href="/docs/packages/interactive-shell.html" class="sidebar-link{% if page.url == '/docs/packages/interactive-shell.html' %} active{% endif %}">Interactive Shell</a>
+    <a href="/docs/packages/autoresearch.html" class="sidebar-link{% if page.url == '/docs/packages/autoresearch.html' %} active{% endif %}">Autoresearch</a>
+    <a href="/docs/packages/ralph-wiggum.html" class="sidebar-link{% if page.url == '/docs/packages/ralph-wiggum.html' %} active{% endif %}">Ralph Wiggum</a>
+    <a href="/docs/packages/compound-engineering.html" class="sidebar-link{% if page.url == '/docs/packages/compound-engineering.html' %} active{% endif %}">Compound Engineering</a>
+  </nav>
+</aside>

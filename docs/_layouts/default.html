@@ -1,0 +1,28 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <link rel="icon" type="image/svg+xml" href="/favicon.svg">
+  <title>{{ page.title }}</title>
+  {% if page.description %}<meta name="description" content="{{ page.description }}">{% endif %}
+  {% if page.og_title %}
+  <meta property="og:title" content="{{ page.og_title }}">
+  <meta property="og:description" content="{{ page.og_description }}">
+  <meta property="og:url" content="{{ page.og_url | default: site.url }}">
+  <meta property="og:type" content="website">
+  <meta property="og:image" content="{{ page.og_image }}">
+  <meta name="twitter:card" content="summary_large_image">
+  <meta name="twitter:title" content="{{ page.og_title }}">
+  <meta name="twitter:description" content="{{ page.og_description }}">
+  <meta name="twitter:image" content="{{ page.og_image }}">
+  {% endif %}
+  <link rel="stylesheet" href="/assets/css/site.css">
+  {% if page.extra_css %}<link rel="stylesheet" href="{{ page.extra_css }}">{% endif %}
+</head>
+<body>
+{% include nav.html %}
+{{ content }}
+{% include footer.html %}
+</body>
+</html>
