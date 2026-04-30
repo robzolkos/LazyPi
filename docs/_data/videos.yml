@@ -102,6 +102,11 @@
       channel: IndyDevDan
       duration: "51:37"
       published: "2026-02-23"
+    - id: ANQ1IYsFM2s
+      title: "Building a Computer Game from Scratch With Opus and PI"
+      channel: Armin Ronacher
+      duration: "38:02"
+      published: "2026-01-08"
 
 - category: Slice of Pi
   id: slice
