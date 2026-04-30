@@ -77,6 +77,11 @@
   id: advanced
   description: "Deep dives into advanced Pi workflows and techniques."
   videos:
+    - id: yHgHU75N5T8
+      title: "DeepSeek V4: SOTA Coding Agent at 12x Lower Cost"
+      channel: Alejandro AO
+      duration: "18:10"
+      published: "2026-04-28"
     - id: DWWrLlM3gwQ
       title: "Pi Coding Agent Setup After 2 Months"
       channel: Eero Alvar
