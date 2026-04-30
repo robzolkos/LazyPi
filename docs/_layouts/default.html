@@ -1,22 +1,32 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
+  {% if jekyll.environment == "production" %}
+  <script async src="https://www.googletagmanager.com/gtag/js?id=G-DG7XQHRF5L"></script>
+  <script>
+    window.dataLayer = window.dataLayer || [];
+    function gtag(){dataLayer.push(arguments);}
+    gtag('js', new Date());
+    gtag('config', 'G-DG7XQHRF5L');
+  </script>
+  {% endif %}
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <link rel="icon" type="image/svg+xml" href="/favicon.svg">
   <title>{{ page.title }}</title>
   {% if page.description %}<meta name="description" content="{{ page.description }}">{% endif %}
-  {% if page.og_title %}
-  <meta property="og:title" content="{{ page.og_title }}">
-  <meta property="og:description" content="{{ page.og_description }}">
-  <meta property="og:url" content="{{ page.og_url | default: site.url }}">
+  {% assign og_title = page.og_title | default: page.title %}
+  {% assign og_desc = page.og_description | default: page.description %}
+  {% assign og_image = page.og_image | default: "/og.png" %}
+  <meta property="og:title" content="{{ og_title }}">
+  {% if og_desc %}<meta property="og:description" content="{{ og_desc }}">{% endif %}
+  <meta property="og:url" content="{{ site.url }}{{ page.url }}">
   <meta property="og:type" content="website">
-  <meta property="og:image" content="{{ page.og_image }}">
+  <meta property="og:image" content="{{ site.url }}{{ og_image }}">
   <meta name="twitter:card" content="summary_large_image">
-  <meta name="twitter:title" content="{{ page.og_title }}">
-  <meta name="twitter:description" content="{{ page.og_description }}">
-  <meta name="twitter:image" content="{{ page.og_image }}">
-  {% endif %}
+  <meta name="twitter:title" content="{{ og_title }}">
+  {% if og_desc %}<meta name="twitter:description" content="{{ og_desc }}">{% endif %}
+  <meta name="twitter:image" content="{{ site.url }}{{ og_image }}">
   <link rel="stylesheet" href="/assets/css/site.css">
   {% if page.extra_css %}<link rel="stylesheet" href="{{ page.extra_css }}">{% endif %}
 </head>
