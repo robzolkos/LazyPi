@@ -1,0 +1,45 @@
+---
+layout: default
+title: "Videos — LazyPi"
+description: "YouTube videos about the Pi coding agent — introductions, deep dives, and quick tips."
+extra_css: /assets/css/videos.css
+---
+<div class="videos-header">
+  <p class="videos-header-eyebrow">Learn Pi</p>
+  <h1>Videos</h1>
+  <p>Tutorials, talks, and demos from the Pi community.</p>
+</div>
+
+<nav class="videos-pill-nav">
+  {% for cat in site.data.videos %}{% if cat.videos.size > 0 %}<a href="#{{ cat.id }}" class="pill">{{ cat.category }}</a>{% endif %}{% endfor %}
+</nav>
+
+<div class="videos-body">
+  {% for cat in site.data.videos %}{% if cat.videos.size > 0 %}
+  <div class="video-category" id="{{ cat.id }}">
+    <p class="category-label">{{ cat.category }}</p>
+    <h2>{{ cat.category }}</h2>
+    {% if cat.description %}<p class="category-desc">{{ cat.description }}</p>{% endif %}
+    <div class="video-grid">
+      {% for video in cat.videos %}
+      <a class="video-card" href="https://www.youtube.com/watch?v={{ video.id }}" target="_blank" rel="noopener">
+        <div class="video-thumb">
+          <img src="https://img.youtube.com/vi/{{ video.id }}/mqdefault.jpg" alt="{{ video.title }}" loading="lazy">
+          <div class="play-icon">
+            <svg viewBox="0 0 24 24" fill="currentColor"><path d="M8 5v14l11-7z"/></svg>
+          </div>
+          {% if video.duration %}<div class="video-duration">{{ video.duration }}</div>{% endif %}
+        </div>
+        <div class="video-info">
+          <div class="video-title">{{ video.title }}</div>
+          <div class="video-meta">
+            {% if video.channel %}<span class="video-channel">{{ video.channel }}</span>{% endif %}
+            {% if video.published %}<span class="video-date">{{ video.published | date: "%b %Y" }}</span>{% endif %}
+          </div>
+        </div>
+      </a>
+      {% endfor %}
+    </div>
+  </div>
+  {% endif %}{% endfor %}
+</div>

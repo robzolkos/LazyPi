@@ -152,6 +152,23 @@ GitHub Pages uses the `github-pages` gem (specified in `docs/Gemfile`), which pi
 
 CSS variables (colors, spacing tokens) are defined at the top of `docs/assets/css/site.css`.
 
+### Adding videos
+
+Videos are driven by `docs/_data/videos.yml`. Each entry has a `category`, `id` (for anchor links), optional `description`, and a list of `videos`:
+
+```yaml
+- category: Intro to Pi
+  id: intro
+  description: "New to Pi? Start here."
+  videos:
+    - id: dQw4w9WgXcQ       # YouTube video ID (from ?v= in the URL)
+      title: "Video title"
+      channel: "Channel name"
+      duration: "12:34"        # optional, shown as badge on thumbnail (use H:MM:SS for >1hr)
+```
+
+The YouTube thumbnail is loaded automatically from `img.youtube.com/vi/{id}/mqdefault.jpg` — no API key needed. Add a video by appending to the right category block in the YAML file. The four categories are `Intro to Pi`, `Full Course Pi`, `Advanced Pi`, and `Slice of Pi`.
+
 ### Catalog updates on the landing page
 
 The catalog grid on `docs/index.html` and the themes data array in `docs/themes.html` are maintained manually. When adding a package to the CLI catalog (`PACKAGES` in `bin/lazypi.mjs`), update the catalog grid in `docs/index.html` to match.

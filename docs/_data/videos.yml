@@ -1,0 +1,99 @@
+- category: Intro to Pi
+  id: intro
+  description: "Get started with Pi — introductions, tutorials, and setup guides."
+  videos:
+    - id: DWWrLlM3gwQ
+      title: "Pi Coding Agent Setup After 2 Months"
+      channel: Eero Alvar
+      duration: "19:09"
+      published: "2026-04-27"
+    - id: OMFIPv8a4qA
+      title: "Pi: The Minimal Agent for REAL Devs"
+      channel: DevOps Toolbox
+      duration: "13:53"
+      published: "2026-04-24"
+    - id: 0uI62Ajzx08
+      title: "Pi: The Extensible Open Source Coding Agent"
+      channel: Seibert Group
+      duration: "0:38"
+      published: "2026-04-21"
+    - id: hV_hnPJ2r6k
+      title: "How to Use Pi as a Coding Agent (Standalone + SDK Basics)"
+      channel: Vilson Vieira
+      duration: "9:24"
+      published: "2026-04-08"
+    - id: 9KYfx_GzY1o
+      title: "This 100% minimal AI Agent can do anything… just watch"
+      channel: David Ondrej
+      duration: "31:32"
+      published: "2026-04-06"
+    - id: IJe9CabMeTk
+      title: "Pi: The Best Coding Agent You've (Probably) Never Heard Of"
+      channel: Ben Davis
+      duration: "22:03"
+      published: "2026-04-01"
+    - id: wVe3XOnio7M
+      title: "The PI coding agent is so much more than just another amazing coding agent!"
+      channel: Maximilian Schwarzmüller
+      duration: "15:25"
+      published: "2026-03-12"
+    - id: boSPk_Ig4gU
+      title: "Ollama + Pi: FREE Local AI Coding Agent"
+      channel: Julian Goldie SEO
+      duration: "9:40"
+      published: "2026-03-03"
+
+- category: Full Course Pi
+  id: fullcourse
+  description: "Extended videos showing it all."
+  videos:
+    - id: yAPKzHrx3eo
+      title: "Pi Agent (Full Course)"
+      channel: Vilson Vieira
+      duration: "34:48"
+      published: "2026-04-29"
+    - id: BZ0w0JhPQ9o
+      title: "Pi Coding Agent (Free Course)"
+      channel: Owain Lewis
+      duration: "28:01"
+      published: "2026-04-18"
+
+- category: Advanced Pi
+  id: advanced
+  description: "Deep dives into advanced Pi workflows and techniques."
+  videos:
+    - id: M30gp1315Y4
+      title: "One Agent Is NOT ENOUGH: Agentic Coding BEYOND Claude Code"
+      channel: IndyDevDan
+      duration: "34:57"
+      published: "2026-03-30"
+    - id: f8cfH5XX-XU
+      title: "The Pi Coding Agent: The ONLY REAL Claude Code COMPETITOR"
+      channel: IndyDevDan
+      duration: "51:37"
+      published: "2026-02-23"
+
+- category: Slice of Pi
+  id: slice
+  description: "Talks, interviews, and discussions about Pi from the creator and community."
+  videos:
+    - id: n5f51gtuGHE
+      title: "Building Pi, and what makes self-modifying software so fascinating"
+      channel: The Pragmatic Engineer
+      duration: "1:33:56"
+      published: "2026-04-29"
+    - id: RjfbvDXpFls
+      title: "Building Pi in a World of Slop — Mario Zechner"
+      channel: AI Engineer
+      duration: "18:25"
+      published: "2026-04-16"
+    - id: Dli5slNaJu0
+      title: "I Hated Every Coding Agent, So I Built My Own — Mario Zechner"
+      channel: Mastra
+      duration: "27:16"
+      published: "2026-03-31"
+    - id: PZ-sko1NWa0
+      title: "Pi Agent Creator on the Future of Agentic Coding"
+      channel: Mayank Gupta
+      duration: "1:30:42"
+      published: "2026-03-28"
