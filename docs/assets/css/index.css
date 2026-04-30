@@ -185,6 +185,41 @@
   letter-spacing: 0.05em;
 }
 
+.hero-testimonial {
+  margin-bottom: 2.5rem;
+  position: relative;
+  z-index: 1;
+}
+
+.hero-testimonial-quote {
+  font-size: clamp(0.9rem, 2vw, 1.05rem);
+  color: var(--text-bright);
+  font-style: italic;
+  margin: 0 0 0.35rem;
+  position: relative;
+  padding-left: 2.75rem;
+}
+
+.hero-testimonial-quote::before {
+  content: '\201C';
+  position: absolute;
+  left: -0.25rem;
+  top: -0.5rem;
+  font-size: 5rem;
+  line-height: 1;
+  color: var(--green);
+  font-style: normal;
+  font-family: Georgia, serif;
+  opacity: 0.7;
+}
+
+.hero-testimonial-attr {
+  font-size: 0.72rem;
+  color: rgba(74, 250, 122, 0.45);
+  letter-spacing: 0.04em;
+  margin: 0;
+}
+
 /* SECTIONS */
 section { padding: 5rem 2rem; }
 
