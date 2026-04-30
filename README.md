@@ -56,6 +56,19 @@ There is nothing to "uninstall" for LazyPi itself — `npx` doesn't leave it aro
 
 Run the built-in health check with `npx @robzolkos/lazypi doctor`.
 
+## Site / docs
+
+The site at [lazypi.org](https://lazypi.org) lives in `docs/` and is a Jekyll site compiled by GitHub Pages automatically on push to `master`.
+
+To preview locally (requires Ruby + Bundler):
+
+```bash
+cd docs && bundle install   # first time only
+npm run docs:serve          # serves at http://localhost:4000 with livereload
+```
+
+Shared nav and footer are in `docs/_includes/`. Layouts are in `docs/_layouts/`. CSS variables and nav styles are in `docs/assets/css/site.css`.
+
 ## Releasing
 
 LazyPi uses **Release Please** and **npm trusted publishing**.
