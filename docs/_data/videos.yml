@@ -12,11 +12,6 @@
       channel: DevOps Toolbox
       duration: "13:53"
       published: "2026-04-24"
-    - id: 0uI62Ajzx08
-      title: "Pi: The Extensible Open Source Coding Agent"
-      channel: Seibert Group
-      duration: "0:38"
-      published: "2026-04-21"
     - id: hV_hnPJ2r6k
       title: "How to Use Pi as a Coding Agent (Standalone + SDK Basics)"
       channel: Vilson Vieira
@@ -97,3 +92,18 @@
       channel: Mayank Gupta
       duration: "1:30:42"
       published: "2026-03-28"
+
+- category: Short Pi
+  id: shortpi
+  description: "Quick Pi clips and YouTube Shorts."
+  videos:
+    - id: iAQq0MndX9c
+      title: "Pi can run from your phone!"
+      channel: DevOps Toolbox
+      duration: "0:36"
+      published: "2026-04-30"
+    - id: 0uI62Ajzx08
+      title: "Pi: The Extensible Open Source Coding Agent"
+      channel: Seibert Group
+      duration: "0:38"
+      published: "2026-04-21"
