@@ -2,21 +2,16 @@
   id: intro
   description: "Get started with Pi — introductions, tutorials, and setup guides."
   videos:
-    - id: DWWrLlM3gwQ
-      title: "Pi Coding Agent Setup After 2 Months"
-      channel: Eero Alvar
-      duration: "19:09"
-      published: "2026-04-27"
     - id: OMFIPv8a4qA
       title: "Pi: The Minimal Agent for REAL Devs"
       channel: DevOps Toolbox
       duration: "13:53"
       published: "2026-04-24"
-    - id: 0uI62Ajzx08
-      title: "Pi: The Extensible Open Source Coding Agent"
-      channel: Seibert Group
-      duration: "0:38"
-      published: "2026-04-21"
+    - id: jTMI1bCv3Ts
+      title: "Pi Coding Agent: The only Agent That's Truly YOURS"
+      channel: Igor Kudryk (Salesforce)
+      duration: "18:35"
+      published: "2026-04-10"
     - id: hV_hnPJ2r6k
       title: "How to Use Pi as a Coding Agent (Standalone + SDK Basics)"
       channel: Vilson Vieira
@@ -32,16 +27,41 @@
       channel: Ben Davis
       duration: "22:03"
       published: "2026-04-01"
+    - id: XzZgLDL0wZY
+      title: "I Found the Vim of AI Coding Agents"
+      channel: chantastic
+      duration: "14:05"
+      published: "2026-03-26"
+    - id: fdbXNWkpPMY
+      title: "A love letter to Pi | Lucas Meijer"
+      channel: Build Monumental
+      duration: "27:11"
+      published: "2026-03-25"
     - id: wVe3XOnio7M
       title: "The PI coding agent is so much more than just another amazing coding agent!"
       channel: Maximilian Schwarzmüller
       duration: "15:25"
       published: "2026-03-12"
+    - id: e5sRVJTQxK8
+      title: "Pi Coding Agent: Forget Claude Code & OpenCode — This Open Source Agent Is Insane"
+      channel: AI Stack Engineer
+      duration: "9:18"
+      published: "2026-03-08"
+    - id: hv0V0GJpC78
+      title: "Pi Coding Agent: RIP Claude Code & OpenCode! This Opensource Coding Agent is JUST WAY BETTER!"
+      channel: AICodeKing
+      duration: "14:08"
+      published: "2026-03-05"
     - id: boSPk_Ig4gU
       title: "Ollama + Pi: FREE Local AI Coding Agent"
       channel: Julian Goldie SEO
       duration: "9:40"
       published: "2026-03-03"
+    - id: AEmHcFH1UgQ
+      title: "Claude Code is overkill - Pi is All you Need"
+      channel: Syntax
+      duration: "58:00"
+      published: "2026-02-04"
 
 - category: Full Course Pi
   id: fullcourse
@@ -62,6 +82,21 @@
   id: advanced
   description: "Deep dives into advanced Pi workflows and techniques."
   videos:
+    - id: yHgHU75N5T8
+      title: "DeepSeek V4: SOTA Coding Agent at 12x Lower Cost"
+      channel: Alejandro AO
+      duration: "18:10"
+      published: "2026-04-28"
+    - id: DWWrLlM3gwQ
+      title: "Pi Coding Agent Setup After 2 Months"
+      channel: Eero Alvar
+      duration: "19:09"
+      published: "2026-04-27"
+    - id: jD_MpL9xkSU
+      title: "pi and the Spec Paradox by Max Sumrall"
+      channel: Devoxx
+      duration: "12:29"
+      published: "2026-04-09"
     - id: M30gp1315Y4
       title: "One Agent Is NOT ENOUGH: Agentic Coding BEYOND Claude Code"
       channel: IndyDevDan
@@ -72,6 +107,11 @@
       channel: IndyDevDan
       duration: "51:37"
       published: "2026-02-23"
+    - id: ANQ1IYsFM2s
+      title: "Building a Computer Game from Scratch With Opus and PI"
+      channel: Armin Ronacher
+      duration: "38:02"
+      published: "2026-01-08"
 
 - category: Slice of Pi
   id: slice
@@ -87,6 +127,11 @@
       channel: AI Engineer
       duration: "18:25"
       published: "2026-04-16"
+    - id: vXyerrv8ohw
+      title: "Pi Coding Agent - Interviewing the Creator of Openclaws core"
+      channel: 0xSero
+      duration: "55:36"
+      published: "2026-04-04"
     - id: Dli5slNaJu0
       title: "I Hated Every Coding Agent, So I Built My Own — Mario Zechner"
       channel: Mastra
@@ -97,3 +142,18 @@
       channel: Mayank Gupta
       duration: "1:30:42"
       published: "2026-03-28"
+
+- category: Short Pi
+  id: shortpi
+  description: "Quick Pi clips and YouTube Shorts."
+  videos:
+    - id: iAQq0MndX9c
+      title: "Pi can run from your phone!"
+      channel: DevOps Toolbox
+      duration: "0:36"
+      published: "2026-04-30"
+    - id: 0uI62Ajzx08
+      title: "Pi: The Extensible Open Source Coding Agent"
+      channel: Seibert Group
+      duration: "0:38"
+      published: "2026-04-21"

@@ -23,7 +23,12 @@ og_image: /og-videos.png
     {% if cat.description %}<p class="category-desc">{{ cat.description }}</p>{% endif %}
     <div class="video-grid">
       {% for video in cat.videos %}
-      <a class="video-card" href="https://www.youtube.com/watch?v={{ video.id }}" target="_blank" rel="noopener">
+      {% if cat.id == 'shortpi' %}
+      {% assign video_url = "https://www.youtube.com/shorts/" | append: video.id %}
+      {% else %}
+      {% assign video_url = "https://www.youtube.com/watch?v=" | append: video.id %}
+      {% endif %}
+      <a class="video-card" href="{{ video_url }}" target="_blank" rel="noopener">
         <div class="video-thumb">
           <img src="https://img.youtube.com/vi/{{ video.id }}/mqdefault.jpg" alt="{{ video.title }}" loading="lazy">
           <div class="play-icon">
