@@ -27,8 +27,8 @@
   <meta name="twitter:title" content="{{ og_title }}">
   {% if og_desc %}<meta name="twitter:description" content="{{ og_desc }}">{% endif %}
   <meta name="twitter:image" content="{{ site.url }}{{ og_image }}">
-  <link rel="stylesheet" href="/assets/css/site.css">
-  {% if page.extra_css %}<link rel="stylesheet" href="{{ page.extra_css }}">{% endif %}
+  <link rel="stylesheet" href="/assets/css/site.css?v={{ site.time | date: '%s' }}">
+  {% if page.extra_css %}<link rel="stylesheet" href="{{ page.extra_css }}?v={{ site.time | date: '%s' }}">{% endif %}
 </head>
 <body>
 {% include nav.html %}
