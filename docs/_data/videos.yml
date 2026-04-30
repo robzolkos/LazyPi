@@ -2,11 +2,6 @@
   id: intro
   description: "Get started with Pi — introductions, tutorials, and setup guides."
   videos:
-    - id: DWWrLlM3gwQ
-      title: "Pi Coding Agent Setup After 2 Months"
-      channel: Eero Alvar
-      duration: "19:09"
-      published: "2026-04-27"
     - id: OMFIPv8a4qA
       title: "Pi: The Minimal Agent for REAL Devs"
       channel: DevOps Toolbox
@@ -72,6 +67,11 @@
   id: advanced
   description: "Deep dives into advanced Pi workflows and techniques."
   videos:
+    - id: DWWrLlM3gwQ
+      title: "Pi Coding Agent Setup After 2 Months"
+      channel: Eero Alvar
+      duration: "19:09"
+      published: "2026-04-27"
     - id: M30gp1315Y4
       title: "One Agent Is NOT ENOUGH: Agentic Coding BEYOND Claude Code"
       channel: IndyDevDan
