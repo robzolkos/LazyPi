@@ -1,5 +1,15 @@
 # Changelog
 
+## [0.5.0](https://github.com/robzolkos/LazyPi/compare/v0.4.0...v0.5.0) (2026-04-30)
+
+
+### Features
+
+* add Mario Zechner testimonial quote to home page hero ([c282468](https://github.com/robzolkos/LazyPi/commit/c282468c6fde2bc53b2177aa9f5a81d4663fc0b3))
+* add Short Pi videos section ([#44](https://github.com/robzolkos/LazyPi/issues/44)) ([9fa5d82](https://github.com/robzolkos/LazyPi/commit/9fa5d820117b1e0f1db4d54580ae346a4f12eee4))
+* bust CSS cache on deploy using build timestamp ([1d91fba](https://github.com/robzolkos/LazyPi/commit/1d91fba1fdc298a69d118104f087d005ffa26f4a))
+* convert docs site to Jekyll for GitHub Pages compilation ([#41](https://github.com/robzolkos/LazyPi/issues/41)) ([963755d](https://github.com/robzolkos/LazyPi/commit/963755d20cf26aad0eba5abefa1da3f7e9848040))
+
 ## [0.4.0](https://github.com/robzolkos/LazyPi/compare/v0.3.0...v0.4.0) (2026-04-29)
 
 
