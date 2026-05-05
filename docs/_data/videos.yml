@@ -82,6 +82,11 @@
   id: advanced
   description: "Deep dives into advanced Pi workflows and techniques."
   videos:
+    - id: EnXKysJNz_8
+      title: "GPT-5.5 VERIFIED Opus 4.7: A Pi Coding Agent That REVIEWS Like YOU"
+      channel: IndyDevDan
+      duration: "32:52"
+      published: "2026-05-04"
     - id: yHgHU75N5T8
       title: "DeepSeek V4: SOTA Coding Agent at 12x Lower Cost"
       channel: Alejandro AO
