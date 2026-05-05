@@ -82,6 +82,16 @@
   id: advanced
   description: "Deep dives into advanced Pi workflows and techniques."
   videos:
+    - id: EnXKysJNz_8
+      title: "GPT-5.5 VERIFIED Opus 4.7: A Pi Coding Agent That REVIEWS Like YOU"
+      channel: IndyDevDan
+      duration: "32:52"
+      published: "2026-05-04"
+    - id: DVTTskFgI-8
+      title: "630% Better: pi-AutoResearch in 13 Minutes"
+      channel: Tech Friend AJ
+      duration: "13:39"
+      published: "2026-05-03"
     - id: yHgHU75N5T8
       title: "DeepSeek V4: SOTA Coding Agent at 12x Lower Cost"
       channel: Alejandro AO
@@ -117,6 +127,11 @@
   id: slice
   description: "Talks, interviews, and discussions about Pi from the creator and community."
   videos:
+    - id: sqtX2OmgOF0
+      title: "Tokens can make you rich, just do this – Mario Zechner"
+      channel: David Ondrej
+      duration: "47:41"
+      published: "2026-05-03"
     - id: n5f51gtuGHE
       title: "Building Pi, and what makes self-modifying software so fascinating"
       channel: The Pragmatic Engineer
