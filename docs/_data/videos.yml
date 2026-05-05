@@ -122,6 +122,11 @@
   id: slice
   description: "Talks, interviews, and discussions about Pi from the creator and community."
   videos:
+    - id: sqtX2OmgOF0
+      title: "Tokens can make you rich, just do this – Mario Zechner"
+      channel: David Ondrej
+      duration: "47:41"
+      published: "2026-05-03"
     - id: n5f51gtuGHE
       title: "Building Pi, and what makes self-modifying software so fascinating"
       channel: The Pragmatic Engineer
