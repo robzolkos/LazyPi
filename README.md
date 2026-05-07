@@ -1,6 +1,6 @@
 # LazyPi
 
-The [Pi](https://github.com/badlogic/pi-mono) coding agent is minimal by design. LazyPi is opinionated by design. Run one command and get a complete, curated Pi setup — everything selected by default, nothing to research, nothing to configure. Remove what you don't want later.
+The [Pi](https://github.com/earendil-works/pi-mono) coding agent is minimal by design. LazyPi is opinionated by design. Run one command and get a complete, curated Pi setup — everything selected by default, nothing to research, nothing to configure. Remove what you don't want later.
 
 ## Quick start
 

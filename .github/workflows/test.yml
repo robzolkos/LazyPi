@@ -25,7 +25,7 @@ jobs:
         uses: oven-sh/setup-bun@v2
 
       - name: Install pi
-        run: npm install -g @mariozechner/pi-coding-agent
+        run: npm install -g @earendil-works/pi-coding-agent
 
       - name: Install dependencies
         run: npm ci

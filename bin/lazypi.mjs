@@ -716,16 +716,16 @@ async function ensurePi(flags) {
 	if (hasCmd("pi")) return true;
 
 	log.warn("Could not find the `pi` command on PATH.");
-	const ok = flags.yes || (await confirm("Install Pi now with `npm install -g @mariozechner/pi-coding-agent`?", true));
+	const ok = flags.yes || (await confirm("Install Pi now with `npm install -g @earendil-works/pi-coding-agent`?", true));
 	if (!ok) {
 		log.error("Install Pi first, then re-run `npx @robzolkos/lazypi`.");
 		return false;
 	}
 
-	log.step("Installing Pi via `npm install -g @mariozechner/pi-coding-agent`");
-	const code = spawnCommand("npm", ["install", "-g", "@mariozechner/pi-coding-agent"], { stdio: "inherit" }).status;
+	log.step("Installing Pi via `npm install -g @earendil-works/pi-coding-agent`");
+	const code = spawnCommand("npm", ["install", "-g", "@earendil-works/pi-coding-agent"], { stdio: "inherit" }).status;
 	if (code !== 0) {
-		log.error("Failed to install Pi. On some systems a global npm install needs sudo:\n  sudo npm install -g @mariozechner/pi-coding-agent");
+		log.error("Failed to install Pi. On some systems a global npm install needs sudo:\n  sudo npm install -g @earendil-works/pi-coding-agent");
 		return false;
 	}
 
