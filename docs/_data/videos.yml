@@ -2,6 +2,11 @@
   id: intro
   description: "Get started with Pi — introductions, tutorials, and setup guides."
   videos:
+    - id: N30XGyPrr6I
+      title: "Pi Agent – Crash Course | Minimal Coding Agent"
+      channel: Alejandro AO
+      duration: "26:34"
+      published: "2026-05-05"
     - id: OMFIPv8a4qA
       title: "Pi: The Minimal Agent for REAL Devs"
       channel: DevOps Toolbox
@@ -82,6 +87,11 @@
   id: advanced
   description: "Deep dives into advanced Pi workflows and techniques."
   videos:
+    - id: g94lMuhGlEY
+      title: "PI Agent + Gemma 4 = Best Laptop AI Coding Setup!"
+      channel: NetworkCoder
+      duration: "13:30"
+      published: "2026-05-07"
     - id: EnXKysJNz_8
       title: "GPT-5.5 VERIFIED Opus 4.7: A Pi Coding Agent That REVIEWS Like YOU"
       channel: IndyDevDan
