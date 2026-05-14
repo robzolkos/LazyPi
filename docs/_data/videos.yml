@@ -12,10 +12,20 @@
       channel: FluxStack
       duration: "10:13"
       published: "2026-05-06"
+    - id: dGCFj-IcuI0
+      title: "Pi Coding Agent vs Claude Code, Codex & OpenCode"
+      channel: Panda Making Money
+      duration: "29:06"
+      published: "2026-05-06"
     - id: N30XGyPrr6I
       title: "Pi Agent – Crash Course | Minimal Coding Agent"
       channel: Alejandro AO
       duration: "26:34"
+      published: "2026-05-05"
+    - id: NQhH2fPcDmo
+      title: "Pi coding agent with claude"
+      channel: Music mix and remix
+      duration: "5:18"
       published: "2026-05-05"
     - id: 8yac_swVw8I
       title: "Pi Coding Agent: The Minimal Coding Agent That Beats Claude Code and OpenCode"
@@ -32,6 +42,16 @@
       channel: AI Automation Station
       duration: "9:07"
       published: "2026-04-23"
+    - id: 2s573tu8B7M
+      title: "PI CODING AGENT - ЧТО ЭТО? Минималистичный CLI для разработки"
+      channel: NullsCode
+      duration: "9:34"
+      published: "2026-04-22"
+    - id: qdJIBZ3ENfg
+      title: "Pi Coding Agent DESTROYS Openclaw?"
+      channel: AI News Today | Julian Goldie Podcast
+      duration: "11:45"
+      published: "2026-04-13"
     - id: O-96yYDPMOc
       title: "Pi Coding Agent"
       channel: DevOnDuty
@@ -102,6 +122,11 @@
   id: fullcourse
   description: "Extended videos showing it all."
   videos:
+    - id: 6T46BslVzAc
+      title: "Pi Coding Agent (Free Course) (2026)"
+      channel: Tutorials by Manizha & Ryan
+      duration: "19:13"
+      published: "2026-05-04"
     - id: yAPKzHrx3eo
       title: "Pi Agent (Full Course)"
       channel: Vilson Vieira
@@ -122,11 +147,21 @@
       channel: IndyDevDan
       duration: "31:10"
       published: "2026-05-11"
+    - id: JnQcPzjC6Vo
+      title: "I Gave Pi Access to Obsidian And I'm Not Looking Back"
+      channel: DevOps Toolbox
+      duration: "14:20"
+      published: "2026-05-08"
     - id: g94lMuhGlEY
       title: "PI Agent + Gemma 4 = Best Laptop AI Coding Setup!"
       channel: NetworkCoder
       duration: "13:30"
       published: "2026-05-07"
+    - id: qS-aMKbVJ00
+      title: "How the PI coding agent was built"
+      channel: The Manual for The Western Male
+      duration: "9:04"
+      published: "2026-05-06"
     - id: EnXKysJNz_8
       title: "GPT-5.5 VERIFIED Opus 4.7: A Pi Coding Agent That REVIEWS Like YOU"
       channel: IndyDevDan
@@ -137,6 +172,21 @@
       channel: Tech Friend AJ
       duration: "13:39"
       published: "2026-05-03"
+    - id: dRialfHHwRw
+      title: "DON'T WASTE SO MANY TOKENS! PI CODING AGENT vs OPENCODE with same local LLM."
+      channel: Luigi Tech
+      duration: "15:16"
+      published: "2026-05-03"
+    - id: _u4PLnc13ME
+      title: "Claude Code Wasted 100K Tokens. Pi Did It Better on Local Gemma 4"
+      channel: Execute Automation
+      duration: "19:10"
+      published: "2026-05-02"
+    - id: pn4hGl6GJ0I
+      title: "I Ran an Uncensored Local LLM Inside Pi Coding Agent (Qwen 3.6 + Gemma 4 uncensored live demo)"
+      channel: Luke Spear
+      duration: "35:19"
+      published: "2026-04-30"
     - id: yHgHU75N5T8
       title: "DeepSeek V4: SOTA Coding Agent at 12x Lower Cost"
       channel: Alejandro AO
@@ -152,26 +202,101 @@
       channel: Cole Medin
       duration: "17:49"
       published: "2026-04-20"
+    - id: 6MYOhD_XytA
+      title: "pi-reviewer: a pi coding agent extension to review pull requests via voice"
+      channel: 6etime with Arnav
+      duration: "6:40"
+      published: "2026-04-18"
     - id: 1ZsFjM6yZGI
       title: "Don't sleep on the Pi agent, it solves the sandbox problem"
       channel: marimo
       duration: "6:55"
       published: "2026-04-16"
+    - id: c9292MtK8EA
+      title: "Pi Agent + a Real Browser = This Is What Happened"
+      channel: Steel Browser
+      duration: "5:24"
+      published: "2026-04-14"
+    - id: lWbEq1dEqKg
+      title: "How Pi Mono Actually Works in Your App"
+      channel: Michael Jamieson
+      duration: "18:12"
+      published: "2026-04-12"
+    - id: _K4c7cL_tzw
+      title: "Coding Agent from Scratch: Terminal User Interface with pi-tui"
+      channel: Joe Maddalone
+      duration: "16:31"
+      published: "2026-04-12"
+    - id: BILOFt4a50k
+      title: "Pi Coding Agent - Oneshot Updating an Extension with Pi - CLI Streaming Mode (pi -p --stream=all)"
+      channel: Lotus Creation Concepts
+      duration: "5:10"
+      published: "2026-04-12"
+    - id: yqwT5sGSlJk
+      title: "Your Own Perplexity Deep Search Tool Using Pi Coding Agent"
+      channel: Lotus Creation Concepts
+      duration: "1:46"
+      published: "2026-04-11"
     - id: jD_MpL9xkSU
       title: "pi and the Spec Paradox by Max Sumrall"
       channel: Devoxx
       duration: "12:29"
+      published: "2026-04-09"
+    - id: 1cF_Afc5_tA
+      title: "PI Agent + Ollama + Gemma4: Super Lightweight and Highly Extensible AI Coding Agent"
+      channel: DevsKingdom
+      duration: "15:02"
       published: "2026-04-09"
     - id: ttklS6Yp0O8
       title: "Gemma 4 with Pi Coding Agent & llama.cpp | Build LLM Resource Calculator with NextJS | 🔴 Live"
       channel: Venelin Valkov
       duration: "1:06:16"
       published: "2026-04-07"
+    - id: RairMJflUSA
+      title: "My Pi Agent Teams. Claude Code Leak SIGNAL. Harness Engineering"
+      channel: IndyDevDan
+      duration: "32:27"
+      published: "2026-04-06"
+    - id: gsiOPy3jPDI
+      title: "Remote coding agents over SSH w/ Pi & tmux"
+      channel: Ben Vinegar
+      duration: "17:05"
+      published: "2026-04-04"
+    - id: YOuKskmEosQ
+      title: "How Pi Mono Actually Works: The Shared Agent Stack Behind Pi"
+      channel: Michael Jamieson
+      duration: "16:06"
+      published: "2026-04-02"
     - id: M30gp1315Y4
       title: "One Agent Is NOT ENOUGH: Agentic Coding BEYOND Claude Code"
       channel: IndyDevDan
       duration: "34:57"
       published: "2026-03-30"
+    - id: fgPJjvD5mDM
+      title: "Pi vs OpenCode - Which AI Coding Agent Should You Use?"
+      channel: KTG Analysis
+      duration: "17:42"
+      published: "2026-03-24"
+    - id: A_fvWhL-NIQ
+      title: "opencode vs pi agent. simple benchmark with Local LLM."
+      channel: Luigi Tech
+      duration: "7:38"
+      published: "2026-03-14"
+    - id: 28MLpm4NSBs
+      title: "Pi Coding Agent Custom Theme and Animated Gif During Thought"
+      channel: Dara Jeffus
+      duration: "3:14"
+      published: "2026-02-26"
+    - id: Fs_raupd3kc
+      title: "Context Bonsai Plugin development and more experimentation with the pi coding agent"
+      channel: Vibecodelicious
+      duration: "2:05:52"
+      published: "2026-02-26"
+    - id: y3ntCh8vF7Q
+      title: "PI: pi-coding-agent, a general framework"
+      channel: Kan Deng
+      duration: "10:47"
+      published: "2026-02-25"
     - id: f8cfH5XX-XU
       title: "The Pi Coding Agent: The ONLY REAL Claude Code COMPETITOR"
       channel: IndyDevDan
@@ -192,6 +317,11 @@
       channel: Armin Ronacher
       duration: "11:27"
       published: "2026-01-25"
+    - id: jiWS9pP_cX0
+      title: "eddo skill for pi-coding-agent teaser"
+      channel: Walter Rafelsberger
+      duration: "2:08"
+      published: "2026-01-13"
     - id: ANQ1IYsFM2s
       title: "Building a Computer Game from Scratch With Opus and PI"
       channel: Armin Ronacher
@@ -207,6 +337,16 @@
       channel: Armin Ronacher
       duration: "1:38:23"
       published: "2026-05-11"
+    - id: vAIDdLKB6-w
+      title: "A Piece of Pi: Embedding The OpenClaw Coding Agent In Your Product — Matthias Luebken, Tavon"
+      channel: AI Engineer
+      duration: "20:42"
+      published: "2026-05-11"
+    - id: BQ_Es8k650I
+      title: "Pi.dev explained by its creators | AI Agents Under the Hood"
+      channel: Merantix AI Campus
+      duration: "1:12:40"
+      published: "2026-05-05"
     - id: sqtX2OmgOF0
       title: "Tokens can make you rich, just do this – Mario Zechner"
       channel: David Ondrej
@@ -222,6 +362,11 @@
       channel: AI Engineer
       duration: "18:25"
       published: "2026-04-16"
+    - id: 3DNkDIVKtK8
+      title: "Crashing out at Anthropic and getting Pi pilled"
+      channel: Theo - t3․gg
+      duration: "1:21:48"
+      published: "2026-04-08"
     - id: vXyerrv8ohw
       title: "Pi Coding Agent - Interviewing the Creator of Openclaws core"
       channel: 0xSero
@@ -237,6 +382,16 @@
       channel: Mayank Gupta
       duration: "1:30:42"
       published: "2026-03-28"
+    - id: -uB0KVAQIM8
+      title: "Pi Coding Agent, Dark Factories & the Furniture Makers of Carolina"
+      channel: Artificial Developer Intelligence
+      duration: "1:25:17"
+      published: "2026-02-13"
+    - id: dWlhu0aWCb8
+      title: "Hacking pi, the little coding agent that could, using pi"
+      channel: Mario Zechner
+      duration: "2:13:21"
+      published: "2025-11-14"
     - id: 4p2uQ4FQtis
       title: "pi - a radically minimal, opinionated multi-model coding agent"
       channel: Mario Zechner
@@ -257,3 +412,8 @@
       channel: Seibert Group
       duration: "0:38"
       published: "2026-04-21"
+    - id: sQq8Bhqig5E
+      title: "Sync active nvim theme to pi coding agent"
+      channel: Lê Hùng Thiện
+      duration: "1:18"
+      published: "2026-04-10"

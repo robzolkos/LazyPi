@@ -32,14 +32,17 @@ Pi coding agent
 Also search these variants before concluding there are no more candidates, because YouTube ranking can miss relevant uploads for the default query:
 
 ```text
+"Pi Coding Agent"
 "Pi agent"
 "Pi Agent" coding
+"picodingagent"
+"Pi.dev" coding
 "pi-coding-agent"
 "@earendil-works" Pi
 "Earendil Works" Pi agent
 ```
 
-The exact phrase `"Pi agent"` is required in the default workflow; do not skip it just because `Pi coding agent` returned results.
+The exact phrases `"Pi Coding Agent"` and `"Pi agent"`, plus `"picodingagent"` and `"Pi.dev" coding`, are required in the default workflow; do not skip them just because `Pi coding agent` returned results.
 
 Prefer recent, relevant videos about the Pi coding agent. Avoid unrelated Raspberry Pi, math pi, or generic AI coding videos unless they clearly mention the Pi coding agent.
 
