@@ -62,7 +62,6 @@ export const PACKAGES = [
 	},
 	{ id: "ralph-wiggum", category: "research", source: "npm:@tmustier/pi-ralph-wiggum", description: "Ralph Wiggum agent loop", hint: "Long-running iterative dev loops with goals, checklists, and optional self-reflection." },
 	{ id: "compound", category: "frameworks", source: "npm:@every-env/compound-plugin", description: "Official Compound Engineering", hint: "Official Every Pi target via Bun (skipped if Bun is unavailable)." },
-	{ id: "pi-themes", category: "themes", source: "npm:pi-themes", description: "Theme collection + picker", hint: "10 themes (Catppuccin, Dracula, Gruvbox, Nord, One Dark, Solarized, Tokyo Night) with a /themes picker command." },
 	{ id: "hackerman", category: "themes", source: "git:github.com/javierportillo/pi-hackerman@63b0a3ef2c7b14985ffeb6cac44614ba59cd5693", description: "Hackerman theme", hint: "Neon hacker-style color theme ported from the VS Code Hackerman Theme." },
 	{ id: "curated-themes", category: "themes", source: "npm:@victor-software-house/pi-curated-themes", description: "65 curated dark themes", hint: "65 dark terminal themes adapted from iTerm2-Color-Schemes." },
 	{ id: "terminal-theme", category: "themes", source: "npm:pi-terminal-theme", description: "Terminal ANSI theme", hint: "Maps Pi colors to ANSI 0–15 so Pi inherits your terminal's own color palette." },
@@ -284,14 +283,6 @@ function settingsPath(local) {
 // so they fall back to the user's active session model instead.
 const SUBAGENT_BUILTIN_MODELS = ["context-builder", "planner", "researcher", "reviewer", "scout", "worker"];
 
-const PI_THEMES_FILTERED_ENTRY = {
-	source: "npm:pi-themes",
-	themes: [
-		"themes/*.json",
-		"!themes/catppuccin-mocha.json",
-		"!themes/gruvbox-dark.json",
-	],
-};
 
 function readSettings(local) {
 	const path = settingsPath(local);
@@ -329,22 +320,6 @@ function writeSubagentOverrides(local) {
 		const overrides = {};
 		for (const name of SUBAGENT_BUILTIN_MODELS) overrides[name] = { model: "" };
 		settings.subagents = { ...(settings.subagents ?? {}), agentOverrides: { ...(settings.subagents?.agentOverrides ?? {}), ...overrides } };
-		return true;
-	});
-}
-
-function writePiThemesFilter(local) {
-	return writeSettings(local, (settings) => {
-		const packages = Array.isArray(settings.packages) ? [...settings.packages] : [];
-		const index = packages.findIndex((entry) => (typeof entry === "string" && entry === PI_THEMES_FILTERED_ENTRY.source)
-			|| (entry && typeof entry === "object" && entry.source === PI_THEMES_FILTERED_ENTRY.source));
-		if (index === -1) return false;
-		const entry = packages[index];
-		if (entry && typeof entry === "object" && Array.isArray(entry.themes)) return false;
-		packages[index] = entry && typeof entry === "object"
-			? { ...entry, themes: [...PI_THEMES_FILTERED_ENTRY.themes] }
-			: { ...PI_THEMES_FILTERED_ENTRY, themes: [...PI_THEMES_FILTERED_ENTRY.themes] };
-		settings.packages = packages;
 		return true;
 	});
 }
@@ -813,19 +788,6 @@ async function cmdInstall(flags) {
 	}
 
 	if (toInstall.length === 0) {
-		if (selected.some((p) => p.id === "pi-themes")) {
-			const themesFilterResult = writePiThemesFilter(flags.local);
-			if (!themesFilterResult.ok) {
-				const message = `Refusing to update ${themesFilterResult.path} because it is not valid JSON (${themesFilterResult.error}). Fix the file first, then rerun lazypi.`;
-				if (interactive) {
-					log.error(message);
-					outro(red("Aborted."));
-				} else {
-					console.error(red(message));
-				}
-				return 2;
-			}
-		}
 		printCheatsheet(selected, interactive);
 		const done = "Nothing to do — every selected package is already installed.";
 		if (interactive) log.success(green(done));
@@ -883,20 +845,6 @@ async function cmdInstall(flags) {
 			failed.push(pkg);
 			if (interactive) log.error(`failed to install ${pkg.id}`);
 			else console.error(red(`  ✗ failed to install ${pkg.id}`));
-		}
-	}
-
-	if (selected.some((p) => p.id === "pi-themes")) {
-		const themesFilterResult = writePiThemesFilter(flags.local);
-		if (!themesFilterResult.ok) {
-			const message = `Refusing to update ${themesFilterResult.path} because it is not valid JSON (${themesFilterResult.error}). Fix the file first, then rerun lazypi.`;
-			if (interactive) {
-				log.error(message);
-				outro(red("Aborted."));
-			} else {
-				console.error(red(message));
-			}
-			return 2;
 		}
 	}
 
