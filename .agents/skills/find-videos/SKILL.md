@@ -29,13 +29,20 @@ If the user does not provide a query, search YouTube for:
 Pi coding agent
 ```
 
-Also consider searching these variants if the first query has few results:
+Also search these variants before concluding there are no more candidates, because YouTube ranking can miss relevant uploads for the default query:
 
 ```text
+"Pi Coding Agent"
+"Pi agent"
+"Pi Agent" coding
+"picodingagent"
+"Pi.dev" coding
 "pi-coding-agent"
 "@earendil-works" Pi
 "Earendil Works" Pi agent
 ```
+
+The exact phrases `"Pi Coding Agent"` and `"Pi agent"`, plus `"picodingagent"` and `"Pi.dev" coding`, are required in the default workflow; do not skip them just because `Pi coding agent` returned results.
 
 Prefer recent, relevant videos about the Pi coding agent. Avoid unrelated Raspberry Pi, math pi, or generic AI coding videos unless they clearly mention the Pi coding agent.
 
@@ -46,6 +53,7 @@ When possible, use YouTube's upload-date filter for recent videos, then enforce 
 Only propose a candidate if it has at least one strong Pi coding-agent signal:
 
 - title, description, or transcript snippet says `Pi coding agent`
+- title, description, or transcript snippet says `Pi agent` in a software/coding-agent context
 - title, description, or transcript snippet says `pi-coding-agent`
 - title, description, channel, or page metadata mentions `Earendil Works` in connection with Pi
 - description links to `github.com/earendil-works/pi-coding-agent`
@@ -112,7 +120,7 @@ agent-browser open "https://www.youtube.com/results?search_query=Pi%20coding%20a
 
 If needed, also try YouTube's recent upload filters from the UI through agent-browser. The final candidate list must still be filtered to videos published within the last 10 days.
 
-Use `agent-browser eval` to extract visible video results in one pass. Prefer extracting:
+For each query, scroll the results page before extracting. YouTube lazy-loads and re-ranks results, so a single first-viewport extraction can miss relevant videos. Scroll down several times until the result count stops increasing, or until you have inspected at least 60 video results for that query when available. Then use `agent-browser eval` to extract results. Prefer extracting:
 
 - video ID
 - title
@@ -127,6 +135,8 @@ Example extraction script, adapting selectors as needed:
 ```bash
 agent-browser eval "JSON.stringify([...document.querySelectorAll('ytd-video-renderer,ytd-rich-item-renderer')].map((el) => { const link = el.querySelector('a#video-title,a.yt-simple-endpoint[href*=watch],a[href*=shorts]'); const href = link?.href || ''; const url = href.startsWith('http') ? href : new URL(href, location.origin).href; const id = new URL(url).searchParams.get('v') || url.match(/shorts\\/([^?&/]+)/)?.[1] || ''; const title = (link?.textContent || link?.getAttribute('title') || '').trim(); const channel = (el.querySelector('ytd-channel-name a,#channel-name a')?.textContent || '').trim(); const meta = [...el.querySelectorAll('#metadata-line span')].map((s) => s.textContent.trim()).filter(Boolean); const duration = (el.querySelector('ytd-thumbnail-overlay-time-status-renderer span,span.ytd-thumbnail-overlay-time-status-renderer')?.textContent || '').trim(); return { id, title, channel, url, duration, meta, isShort: url.includes('/shorts/') }; }).filter((v) => v.id && v.title))"
 ```
+
+If a known-relevant result is missing from the first extraction, rerun the same query after additional scrolling and try a related exact phrase (for example `"Pi Coding Agent"`, `"Pi agent"`, `"picodingagent"`, or `"Pi.dev" coding`). YouTube results are volatile; do not assume the first page is exhaustive.
 
 If YouTube blocks or returns incomplete results, use the normal browser page manually through agent-browser, or try a more specific search query. Do not use guessed metadata.
 
