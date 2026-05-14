@@ -5,8 +5,8 @@ extra_css: /assets/css/themes.css
 ---
 <div class="header">
   <p class="header-eyebrow">Installed with LazyPi</p>
-  <h1>75 Themes</h1>
-  <p>Every theme you get with <code style="color:var(--green)">npx @robzolkos/lazypi</code> — click any tile to preview. LazyPi filters duplicate theme IDs from <code style="color:var(--green)">pi-themes</code>, so <code style="color:var(--green)">catppuccin-mocha</code> and <code style="color:var(--green)">gruvbox-dark</code> are sourced from <code style="color:var(--green)">pi-curated-themes</code>.</p>
+  <h1>67 Themes</h1>
+  <p>Every theme you get with <code style="color:var(--green)">npx @robzolkos/lazypi</code> — click any tile to preview.</p>
 </div>
 
 <div class="filter-bar" id="filter-bar"></div>
@@ -26,7 +26,6 @@ const themes = [
   { name: "Box",                     pkg: "pi-curated-themes", bg: "#141d2b", fg: "#9fef00", swatches: ["#cc0403","#19cb00","#cecb00","#0d73cc","#cb1ed1","#0dcdcd"] },
   { name: "Brogrammer",              pkg: "pi-curated-themes", bg: "#131313", fg: "#d6dbe5", swatches: ["#f81118","#2dc55e","#ecba0f","#2a84d2","#4e5ab7","#1081d6"] },
   { name: "Carbonfox",               pkg: "pi-curated-themes", bg: "#161616", fg: "#f2f4f8", swatches: ["#ee5396","#25be6a","#08bdba","#78a9ff","#be95ff","#33b1ff"] },
-  { name: "Catppuccin Latte",        pkg: "pi-themes",         bg: "#eff1f5", fg: "#4c4f69", swatches: ["#d20f39","#40a02b","#df8e1d","#1e66f5","#8839ef","#04a5e5"] },
   { name: "Catppuccin Mocha",        pkg: "pi-curated-themes", bg: "#1e1e2e", fg: "#cdd6f4", swatches: ["#f38ba8","#a6e3a1","#f9e2af","#89b4fa","#cba6f7","#89dceb"] },
   { name: "Citruszest",              pkg: "pi-curated-themes", bg: "#121212", fg: "#bfbfbf", swatches: ["#ff5454","#00cc7a","#ffd400","#00bfff","#ff90fe","#48d1cc"] },
   { name: "Cursor Dark",             pkg: "pi-curated-themes", bg: "#141414", fg: "#d4d4d4", swatches: ["#fc6b83","#3fa266","#d2943e","#81a1c1","#b48ead","#88c0d0"] },
@@ -35,7 +34,6 @@ const themes = [
   { name: "Dark Pastel",             pkg: "pi-curated-themes", bg: "#000000", fg: "#ffffff", swatches: ["#ff5555","#55ff55","#ffff55","#5555ff","#ff55ff","#55ffff"] },
   { name: "Dimmed Monokai",          pkg: "pi-curated-themes", bg: "#1f1f1f", fg: "#b9bcba", swatches: ["#be3f48","#879a3b","#c5a635","#4f76a1","#855c8d","#578fa4"] },
   { name: "Doom Peacock",            pkg: "pi-curated-themes", bg: "#2b2a27", fg: "#ede0ce", swatches: ["#cb4b16","#26a6a6","#bcd42a","#2a6cc6","#a9a1e1","#5699af"] },
-  { name: "Dracula",                 pkg: "pi-themes",         bg: "#282a36", fg: "#f8f8f2", swatches: ["#ff5555","#50fa7b","#f1fa8c","#bd93f9","#ff79c6","#8be9fd"] },
   { name: "Dracula Plus",            pkg: "pi-curated-themes", bg: "#1e1523", fg: "#f8f8f2", swatches: ["#ff5555","#50fa7b","#f1fa8c","#9580ff","#ff79c6","#8be9fd"] },
   { name: "Earthsong",               pkg: "pi-curated-themes", bg: "#292520", fg: "#e5c7a9", swatches: ["#c94234","#85c54c","#f5ae2e","#1398b9","#d0633d","#509552"] },
   { name: "Everforest Dark Hard",    pkg: "pi-curated-themes", bg: "#1e2326", fg: "#d3c6aa", swatches: ["#e67e80","#a7c080","#dbbc7f","#7fbbb3","#d699b6","#83c092"] },
@@ -51,7 +49,6 @@ const themes = [
   { name: "Gruber Darker",           pkg: "pi-curated-themes", bg: "#181818", fg: "#e4e4e4", swatches: ["#ff0a36","#42dc00","#ffdb00","#92a7cb","#a095cb","#90aa9e"] },
   { name: "Gruvbox Dark",            pkg: "pi-curated-themes", bg: "#282828", fg: "#ebdbb2", swatches: ["#cc241d","#98971a","#d79921","#458588","#b16286","#689d6a"] },
   { name: "Gruvbox Dark Hard",       pkg: "pi-curated-themes", bg: "#1d2021", fg: "#ebdbb2", swatches: ["#cc241d","#98971a","#d79921","#458588","#b16286","#689d6a"] },
-  { name: "Gruvbox Light",           pkg: "pi-themes",         bg: "#fbf1c7", fg: "#3c3836", swatches: ["#cc241d","#98971a","#d79921","#458588","#b16286","#689d6a"] },
   { name: "Gruvbox Material",        pkg: "pi-curated-themes", bg: "#1d2021", fg: "#d4be98", swatches: ["#ea6926","#c1d041","#eecf75","#6da3ec","#fd9bc1","#fe9d6e"] },
   { name: "Guezwhoz",                pkg: "pi-curated-themes", bg: "#1d1d1d", fg: "#d9d9d9", swatches: ["#e85181","#7ad694","#b7d074","#5aa0d6","#9a90e0","#58d6ce"] },
   { name: "Hackerman",               pkg: "pi-hackerman",      bg: "#0d0208", fg: "#00ff41", swatches: ["#ff0000","#00ff41","#ffff00","#003b00","#ff00ff","#00ffff"] },
@@ -71,17 +68,12 @@ const themes = [
   { name: "Matte Black",             pkg: "pi-curated-themes", bg: "#121212", fg: "#bebebe", swatches: ["#d35f5f","#ffc107","#b91c1c","#e68e0d","#d35f5f","#bebebe"] },
   { name: "Mellow",                  pkg: "pi-curated-themes", bg: "#161617", fg: "#c9c7cd", swatches: ["#f5a191","#90b99f","#e6b99d","#aca1cf","#e29eca","#ea83a5"] },
   { name: "Miasma",                  pkg: "pi-curated-themes", bg: "#222222", fg: "#c2c2b0", swatches: ["#685742","#5f875f","#b36d43","#78824b","#bb7744","#c9a554"] },
-  { name: "Nord",                    pkg: "pi-themes",         bg: "#2e3440", fg: "#d8dee9", swatches: ["#bf616a","#a3be8c","#ebcb8b","#81a1c1","#b48ead","#88c0d0"] },
   { name: "Nvim Dark",               pkg: "pi-curated-themes", bg: "#14161b", fg: "#e0e2ea", swatches: ["#ffc0b9","#b3f6c0","#fce094","#a6dbff","#ffcaff","#8cf8f7"] },
-  { name: "One Dark",                pkg: "pi-themes",         bg: "#282c34", fg: "#abb2bf", swatches: ["#e06c75","#98c379","#e5c07b","#61afef","#c678dd","#56b6c2"] },
   { name: "Popping and Locking",     pkg: "pi-curated-themes", bg: "#111114", fg: "#e0e0e0", swatches: ["#ff3c6f","#00e86e","#f9d71c","#1e90ff","#c75bff","#00d4ff"] },
   { name: "Sea Shells",              pkg: "pi-curated-themes", bg: "#09141b", fg: "#deb88d", swatches: ["#d15123","#027c9b","#fca02f","#1e4950","#68d4f1","#50a3b5"] },
   { name: "Sleepy Hollow",           pkg: "pi-curated-themes", bg: "#121214", fg: "#af9a91", swatches: ["#ba3934","#91773f","#b55600","#5f63b4","#a17c7b","#8faea9"] },
   { name: "Smyck",                   pkg: "pi-curated-themes", bg: "#1b1b1b", fg: "#f7f7f7", swatches: ["#b84131","#7da900","#c4a500","#62a3c4","#ba8acc","#207383"] },
-  { name: "Solarized Dark",          pkg: "pi-themes",         bg: "#002b36", fg: "#839496", swatches: ["#dc322f","#859900","#b58900","#268bd2","#d33682","#2aa198"] },
-  { name: "Solarized Light",         pkg: "pi-themes",         bg: "#fdf6e3", fg: "#657b83", swatches: ["#dc322f","#859900","#b58900","#268bd2","#d33682","#2aa198"] },
   { name: "Terminal (ANSI)",         pkg: "pi-terminal-theme", bg: "#000000", fg: "#ffffff", swatches: ["#cc0000","#4e9a06","#c4a000","#3465a4","#75507b","#06989a"] },
-  { name: "Tokyo Night",             pkg: "pi-themes",         bg: "#1a1b26", fg: "#a9b1d6", swatches: ["#f7768e","#9ece6a","#e0af68","#7aa2f7","#bb9af7","#7dcfff"] },
   { name: "Tomorrow Night",          pkg: "pi-curated-themes", bg: "#1d1f21", fg: "#c5c8c6", swatches: ["#cc6666","#b5bd68","#f0c674","#81a2be","#b294bb","#8abeb7"] },
   { name: "Tomorrow Night Bright",   pkg: "pi-curated-themes", bg: "#000000", fg: "#eaeaea", swatches: ["#d54e53","#b9ca4a","#e7c547","#7aa6da","#c397d8","#70c0b1"] },
   { name: "Tomorrow Night Burns",    pkg: "pi-curated-themes", bg: "#151515", fg: "#a1b0b8", swatches: ["#832e31","#a63c40","#d3494e","#fc595f","#df9395","#ba8586"] },
@@ -93,14 +85,12 @@ const themes = [
 
 const pkgLabels = {
   "pi-curated-themes": "curated",
-  "pi-themes":         "pi-themes",
   "pi-hackerman":      "hackerman",
   "pi-terminal-theme": "terminal",
 };
 
 const pkgColors = {
   "pi-curated-themes": "#7aa2f7",
-  "pi-themes":         "#4afa7a",
   "pi-hackerman":      "#00ff41",
   "pi-terminal-theme": "#888",
 };

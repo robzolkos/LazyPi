@@ -19,8 +19,6 @@ That's it.  Once done - run `pi` and experience a feature rich coding agent expe
 
 Install is **idempotent** — LazyPi reads your Pi settings and skips any package that is already installed, so re-running is safe.
 
-For theme packages, LazyPi also applies a small Pi package filter so duplicate theme IDs do not collide. It keeps both `pi-themes` and `@victor-software-house/pi-curated-themes` installed, but excludes `catppuccin-mocha` and `gruvbox-dark` from `pi-themes` so those two come from the curated themes package.
-
 ## Commands
 
 | Command | What it does |
