@@ -1,5 +1,17 @@
 # Changelog
 
+## [0.6.0](https://github.com/robzolkos/LazyPi/compare/v0.5.1...v0.6.0) (2026-05-14)
+
+
+### Features
+
+* add missing Pi videos ([#50](https://github.com/robzolkos/LazyPi/issues/50)) ([81d0e1c](https://github.com/robzolkos/LazyPi/commit/81d0e1cdd577653bc3a29ee5c406d4bbbf742f88))
+
+
+### Bug Fixes
+
+* remove pi-themes from catalog ([#52](https://github.com/robzolkos/LazyPi/issues/52)) ([32aa514](https://github.com/robzolkos/LazyPi/commit/32aa514de3c2762cf0b0f653fb6b86f34921efbd))
+
 ## [0.5.1](https://github.com/robzolkos/LazyPi/compare/v0.5.0...v0.5.1) (2026-05-07)
 
 
