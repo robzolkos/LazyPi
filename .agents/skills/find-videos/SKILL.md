@@ -29,13 +29,17 @@ If the user does not provide a query, search YouTube for:
 Pi coding agent
 ```
 
-Also consider searching these variants if the first query has few results:
+Also search these variants before concluding there are no more candidates, because YouTube ranking can miss relevant uploads for the default query:
 
 ```text
+"Pi agent"
+"Pi Agent" coding
 "pi-coding-agent"
 "@earendil-works" Pi
 "Earendil Works" Pi agent
 ```
+
+The exact phrase `"Pi agent"` is required in the default workflow; do not skip it just because `Pi coding agent` returned results.
 
 Prefer recent, relevant videos about the Pi coding agent. Avoid unrelated Raspberry Pi, math pi, or generic AI coding videos unless they clearly mention the Pi coding agent.
 
@@ -46,6 +50,7 @@ When possible, use YouTube's upload-date filter for recent videos, then enforce 
 Only propose a candidate if it has at least one strong Pi coding-agent signal:
 
 - title, description, or transcript snippet says `Pi coding agent`
+- title, description, or transcript snippet says `Pi agent` in a software/coding-agent context
 - title, description, or transcript snippet says `pi-coding-agent`
 - title, description, channel, or page metadata mentions `Earendil Works` in connection with Pi
 - description links to `github.com/earendil-works/pi-coding-agent`

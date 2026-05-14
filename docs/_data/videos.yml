@@ -2,16 +2,36 @@
   id: intro
   description: "Get started with Pi — introductions, tutorials, and setup guides."
   videos:
+    - id: hvqiRdGko6g
+      title: "Pi AI Agent and Coding Harness: Free, Open Source, Local, and Scary Good"
+      channel: AI with Eric
+      duration: "10:46"
+      published: "2026-05-11"
     - id: N30XGyPrr6I
       title: "Pi Agent – Crash Course | Minimal Coding Agent"
       channel: Alejandro AO
       duration: "26:34"
       published: "2026-05-05"
+    - id: 8yac_swVw8I
+      title: "Pi Coding Agent: The Minimal Coding Agent That Beats Claude Code and OpenCode"
+      channel: AI Stack Engineer
+      duration: "8:19"
+      published: "2026-05-03"
     - id: OMFIPv8a4qA
       title: "Pi: The Minimal Agent for REAL Devs"
       channel: DevOps Toolbox
       duration: "13:53"
       published: "2026-04-24"
+    - id: C5wEcJRo_VA
+      title: "Is PI Better Than OpenCode For AI Coding?"
+      channel: AI Automation Station
+      duration: "9:07"
+      published: "2026-04-23"
+    - id: O-96yYDPMOc
+      title: "Pi Coding Agent"
+      channel: DevOnDuty
+      duration: "9:55"
+      published: "2026-04-12"
     - id: jTMI1bCv3Ts
       title: "Pi Coding Agent: The only Agent That's Truly YOURS"
       channel: Igor Kudryk (Salesforce)
@@ -42,6 +62,11 @@
       channel: Build Monumental
       duration: "27:11"
       published: "2026-03-25"
+    - id: KMTcJX89jFI
+      title: "Pi Coding Agent: The Unrestricted Alternative to Claude Code"
+      channel: Zero Code Devs
+      duration: "7:57"
+      published: "2026-03-13"
     - id: wVe3XOnio7M
       title: "The PI coding agent is so much more than just another amazing coding agent!"
       channel: Maximilian Schwarzmüller
@@ -87,6 +112,11 @@
   id: advanced
   description: "Deep dives into advanced Pi workflows and techniques."
   videos:
+    - id: yBcmIoA-vGs
+      title: "Engineers, DELETE the BASH Tool: Agentic Security For Pi Agent and Claude Code"
+      channel: IndyDevDan
+      duration: "31:10"
+      published: "2026-05-11"
     - id: g94lMuhGlEY
       title: "PI Agent + Gemma 4 = Best Laptop AI Coding Setup!"
       channel: NetworkCoder
@@ -112,11 +142,26 @@
       channel: Eero Alvar
       duration: "19:09"
       published: "2026-04-27"
+    - id: XSmI7OYd7iM
+      title: "Pi Coding Agent + Archon: Build ANY AI Coding Workflow (No Claude Code Bloat)"
+      channel: Cole Medin
+      duration: "17:49"
+      published: "2026-04-20"
+    - id: 1ZsFjM6yZGI
+      title: "Don't sleep on the Pi agent, it solves the sandbox problem"
+      channel: marimo
+      duration: "6:55"
+      published: "2026-04-16"
     - id: jD_MpL9xkSU
       title: "pi and the Spec Paradox by Max Sumrall"
       channel: Devoxx
       duration: "12:29"
       published: "2026-04-09"
+    - id: ttklS6Yp0O8
+      title: "Gemma 4 with Pi Coding Agent & llama.cpp | Build LLM Resource Calculator with NextJS | 🔴 Live"
+      channel: Venelin Valkov
+      duration: "1:06:16"
+      published: "2026-04-07"
     - id: M30gp1315Y4
       title: "One Agent Is NOT ENOUGH: Agentic Coding BEYOND Claude Code"
       channel: IndyDevDan
@@ -127,6 +172,21 @@
       channel: IndyDevDan
       duration: "51:37"
       published: "2026-02-23"
+    - id: KiplOks4NAs
+      title: "300 Tokens vs 10K | Pi Wins Anyway"
+      channel: DIY Smart Code
+      duration: "10:30"
+      published: "2026-02-23"
+    - id: XqFun9XCXPw
+      title: "Pi Coding Agent - Visual Plan Mode Extension"
+      channel: Michael
+      duration: "2:58"
+      published: "2026-02-21"
+    - id: uPR7aAneg2U
+      title: "Short Demo of my Pi Todo Extension"
+      channel: Armin Ronacher
+      duration: "11:27"
+      published: "2026-01-25"
     - id: ANQ1IYsFM2s
       title: "Building a Computer Game from Scratch With Opus and PI"
       channel: Armin Ronacher
@@ -137,6 +197,11 @@
   id: slice
   description: "Talks, interviews, and discussions about Pi from the creator and community."
   videos:
+    - id: JM1sIVIZYRg
+      title: "State of Agentic Coding #6 with Armin and Ben"
+      channel: Armin Ronacher
+      duration: "1:38:23"
+      published: "2026-05-11"
     - id: sqtX2OmgOF0
       title: "Tokens can make you rich, just do this – Mario Zechner"
       channel: David Ondrej
@@ -167,6 +232,11 @@
       channel: Mayank Gupta
       duration: "1:30:42"
       published: "2026-03-28"
+    - id: 4p2uQ4FQtis
+      title: "pi - a radically minimal, opinionated multi-model coding agent"
+      channel: Mario Zechner
+      duration: "11:54"
+      published: "2025-11-12"
 
 - category: Short Pi
   id: shortpi
