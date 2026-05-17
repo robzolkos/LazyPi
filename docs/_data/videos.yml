@@ -2,6 +2,11 @@
   id: intro
   description: "Get started with Pi — introductions, tutorials, and setup guides."
   videos:
+    - id: 8Dt0HM8HIq4
+      title: "Learn 90% Of Pi Agent in Under 17 Minutes"
+      channel: Brandon Melville
+      duration: "16:50"
+      published: "2026-05-15"
     - id: hvqiRdGko6g
       title: "Pi AI Agent and Coding Harness: Free, Open Source, Local, and Scary Good"
       channel: AI with Eric
@@ -122,6 +127,11 @@
   id: fullcourse
   description: "Extended videos showing it all."
   videos:
+    - id: 6xXjHM3V1zM
+      title: "How I Turned Pi Into the Ultimate Coding Agent"
+      channel: Ben Davis
+      duration: "21:27"
+      published: "2026-05-14"
     - id: 6T46BslVzAc
       title: "Pi Coding Agent (Free Course) (2026)"
       channel: Tutorials by Manizha & Ryan
@@ -142,6 +152,11 @@
   id: advanced
   description: "Deep dives into advanced Pi workflows and techniques."
   videos:
+    - id: lK9o5Wu2upU
+      title: "Pi is INCREDIBLE - Building a Custom Coding Agent Live"
+      channel: Cole Medin
+      duration: "1:36:20"
+      published: "2026-05-15"
     - id: yBcmIoA-vGs
       title: "Engineers, DELETE the BASH Tool: Agentic Security For Pi Agent and Claude Code"
       channel: IndyDevDan
