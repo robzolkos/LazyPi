@@ -2,6 +2,11 @@
   id: intro
   description: "Get started with Pi — introductions, tutorials, and setup guides."
   videos:
+    - id: 5O4ULySzO74
+      title: "Is Pi THE Agent for Local Coding Models? (Qwen 3.6 + llama.cpp)"
+      channel: "CloudYeti | Practical AI"
+      duration: "6:09"
+      published: "2026-05-17"
     - id: 8Dt0HM8HIq4
       title: "Learn 90% Of Pi Agent in Under 17 Minutes"
       channel: Brandon Melville
@@ -152,6 +157,11 @@
   id: advanced
   description: "Deep dives into advanced Pi workflows and techniques."
   videos:
+    - id: PIdETjcXNIk
+      title: "Pi to Pi: Two-Way Agent Orchestration with the Pi Coding Agent"
+      channel: IndyDevDan
+      duration: "34:52"
+      published: "2026-05-18"
     - id: lK9o5Wu2upU
       title: "Pi is INCREDIBLE - Building a Custom Coding Agent Live"
       channel: Cole Medin
