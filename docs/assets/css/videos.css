@@ -55,9 +55,10 @@
 }
 
 .videos-body {
-  max-width: 1100px;
-  margin: 0 auto;
-  padding: 4rem 2rem 6rem;
+  width: 100%;
+  max-width: none;
+  margin: 0;
+  padding: 4rem clamp(1rem, 3vw, 3rem) 6rem;
 }
 
 .video-category {
@@ -89,8 +90,8 @@
 
 .video-grid {
   display: grid;
-  grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
-  gap: 1.25rem;
+  grid-template-columns: repeat(auto-fill, minmax(min(100%, 280px), 1fr));
+  gap: clamp(1rem, 1.5vw, 1.5rem);
 }
 
 .video-card {
@@ -215,7 +216,8 @@
   .video-grid {
     grid-template-columns: 1fr;
   }
+
   .videos-body {
-    padding: 2.5rem 1.25rem 4rem;
+    padding: 2.5rem 1rem 4rem;
   }
 }
