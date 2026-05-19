@@ -1,7 +1,7 @@
 #!/usr/bin/env node
 import { copyFileSync, existsSync, mkdirSync, readdirSync, readFileSync, realpathSync, rmSync, statSync, writeFileSync } from "node:fs";
 import { homedir, platform } from "node:os";
-import { dirname, join, resolve } from "node:path";
+import { basename, dirname, join, resolve } from "node:path";
 import { spawnSync } from "node:child_process";
 import { argv, cwd, exit, stdout, stderr } from "node:process";
 import { pathToFileURL } from "node:url";
@@ -67,6 +67,8 @@ export const PACKAGES = [
 	{ id: "terminal-theme", category: "themes", source: "npm:pi-terminal-theme", description: "Terminal ANSI theme", hint: "Maps Pi colors to ANSI 0–15 so Pi inherits your terminal's own color palette." },
 ];
 
+const PI_CORE_PACKAGE = "@earendil-works/pi-coding-agent";
+const PI_CORE_LATEST_SPEC = `${PI_CORE_PACKAGE}@latest`;
 const COMPOUND_PKG_ID = "compound";
 const COMPOUND_SOURCE = "npm:@every-env/compound-plugin";
 const COMPOUND_UPSTREAM_PACKAGE = "@every-env/compound-plugin@3.0.0";
@@ -535,6 +537,119 @@ function runPi(args) {
 	return result.status ?? 1;
 }
 
+function commandPath(name) {
+	const command = platform() === "win32" ? "where" : "which";
+	const probe = spawnCommand(command, [name], { encoding: "utf8" });
+	if (probe.status !== 0) return null;
+	const first = String(probe.stdout ?? "").split(/\r?\n/).map((line) => line.trim()).find(Boolean);
+	return first || null;
+}
+
+function findPackageRoot(startPath, packageName = PI_CORE_PACKAGE) {
+	let current = startPath;
+	try {
+		if (existsSync(current) && !statSync(current).isDirectory()) current = dirname(current);
+	} catch {
+		current = dirname(current);
+	}
+
+	while (current && dirname(current) !== current) {
+		const packageJsonPath = join(current, "package.json");
+		if (existsSync(packageJsonPath)) {
+			try {
+				const pkg = JSON.parse(readFileSync(packageJsonPath, "utf8"));
+				if (pkg?.name === packageName) return current;
+			} catch {
+				// Keep walking; a malformed package.json should not break update fallback.
+			}
+		}
+		current = dirname(current);
+	}
+	return null;
+}
+
+export function inferNpmPrefixFromPiPackageRoot(packageRoot, packageName = PI_CORE_PACKAGE) {
+	const normalizedRoot = resolve(packageRoot).split("\\").join("/");
+	if (normalizedRoot.includes("/.pnpm/")) return null;
+	const suffixes = [
+		`/lib/node_modules/${packageName}`,
+		`/node_modules/${packageName}`,
+	];
+	for (const suffix of suffixes) {
+		if (normalizedRoot.endsWith(suffix)) {
+			return normalizedRoot.slice(0, -suffix.length) || null;
+		}
+	}
+	return null;
+}
+
+function isNamedPackageRoot(path, packageName = PI_CORE_PACKAGE) {
+	const packageJsonPath = join(path, "package.json");
+	if (!existsSync(packageJsonPath)) return false;
+	try {
+		const pkg = JSON.parse(readFileSync(packageJsonPath, "utf8"));
+		return pkg?.name === packageName;
+	} catch {
+		return false;
+	}
+}
+
+function isPiShimInNpmPrefix(piPath, prefix) {
+	const shimDir = resolve(dirname(piPath)).split("\\").join("/");
+	const normalizedPrefix = resolve(prefix).split("\\").join("/");
+	return shimDir === `${normalizedPrefix}/bin` || shimDir === normalizedPrefix;
+}
+
+function inferNpmPrefixFromPiShim(piPath) {
+	const shimDir = dirname(piPath);
+	const candidates = basename(shimDir) === "bin"
+		? [dirname(shimDir)]
+		: [shimDir];
+	for (const prefix of candidates) {
+		for (const packageRoot of [
+			join(prefix, "lib", "node_modules", PI_CORE_PACKAGE),
+			join(prefix, "node_modules", PI_CORE_PACKAGE),
+		]) {
+			if (isNamedPackageRoot(packageRoot)) return prefix;
+		}
+	}
+	return null;
+}
+
+function getActivePiNpmPrefix() {
+	const piPath = commandPath("pi");
+	if (!piPath) return null;
+	let resolvedPiPath = piPath;
+	try {
+		resolvedPiPath = realpathSync(piPath);
+	} catch {
+		// Fall back to the PATH result; findPackageRoot can still walk real files.
+	}
+	const packageRoot = findPackageRoot(resolvedPiPath);
+	const packagePrefix = packageRoot ? inferNpmPrefixFromPiPackageRoot(packageRoot) : null;
+	if (packagePrefix && isPiShimInNpmPrefix(piPath, packagePrefix)) return packagePrefix;
+	return inferNpmPrefixFromPiShim(piPath);
+}
+
+function updatePiCoreViaNpmLatest() {
+	const prefix = getActivePiNpmPrefix();
+	if (!prefix) {
+		console.log(`${yellow("  !")} Could not determine the npm prefix for the active pi command; falling back to \`pi update\`.`);
+		return null;
+	}
+
+	console.log(`\n→ npm --prefix ${prefix} install -g ${PI_CORE_LATEST_SPEC}`);
+	const status = spawnCommand("npm", ["--prefix", prefix, "install", "-g", PI_CORE_LATEST_SPEC], { stdio: "inherit" }).status ?? 1;
+	return status;
+}
+
+function updatePiCoreAndExtensions() {
+	const coreStatus = updatePiCoreViaNpmLatest();
+	if (coreStatus == null) return runPi(["update"]);
+	if (coreStatus !== 0) return coreStatus;
+	return runPi(["update", "--extensions"]);
+}
+
 function legacySourcesForPackage(pkg) {
 	return Array.isArray(pkg.legacySources) ? pkg.legacySources : [];
 }
@@ -988,8 +1103,8 @@ async function cmdUpdate(flags) {
 	const installCode = await cmdInstall({ ...flags, command: "install", yes: true, forceIds: [COMPOUND_PKG_ID] });
 	if (installCode !== 0) return installCode;
 
-	console.log(bold("\nStep 2/2: pi update"));
-	return flags.local ? updateLocalPiPackages(true) : runPi(["update"]);
+	console.log(bold(flags.local ? "\nStep 2/2: pi update" : "\nStep 2/2: update Pi core and extensions"));
+	return flags.local ? updateLocalPiPackages(true) : updatePiCoreAndExtensions();
 }
 
 // ---------------------------------------------------------------------------

@@ -5,7 +5,7 @@ import { tmpdir } from "node:os";
 import { join } from "node:path";
 import { fileURLToPath, pathToFileURL } from "node:url";
 
-import { buildSpawnOptions, resolveEntrypointUrl } from "../bin/lazypi.mjs";
+import { buildSpawnOptions, inferNpmPrefixFromPiPackageRoot, resolveEntrypointUrl } from "../bin/lazypi.mjs";
 
 test("buildSpawnOptions enables shell on Windows by default", () => {
 	assert.deepEqual(buildSpawnOptions({ stdio: "inherit" }, "win32"), {
@@ -41,4 +41,29 @@ test("resolveEntrypointUrl falls back to a resolved path when realpath lookup fa
 	const tmp = mkdtempSync(join(tmpdir(), "lazypi-entrypoint-fallback-"));
 	const missingPath = join(tmp, "missing.mjs");
 	assert.equal(resolveEntrypointUrl(missingPath), pathToFileURL(missingPath).href);
+});
+
+test("inferNpmPrefixFromPiPackageRoot detects Unix global npm lib layout", () => {
+	assert.equal(
+		inferNpmPrefixFromPiPackageRoot("/opt/node/lib/node_modules/@earendil-works/pi-coding-agent"),
+		"/opt/node",
+	);
+});
+
+test("inferNpmPrefixFromPiPackageRoot detects flat node_modules layout", () => {
+	assert.equal(
+		inferNpmPrefixFromPiPackageRoot("/opt/node/node_modules/@earendil-works/pi-coding-agent"),
+		"/opt/node",
+	);
+});
+
+test("inferNpmPrefixFromPiPackageRoot rejects pnpm store paths", () => {
+	assert.equal(
+		inferNpmPrefixFromPiPackageRoot("/home/user/.local/share/pnpm/global/5/.pnpm/@earendil-works+pi-coding-agent@0.74.1/node_modules/@earendil-works/pi-coding-agent"),
+		null,
+	);
+});
+
+test("inferNpmPrefixFromPiPackageRoot rejects unrelated package roots", () => {
+	assert.equal(inferNpmPrefixFromPiPackageRoot("/opt/node/lib/node_modules/other-package"), null);
 });
