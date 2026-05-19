@@ -1,5 +1,13 @@
 # Changelog
 
+## [0.6.1](https://github.com/robzolkos/LazyPi/compare/v0.6.0...v0.6.1) (2026-05-19)
+
+
+### Bug Fixes
+
+* ensure LazyPi updates Pi core with latest npm release ([#61](https://github.com/robzolkos/LazyPi/issues/61)) ([d1fd4c4](https://github.com/robzolkos/LazyPi/commit/d1fd4c4eab4a7bd33aea8aca18835dd59617bb16))
+* improve videos grid responsiveness ([#58](https://github.com/robzolkos/LazyPi/issues/58)) ([9fa78c0](https://github.com/robzolkos/LazyPi/commit/9fa78c08ed230063f8fc5f79b6f74465ad002c76))
+
 ## [0.6.0](https://github.com/robzolkos/LazyPi/compare/v0.5.1...v0.6.0) (2026-05-14)
 
 
