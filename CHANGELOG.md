@@ -1,5 +1,12 @@
 # Changelog
 
+## [0.6.2](https://github.com/robzolkos/LazyPi/compare/v0.6.1...v0.6.2) (2026-05-20)
+
+
+### Bug Fixes
+
+* delegate lazy update to pi update ([#63](https://github.com/robzolkos/LazyPi/issues/63)) ([184b035](https://github.com/robzolkos/LazyPi/commit/184b0359975edb473797c723c48a08459c42589b))
+
 ## [0.6.1](https://github.com/robzolkos/LazyPi/compare/v0.6.0...v0.6.1) (2026-05-19)
 
 
