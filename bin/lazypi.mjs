@@ -223,7 +223,7 @@ ${bold("Commands:")}
   install   Install the selected LazyPi catalog (default)
   remove    Remove a catalog package by id (or pass a raw pi source)
   status    Show which catalog packages are installed
-  update    Re-reconcile the catalog and run \`pi update\`
+  update    Run \`pi update\` for installed Pi packages
   doctor    Check your environment for common problems
 
 ${bold("Install options:")}
@@ -1076,21 +1076,16 @@ function cmdStatus(flags) {
 	return 0;
 }
 
-function updateLocalPiPackages(local) {
-	const { sources, error } = readInstalledSources(local);
-	if (error) {
-		console.error(red(`Could not parse ${settingsPath(local)} — ${error}`));
-		return 1;
-	}
-	for (const source of sources) {
-		console.log(`\n→ pi install ${source}`);
-		const env = source.startsWith("git:")
-			? { ...process.env, npm_config_ignore_scripts: "true" }
-			: process.env;
-		const installStatus = spawnCommand("pi", ["install", "-l", source], { stdio: "inherit", env }).status ?? 1;
-		if (installStatus !== 0) return installStatus;
-	}
-	return 0;
+function resolveUpdateCatalogIds(flags) {
+	const { sources, error } = readInstalledSources(flags.local);
+	if (error) return { ids: [], error };
+	const selectedIds = resolveSelection(flags);
+	return {
+		ids: PACKAGES
+			.filter((pkg) => selectedIds.has(pkg.id) && isPackagePresent(pkg, sources, flags.local))
+			.map((pkg) => pkg.id),
+		error: null,
+	};
 }
 
 // ---------------------------------------------------------------------------
@@ -1099,12 +1094,29 @@ function updateLocalPiPackages(local) {
 async function cmdUpdate(flags) {
 	if (!(await ensurePi(flags))) return 127;
 
-	console.log(bold("Step 1/2: reconcile LazyPi catalog"));
-	const installCode = await cmdInstall({ ...flags, command: "install", yes: true, forceIds: [COMPOUND_PKG_ID] });
-	if (installCode !== 0) return installCode;
+	const updateSelection = resolveUpdateCatalogIds(flags);
+	if (updateSelection.error) {
+		console.error(red(`Could not parse ${settingsPath(flags.local)} — ${updateSelection.error}`));
+		return 1;
+	}
 
-	console.log(bold(flags.local ? "\nStep 2/2: pi update" : "\nStep 2/2: update Pi core and extensions"));
-	return flags.local ? updateLocalPiPackages(true) : updatePiCoreAndExtensions();
+	if (updateSelection.ids.includes(COMPOUND_PKG_ID)) {
+		console.log(bold("Step 1/2: refresh Compound Engineering"));
+		const installCode = await cmdInstall({
+			...flags,
+			command: "install",
+			yes: true,
+			only: [COMPOUND_PKG_ID],
+			except: null,
+			forceIds: [COMPOUND_PKG_ID],
+		});
+		if (installCode !== 0) return installCode;
+		console.log(bold("\nStep 2/2: pi update"));
+	} else {
+		console.log(bold("pi update"));
+	}
+
+	return runPi(flags.local ? ["update", "--extensions"] : ["update"]);
 }
 
 // ---------------------------------------------------------------------------
