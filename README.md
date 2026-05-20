@@ -26,7 +26,7 @@ Install is **idempotent** — LazyPi reads your Pi settings and skips any packag
 | `npx @robzolkos/lazypi` | Install all or selected catalog (interactive picker by default) |
 | `npx @robzolkos/lazypi remove <id>` | Remove a catalog package by id (or pass a raw pi source) |
 | `npx @robzolkos/lazypi status` | Show which catalog packages are installed, missing, or extra |
-| `npx @robzolkos/lazypi update` | Reconcile the catalog and then run `pi update` |
+| `npx @robzolkos/lazypi update` | Run `pi update` for installed Pi packages |
 | `npx @robzolkos/lazypi doctor` | Check your environment for common problems |
 
 ## Updating

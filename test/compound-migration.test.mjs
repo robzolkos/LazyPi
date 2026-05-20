@@ -122,7 +122,7 @@ compoundTest("legacy LazyPi state migrates to CE3 on real update flow", { timeou
 
 	const updateResult = runCli(["update", "-l", "--only", "compound"], { cwd: workspace, home });
 	assertSuccess(updateResult, "migration update failed");
-	assert.match(updateResult.stdout, /Step 1\/2: reconcile LazyPi catalog/);
+	assert.match(updateResult.stdout, /Step 1\/2: refresh Compound Engineering/);
 	assert.match(updateResult.stdout, /Step 2\/2: pi update/);
 	assert.match(updateResult.stdout, /@every-env\/compound-plugin@3\.0\.0/);
 

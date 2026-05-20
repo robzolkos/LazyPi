@@ -6,24 +6,23 @@ description: "How to update your LazyPi packages."
 <h1>Updating</h1>
     <p class="page-desc">Keep your LazyPi packages current.</p>
 
-    <h2>Update all packages</h2>
+    <h2>Update installed packages</h2>
     <pre><code>npx @robzolkos/lazypi update</code></pre>
     <p>
-      This reconciles the LazyPi catalog against what's currently installed and runs <code>pi update</code> for each package that has a newer version available.
+      This runs Pi's updater for installed package changes.
     </p>
 
     <h2>What the update does</h2>
     <p>
-      LazyPi maintains a catalog of the exact packages and versions it manages. When you run <code>update</code>, it:
+      When you run <code>update</code>, LazyPi:
     </p>
     <ol>
-      <li>Compares the current catalog against your installed packages</li>
-      <li>Identifies packages with newer versions</li>
-      <li>Runs <code>pi update</code> for each one</li>
+      <li>Refreshes Compound Engineering when it is installed</li>
+      <li>Runs <code>pi update</code> for installed Pi packages</li>
       <li>Reports what changed</li>
     </ol>
     <p>
-      Packages you installed outside of LazyPi are not touched.
+      Update preserves your selected catalog footprint.
     </p>
 
     <nav class="prev-next">
