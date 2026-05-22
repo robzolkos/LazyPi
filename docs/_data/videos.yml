@@ -2,6 +2,16 @@
   id: intro
   description: "Get started with Pi — introductions, tutorials, and setup guides."
   videos:
+    - id: pr2WGRhVKys
+      title: "The REAL reason Pi is better than Claude Code or Codex"
+      channel: Ben Holmes
+      duration: "7:45"
+      published: "2026-05-21"
+    - id: 04EL2_Llenc
+      title: "Pi: Open-Source AI Agent Terminal Set-Up"
+      channel: Christian Lempa
+      duration: "19:48"
+      published: "2026-05-19"
     - id: 5O4ULySzO74
       title: "Is Pi THE Agent for Local Coding Models? (Qwen 3.6 + llama.cpp)"
       channel: "CloudYeti | Practical AI"
@@ -137,6 +147,11 @@
       channel: Ben Davis
       duration: "21:27"
       published: "2026-05-14"
+    - id: UngVdAsQEiU
+      title: "The Best Local Agentic Coding Workflow (Complete Guide)"
+      channel: Web Dev Simplified
+      duration: "44:57"
+      published: "2026-05-12"
     - id: 6T46BslVzAc
       title: "Pi Coding Agent (Free Course) (2026)"
       channel: Tutorials by Manizha & Ryan
