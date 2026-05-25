@@ -2,11 +2,26 @@
   id: intro
   description: "Get started with Pi — introductions, tutorials, and setup guides."
   videos:
+    - id: 771PQEDeRmw
+      title: "Is Pi the Best Coding Agent? Pi vs OpenCode vs Claude Code"
+      channel: pookie
+      duration: "20:49"
+      published: "2026-05-24"
     - id: pr2WGRhVKys
       title: "The REAL reason Pi is better than Claude Code or Codex"
       channel: Ben Holmes
       duration: "7:45"
       published: "2026-05-21"
+    - id: rikKlsZc5PQ
+      title: "PI Agent is SO MUCH Better Than I Thought!"
+      channel: Eric Michaud
+      duration: "7:47"
+      published: "2026-05-19"
+    - id: 8PJepXx0Jd0
+      title: "Why Everyone Is Talking About Pi Agent"
+      channel: Build Things With AI
+      duration: "9:31"
+      published: "2026-05-19"
     - id: 04EL2_Llenc
       title: "Pi: Open-Source AI Agent Terminal Set-Up"
       channel: Christian Lempa
@@ -172,6 +187,21 @@
   id: advanced
   description: "Deep dives into advanced Pi workflows and techniques."
   videos:
+    - id: JyS8A-5LIY8
+      title: "Local Coding Agents on Strix Halo and R9700: Pi, Opencode, and SWE-bench Mini Benchmarks"
+      channel: Donato Capitella
+      duration: "41:51"
+      published: "2026-05-22"
+    - id: KRVYUkM16hE
+      title: "Simple Pi Subagents"
+      channel: Eero Alvar
+      duration: "13:41"
+      published: "2026-05-21"
+    - id: t70YWb03vm0
+      title: "Setting Up Pi Subagents Because I Keep Doing 2 Dumb Things"
+      channel: Eric Michaud
+      duration: "12:37"
+      published: "2026-05-18"
     - id: PIdETjcXNIk
       title: "Pi to Pi: Two-Way Agent Orchestration with the Pi Coding Agent"
       channel: IndyDevDan
