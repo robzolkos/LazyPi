@@ -2,6 +2,11 @@
   id: intro
   description: "Get started with Pi — introductions, tutorials, and setup guides."
   videos:
+    - id: Kk-rPlpXXec
+      title: "Pi: Inside the Self-Extensible Coding Agent"
+      channel: Learning Podcasts
+      duration: "15:41"
+      published: "2026-05-29"
     - id: 771PQEDeRmw
       title: "Is Pi the Best Coding Agent? Pi vs OpenCode vs Claude Code"
       channel: pookie
@@ -187,6 +192,16 @@
   id: advanced
   description: "Deep dives into advanced Pi workflows and techniques."
   videos:
+    - id: o4KZH_KSqYQ
+      title: "Pi Coding Agent Observability: HTML Specs with Gemini 3.5 Flash and GPT Image 2"
+      channel: IndyDevDan
+      duration: "25:26"
+      published: "2026-06-01"
+    - id: neKuaxnMR70
+      title: "Out of Codex/Claude Tokens? I Tried DeepSeek in Pi"
+      channel: ZeroShotOrDie
+      duration: "17:04"
+      published: "2026-06-01"
     - id: JyS8A-5LIY8
       title: "Local Coding Agents on Strix Halo and R9700: Pi, Opencode, and SWE-bench Mini Benchmarks"
       channel: Donato Capitella
