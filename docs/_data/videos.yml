@@ -2,6 +2,16 @@
   id: intro
   description: "Get started with Pi — introductions, tutorials, and setup guides."
   videos:
+    - id: FJxgz5pN4wU
+      title: "Pi Agent explained in 6min.."
+      channel: Caleb Writes Code
+      duration: "6:41"
+      published: "2026-06-03"
+    - id: Hpt8pYP1c0o
+      title: "Pi in 3 Minutes — the Minimalist AI coding agent"
+      channel: AI Tools in 3 Minutes
+      duration: "2:57"
+      published: "2026-05-30"
     - id: Kk-rPlpXXec
       title: "Pi: Inside the Self-Extensible Coding Agent"
       channel: Learning Podcasts
@@ -192,6 +202,11 @@
   id: advanced
   description: "Deep dives into advanced Pi workflows and techniques."
   videos:
+    - id: gTeujlv8qK0
+      title: "PI Architecture EXPLAINED | Agent Loop, Tools, TUI and More"
+      channel: Alejandro AO
+      duration: "38:59"
+      published: "2026-06-05"
     - id: o4KZH_KSqYQ
       title: "Pi Coding Agent Observability: HTML Specs with Gemini 3.5 Flash and GPT Image 2"
       channel: IndyDevDan
