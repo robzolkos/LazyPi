@@ -45,8 +45,8 @@ export const PACKAGES = [
 	{ id: "claude-cli", category: "core", source: "npm:pi-claude-cli", description: "Claude Code CLI provider", hint: "Use Claude Code CLI auth as a Pi model provider." },
 	{ id: "plannotator", category: "ui", source: "npm:@plannotator/pi-extension", description: "Planning and annotation workflow", hint: "Plan + annotate large changes interactively." },
 	{ id: "slopchop", category: "ui", source: "npm:pi-slopchop", description: "Diff review and annotation", hint: "Review diffs inside Pi and turn FIX/DISCUSS annotations into the next prompt." },
-	{ id: "powerbar", category: "ui", source: "npm:@juanibiapina/pi-powerbar", description: "Powerbar UI", hint: "Status line for Pi with live context." },
 	{ id: "extension-settings", category: "ui", source: "npm:@juanibiapina/pi-extension-settings", description: "Settings support for powerbar", hint: "Required by powerbar for its settings panel." },
+	{ id: "powerbar", category: "ui", source: "npm:@juanibiapina/pi-powerbar", description: "Powerbar UI", hint: "Status line for Pi with live context." },
 	{ id: "usage", category: "ui", source: "npm:@tmustier/pi-usage-extension", description: "Usage and cost dashboard", hint: "Track token usage and API cost in-session." },
 	{ id: "raw-paste", category: "ui", source: "npm:@tmustier/pi-raw-paste", description: "Raw paste command", hint: "Paste raw clipboard content without Pi re-interpreting it." },
 	{ id: "todos", category: "ui", source: "git:github.com/tintinweb/pi-manage-todo-list@b75c449aa85ce328e9a8b632f62bf642aed40359", description: "Todo list management", hint: "Track multi-step work with live progress widget and session persistence." },
@@ -77,6 +77,7 @@ const COMPOUND_DEPENDENCY_IDS = ["subagents", "pi-ask-user"];
 const COMPOUND_MANIFEST_RELATIVE_PATH = join("compound-engineering", "install-manifest.json");
 const COMPOUND_LEGACY_STATE_RELATIVE_PATH = join(".lazypi", "compound-engineering.json");
 const PACKAGE_DEPENDENCIES = new Map([[COMPOUND_PKG_ID, COMPOUND_DEPENDENCY_IDS]]);
+const LOAD_FIRST_PACKAGE_IDS = ["extension-settings"];
 
 // ---------------------------------------------------------------------------
 // Output helpers
@@ -326,16 +327,85 @@ function writeSubagentOverrides(local) {
 	});
 }
 
+function packageEntrySource(entry) {
+	if (typeof entry === "string") return entry;
+	if (entry && typeof entry === "object" && typeof entry.source === "string") return entry.source;
+	return null;
+}
+
 function readInstalledSources(local) {
 	const current = readSettings(local);
 	if (!current.exists) return { sources: new Set(), path: current.path, exists: false };
 	if (current.error) return { sources: new Set(), path: current.path, exists: true, error: current.error };
 	const sources = new Set();
 	for (const entry of current.parsed?.packages ?? []) {
-		if (typeof entry === "string") sources.add(entry);
-		else if (entry && typeof entry === "object" && typeof entry.source === "string") sources.add(entry.source);
+		const source = packageEntrySource(entry);
+		if (source) sources.add(source);
 	}
 	return { sources, path: current.path, exists: true };
+}
+
+function loadFirstPackageSources() {
+	return LOAD_FIRST_PACKAGE_IDS
+		.map((id) => PACKAGES.find((pkg) => pkg.id === id)?.source)
+		.filter(Boolean);
+}
+
+export function normalizePackageLoadOrderInSettings(settings) {
+	if (!Array.isArray(settings.packages)) return false;
+	const loadFirstSources = loadFirstPackageSources();
+	const priorityEntries = [];
+	const remainingEntries = [];
+
+	for (const [originalIndex, entry] of settings.packages.entries()) {
+		const source = packageEntrySource(entry);
+		const priorityIndex = source ? loadFirstSources.indexOf(source) : -1;
+		if (priorityIndex === -1) remainingEntries.push(entry);
+		else priorityEntries.push({ entry, priorityIndex, originalIndex });
+	}
+
+	if (priorityEntries.length === 0) return false;
+	priorityEntries.sort((a, b) => a.priorityIndex - b.priorityIndex || a.originalIndex - b.originalIndex);
+	const ordered = [...priorityEntries.map(({ entry }) => entry), ...remainingEntries];
+	const changed = ordered.some((entry, index) => entry !== settings.packages[index]);
+	if (changed) settings.packages = ordered;
+	return changed;
+}
+
+function normalizePackageLoadOrder(local) {
+	return writeSettings(local, normalizePackageLoadOrderInSettings);
+}
+
+function packageLoadOrderStatusFromSettings(settings) {
+	if (!Array.isArray(settings?.packages)) return { checked: false };
+	const sources = settings.packages.map(packageEntrySource);
+	const extensionSettings = PACKAGES.find((pkg) => pkg.id === "extension-settings")?.source;
+	const powerbar = PACKAGES.find((pkg) => pkg.id === "powerbar")?.source;
+	const extensionSettingsIndex = sources.indexOf(extensionSettings);
+	const powerbarIndex = sources.indexOf(powerbar);
+	if (extensionSettingsIndex === -1 || powerbarIndex === -1) return { checked: false };
+	return { checked: true, ok: extensionSettingsIndex < powerbarIndex, extensionSettingsIndex, powerbarIndex };
+}
+
+function packageLoadOrderStatus(local) {
+	const current = readSettings(local);
+	if (!current.exists) return { checked: false, path: current.path, exists: false };
+	if (current.error) return { checked: false, path: current.path, exists: true, error: current.error };
+	return { ...packageLoadOrderStatusFromSettings(current.parsed), path: current.path, exists: true };
+}
+
+function reportLoadOrderNormalization(result, interactive) {
+	if (!result.ok) {
+		const message = `Could not update package load order in ${result.path} — ${result.error}`;
+		if (interactive) log.warn(message);
+		else console.warn(yellow(message));
+		return;
+	}
+	if (!result.changed) return;
+	const backup = result.backup ? ` Backup: ${result.backup}` : "";
+	const message = `Updated package load order in ${result.path}: extension-settings loads first.${backup}`;
+	if (interactive) log.success(message);
+	else console.log(green(message));
 }
 
 function compoundInstallRoot(local) {
@@ -902,6 +972,9 @@ async function cmdInstall(flags) {
 		}
 	}
 
+	const preInstallLoadOrder = normalizePackageLoadOrder(flags.local);
+	reportLoadOrderNormalization(preInstallLoadOrder, interactive);
+
 	if (toInstall.length === 0) {
 		printCheatsheet(selected, interactive);
 		const done = "Nothing to do — every selected package is already installed.";
@@ -962,6 +1035,9 @@ async function cmdInstall(flags) {
 			else console.error(red(`  ✗ failed to install ${pkg.id}`));
 		}
 	}
+
+	const postInstallLoadOrder = normalizePackageLoadOrder(flags.local);
+	reportLoadOrderNormalization(postInstallLoadOrder, interactive);
 
 	const installedCount = toInstall.length - failed.length - skipped.length;
 	if (failed.length === 0) {
@@ -1100,6 +1176,8 @@ async function cmdUpdate(flags) {
 		return 1;
 	}
 
+	reportLoadOrderNormalization(normalizePackageLoadOrder(flags.local), false);
+
 	if (updateSelection.ids.includes(COMPOUND_PKG_ID)) {
 		console.log(bold("Step 1/2: refresh Compound Engineering"));
 		const installCode = await cmdInstall({
@@ -1165,7 +1243,12 @@ function cmdDoctor(flags) {
 	const { sources, path, exists, error } = readInstalledSources(flags.local);
 	if (!exists) warn(`${path} does not exist yet (Pi has not been run)`);
 	else if (error) fail(`${path} is not valid JSON — ${error}`);
-	else pass(`${path} is readable`);
+	else {
+		pass(`${path} is readable`);
+		const loadOrder = packageLoadOrderStatus(flags.local);
+		if (loadOrder.checked && loadOrder.ok) pass("pi-extension-settings loads before pi-powerbar");
+		else if (loadOrder.checked) warn(`pi-extension-settings loads after pi-powerbar — run ${bold("npx @robzolkos/lazypi --yes")} to repair package load order`);
+	}
 
 	printHeader("Catalog package health");
 	const compound = compoundInstallState(flags.local);
