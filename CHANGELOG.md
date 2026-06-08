@@ -1,5 +1,12 @@
 # Changelog
 
+## [0.6.3](https://github.com/robzolkos/LazyPi/compare/v0.6.2...v0.6.3) (2026-06-08)
+
+
+### Bug Fixes
+
+* repair extension settings load order ([#70](https://github.com/robzolkos/LazyPi/issues/70)) ([6f3deea](https://github.com/robzolkos/LazyPi/commit/6f3deea2499d602fb232fff87bd7490c57a4111c))
+
 ## [0.6.2](https://github.com/robzolkos/LazyPi/compare/v0.6.1...v0.6.2) (2026-05-20)
 
 
