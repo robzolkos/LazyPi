@@ -2,6 +2,26 @@
   id: intro
   description: "Get started with Pi — introductions, tutorials, and setup guides."
   videos:
+    - id: jcUqsNpDDDk
+      title: "If you don’t run Pi locally you’re falling behind…"
+      channel: David Ondrej
+      duration: "47:03"
+      published: "2026-06-12"
+    - id: cIZpaWpI-NQ
+      title: "Pi Coding Agent: The Claude Code Alternative That Builds Itself"
+      channel: Teleport
+      duration: "12:13"
+      published: "2026-06-10"
+    - id: Y9Bt76yK4dI
+      title: "Pi: First Look at the Coding Agent Harness Built to Bend to Your Will"
+      channel: Datadog Community
+      duration: "9:55"
+      published: "2026-06-10"
+    - id: Sphk79piiqM
+      title: "Why I Quit Claude Code for Pi"
+      channel: This Dot Media
+      duration: "13:43"
+      published: "2026-06-09"
     - id: FJxgz5pN4wU
       title: "Pi Agent explained in 6min.."
       channel: Caleb Writes Code
@@ -202,6 +222,21 @@
   id: advanced
   description: "Deep dives into advanced Pi workflows and techniques."
   videos:
+    - id: VTvpbqEdIZQ
+      title: "Talking to My Terminal with Local Speech to text and Pi Coding Agent"
+      channel: Agentic Coding Weekly
+      duration: "0:32"
+      published: "2026-06-18"
+    - id: oGE_Dwz-rMk
+      title: "Omnigent: The New Meta-Harness for EVERY Coding Agent - Claude Code, Codex, Pi, More"
+      channel: Cole Medin
+      duration: "14:50"
+      published: "2026-06-15"
+    - id: P7AZ-iDbIoc
+      title: "Deploying Pi Coding Agents in Docker Sandboxes"
+      channel: Collabnix, Docker and DevOps
+      duration: "3:37"
+      published: "2026-06-09"
     - id: gTeujlv8qK0
       title: "PI Architecture EXPLAINED | Agent Loop, Tools, TUI and More"
       channel: Alejandro AO
@@ -432,6 +467,16 @@
   id: slice
   description: "Talks, interviews, and discussions about Pi from the creator and community."
   videos:
+    - id: DPgJjRdQWrg
+      title: "Pi Building Pi, Openclaw's Minimalist Coding Agent | Mario Zechner, Creator of Pi"
+      channel: The Modern Software Developer
+      duration: "1:30:47"
+      published: "2026-06-12"
+    - id: GhjU-KvXtT0
+      title: "Code Isn't Free — Mario Zechner on the Hard Truths of Coding With AI (creator of Pi)"
+      channel: Jan-Niklas Wortmann
+      duration: "1:17:25"
+      published: "2026-06-12"
     - id: JM1sIVIZYRg
       title: "State of Agentic Coding #6 with Armin and Ben"
       channel: Armin Ronacher
