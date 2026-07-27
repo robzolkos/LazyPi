@@ -1,5 +1,12 @@
 # Changelog
 
+## [0.6.4](https://github.com/robzolkos/LazyPi/compare/v0.6.3...v0.6.4) (2026-07-27)
+
+
+### Bug Fixes
+
+* honor PI_CODING_AGENT_DIR ([#74](https://github.com/robzolkos/LazyPi/issues/74)) ([e5044cb](https://github.com/robzolkos/LazyPi/commit/e5044cbce642c5eb8f5d1f707c09125e876eb59e))
+
 ## [0.6.3](https://github.com/robzolkos/LazyPi/compare/v0.6.2...v0.6.3) (2026-06-08)
 
 
