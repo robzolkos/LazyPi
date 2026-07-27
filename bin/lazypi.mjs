@@ -1,7 +1,7 @@
 #!/usr/bin/env node
 import { copyFileSync, existsSync, mkdirSync, readdirSync, readFileSync, realpathSync, rmSync, statSync, writeFileSync } from "node:fs";
 import { homedir, platform } from "node:os";
-import { basename, dirname, join, resolve } from "node:path";
+import { basename, dirname, join, posix, resolve, win32 } from "node:path";
 import { spawnSync } from "node:child_process";
 import { argv, cwd, exit, stdout, stderr } from "node:process";
 import { pathToFileURL } from "node:url";
@@ -278,14 +278,18 @@ function hasCmd(name) {
 	return probe.status === 0;
 }
 
-function agentConfigDir() {
-	const configured = process.env.PI_CODING_AGENT_DIR;
-	if (!configured) return join(homedir(), ".pi", "agent");
-	if (configured === "~") return homedir();
-	if (configured.startsWith("~/") || (platform() === "win32" && configured.startsWith("~\\"))) {
-		return join(homedir(), configured.slice(2));
+export function resolveAgentConfigDir(configured, home = homedir(), platformName = platform()) {
+	const joinPath = platformName === "win32" ? win32.join : posix.join;
+	if (!configured) return joinPath(home, ".pi", "agent");
+	if (configured === "~") return home;
+	if (configured.startsWith("~/") || (platformName === "win32" && configured.startsWith("~\\"))) {
+		return joinPath(home, configured.slice(2));
 	}
 	return configured;
+}
+
+function agentConfigDir() {
+	return resolveAgentConfigDir(process.env.PI_CODING_AGENT_DIR);
 }
 
 function settingsPath(local) {
