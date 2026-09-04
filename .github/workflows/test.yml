@@ -12,7 +12,12 @@ concurrency:
 jobs:
   test:
     runs-on: ubuntu-latest
-    timeout-minutes: 30
+    timeout-minutes: 90
+    env:
+      npm_config_cache: /tmp/lazypi-npm-cache
+      npm_config_audit: "false"
+      npm_config_fund: "false"
+      BUN_INSTALL_CACHE_DIR: /tmp/lazypi-bun-cache
     steps:
       - uses: actions/checkout@v4
 

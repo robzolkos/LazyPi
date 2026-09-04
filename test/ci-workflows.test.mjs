@@ -30,3 +30,8 @@ test("CI uses LazyPi's supported Node runtime", () => {
 	assert.equal(linuxWorkflow.includes(SUPPORTED_NODE_SETUP), true);
 	assert.equal(windowsWorkflow.split(SUPPORTED_NODE_SETUP).length - 1, 2);
 });
+
+test("full-catalog CI revalidates registry metadata", () => {
+	const linuxWorkflow = readWorkflow(".github/workflows/test.yml");
+	assert.equal(linuxWorkflow.includes("npm_config_prefer_offline"), false);
+});
