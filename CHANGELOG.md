@@ -1,5 +1,12 @@
 # Changelog
 
+## [0.6.5](https://github.com/robzolkos/LazyPi/compare/v0.6.4...v0.6.5) (2026-09-04)
+
+
+### Bug Fixes
+
+* safely migrate to the maintained Claude CLI provider ([#79](https://github.com/robzolkos/LazyPi/issues/79)) ([e1aa3f8](https://github.com/robzolkos/LazyPi/commit/e1aa3f88a44a7cae8ab053d81b23414b4e51feaa))
+
 ## [0.6.4](https://github.com/robzolkos/LazyPi/compare/v0.6.3...v0.6.4) (2026-07-27)
 
 
