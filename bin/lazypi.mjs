@@ -42,7 +42,14 @@ export const PACKAGES = [
 	{ id: "simplify", category: "core", source: "npm:pi-simplify", description: "Code simplify review", hint: "Reviews recently changed code for clarity, consistency, and maintainability." },
 	{ id: "add-dir", category: "core", source: "npm:pi-add-dir", description: "Add external directories", hint: "Load configs and skills from additional project directories in the same Pi session." },
 	{ id: "prompt-templates", category: "core", source: "npm:pi-prompt-template-model", description: "Prompt template model switching", hint: "Add model, skill, and thinking frontmatter so prompt templates switch modes automatically." },
-	{ id: "claude-cli", category: "core", source: "npm:pi-claude-cli", description: "Claude Code CLI provider", hint: "Use Claude Code CLI auth as a Pi model provider." },
+	{
+		id: "claude-cli",
+		category: "core",
+		source: "npm:@saccolabs/pi-claude-cli@0.6.1",
+		legacySources: ["npm:pi-claude-cli"],
+		description: "Claude Code CLI provider",
+		hint: "Use Claude Code CLI auth as a Pi model provider.",
+	},
 	{ id: "plannotator", category: "ui", source: "npm:@plannotator/pi-extension", description: "Planning and annotation workflow", hint: "Plan + annotate large changes interactively." },
 	{ id: "slopchop", category: "ui", source: "npm:pi-slopchop", description: "Diff review and annotation", hint: "Review diffs inside Pi and turn FIX/DISCUSS annotations into the next prompt." },
 	{ id: "extension-settings", category: "ui", source: "npm:@juanibiapina/pi-extension-settings", description: "Settings support for powerbar", hint: "Required by powerbar for its settings panel." },
@@ -69,6 +76,7 @@ export const PACKAGES = [
 
 const PI_CORE_PACKAGE = "@earendil-works/pi-coding-agent";
 const PI_CORE_LATEST_SPEC = `${PI_CORE_PACKAGE}@latest`;
+export const MIN_NODE_VERSION = "22.19.0";
 const COMPOUND_PKG_ID = "compound";
 const COMPOUND_SOURCE = "npm:@every-env/compound-plugin";
 const COMPOUND_UPSTREAM_PACKAGE = "@every-env/compound-plugin@3.0.0";
@@ -95,6 +103,39 @@ const white = c("1;97");
 
 function printHeader(text) {
 	console.log(`\n${bold(text)}`);
+}
+
+export function isSupportedNodeVersion(version, minimum = MIN_NODE_VERSION) {
+	const parseVersion = (value) => {
+		const match = String(value).trim().match(/^v?(\d+)\.(\d+)\.(\d+)(?:-([0-9A-Za-z.-]+))?(?:\+[0-9A-Za-z.-]+)?$/);
+		return match ? { core: match.slice(1, 4).map(Number), prerelease: match[4]?.split(".") ?? [] } : null;
+	};
+	const comparePrerelease = (left, right) => {
+		if (left.length === 0 || right.length === 0) return left.length === right.length ? 0 : left.length === 0 ? 1 : -1;
+		for (let index = 0; index < Math.max(left.length, right.length); index++) {
+			if (left[index] == null || right[index] == null) return left[index] == null ? -1 : 1;
+			const leftNumber = /^\d+$/.test(left[index]) ? Number(left[index]) : null;
+			const rightNumber = /^\d+$/.test(right[index]) ? Number(right[index]) : null;
+			if (leftNumber != null && rightNumber != null && leftNumber !== rightNumber) return leftNumber > rightNumber ? 1 : -1;
+			if (leftNumber != null && rightNumber == null) return -1;
+			if (leftNumber == null && rightNumber != null) return 1;
+			if (left[index] !== right[index]) return left[index] > right[index] ? 1 : -1;
+		}
+		return 0;
+	};
+	const actual = parseVersion(version);
+	const required = parseVersion(minimum);
+	if (!actual || !required) return false;
+	for (let index = 0; index < required.core.length; index++) {
+		if (actual.core[index] !== required.core[index]) return actual.core[index] > required.core[index];
+	}
+	return comparePrerelease(actual.prerelease, required.prerelease) >= 0;
+}
+
+function requireSupportedNode() {
+	if (isSupportedNodeVersion(process.versions.node)) return true;
+	console.error(red(`Node ${process.versions.node} is unsupported — LazyPi and current Pi require Node >= ${MIN_NODE_VERSION}`));
+	return false;
 }
 
 // ASCII "Pi" logo: capital P + lowercase i, with a blue "zzz" cascade
@@ -224,7 +265,7 @@ ${bold("Commands:")}
   install   Install the selected LazyPi catalog (default)
   remove    Remove a catalog package by id (or pass a raw pi source)
   status    Show which catalog packages are installed
-  update    Run \`pi update\` for installed Pi packages
+  update    Migrate catalog sources and update Pi plus installed packages
   doctor    Check your environment for common problems
 
 ${bold("Install options:")}
@@ -738,12 +779,121 @@ function legacySourcesForPackage(pkg) {
 	return Array.isArray(pkg.legacySources) ? pkg.legacySources : [];
 }
 
+function npmPackageName(source) {
+	if (typeof source !== "string" || !source.startsWith("npm:")) return null;
+	const spec = source.slice("npm:".length).trim();
+	const match = spec.match(/^(@?[^@]+(?:\/[^@]+)?)(?:@(.+))?$/);
+	return match?.[1] ?? null;
+}
+
+function npmPackageVersion(source) {
+	if (typeof source !== "string" || !source.startsWith("npm:")) return null;
+	const spec = source.slice("npm:".length).trim();
+	const match = spec.match(/^(@?[^@]+(?:\/[^@]+)?)(?:@(.+))?$/);
+	return match?.[2] ?? null;
+}
+
+function gitRepositorySource(source) {
+	if (typeof source !== "string" || !source.startsWith("git:")) return null;
+	const repository = source.slice("git:".length);
+	const refIndex = repository.lastIndexOf("@");
+	return refIndex > repository.lastIndexOf("/") ? repository.slice(0, refIndex) : repository;
+}
+
+function packageSourceIdentity(source) {
+	const npmName = npmPackageName(source);
+	if (npmName) return `npm:${npmName}`;
+	const gitRepository = gitRepositorySource(source);
+	if (gitRepository) return `git:${gitRepository}`;
+	return source;
+}
+
+function sourcesSharePackageIdentity(left, right) {
+	return packageSourceIdentity(left) === packageSourceIdentity(right);
+}
+
+function dedupeSourcesByPackageIdentity(sources) {
+	const seen = new Set();
+	return sources.filter((source) => {
+		const identity = packageSourceIdentity(source);
+		if (seen.has(identity)) return false;
+		seen.add(identity);
+		return true;
+	});
+}
+
 function isLegacySourceForPackage(pkg, source) {
-	return legacySourcesForPackage(pkg).includes(source);
+	return legacySourcesForPackage(pkg).some((legacySource) => {
+		if (source === legacySource) return true;
+		const sourceName = npmPackageName(source);
+		const legacyName = npmPackageName(legacySource);
+		if (!sourceName || !legacyName || sourceName !== legacyName) return false;
+		return legacyName !== npmPackageName(pkg.source);
+	});
 }
 
 function findLegacyInstalledSources(pkg, installedPiSources) {
 	return [...installedPiSources].filter((source) => isLegacySourceForPackage(pkg, source));
+}
+
+function isCurrentSourceVariant(pkg, source) {
+	if (source === pkg.source) return true;
+	if (isLegacySourceForPackage(pkg, source)) return false;
+	const sourceName = npmPackageName(source);
+	return sourceName != null && sourceName === npmPackageName(pkg.source);
+}
+
+function findCurrentInstalledSourceVariants(pkg, installedPiSources) {
+	if (!npmPackageVersion(pkg.source)) return [];
+	return [...installedPiSources].filter((source) => source !== pkg.source && isCurrentSourceVariant(pkg, source));
+}
+
+function findSourcesRequiringMigration(pkg, installedPiSources) {
+	return [...new Set([
+		...findLegacyInstalledSources(pkg, installedPiSources),
+		...findCurrentInstalledSourceVariants(pkg, installedPiSources),
+	])];
+}
+
+function findPackageEntry(local, predicate) {
+	const current = readSettings(local);
+	if (current.error) return { entry: null, error: current.error };
+	const entries = (current.parsed?.packages ?? []).filter((candidate) => {
+		const source = packageEntrySource(candidate);
+		return source != null && predicate(source);
+	});
+	const entry = entries.find((candidate) => typeof candidate === "object") ?? entries[0];
+	return { entry: entry ?? null, error: null };
+}
+
+function crossScopeMigrationConflict(pkg, installedPiSources, local) {
+	const identityChangingLegacySources = findLegacyInstalledSources(pkg, installedPiSources)
+		.filter((source) => !sourcesSharePackageIdentity(source, pkg.source));
+	if (identityChangingLegacySources.length === 0) return null;
+
+	const otherScope = readInstalledSources(!local);
+	const scopeLabel = local ? "global" : "project";
+	if (otherScope.error) {
+		return { error: `could not verify ${scopeLabel} settings (${otherScope.error}); fix that file before migrating`, scopeLabel, sources: [] };
+	}
+	const sources = [...otherScope.sources].filter((source) =>
+		identityChangingLegacySources.some((legacySource) => sourcesSharePackageIdentity(source, legacySource))
+	);
+	return sources.length > 0 ? { error: null, scopeLabel, sources } : null;
+}
+
+function crossScopeMigrationReason(conflict) {
+	return conflict.error
+		?? `${conflict.sources.join(", ")} is also configured in ${conflict.scopeLabel} settings; remove the duplicate from one scope before migrating`;
+}
+
+function findCrossScopeMigrationFailure(packages, installedPiSources, local) {
+	for (const pkg of packages) {
+		if (pkg.id === COMPOUND_PKG_ID) continue;
+		const conflict = crossScopeMigrationConflict(pkg, installedPiSources, local);
+		if (conflict) return { pkg, reason: crossScopeMigrationReason(conflict) };
+	}
+	return null;
 }
 
 function packageInstallStatus(pkg, installedPiSources, local) {
@@ -755,11 +905,11 @@ function packageInstallStatus(pkg, installedPiSources, local) {
 			present: mode === "manifest" || mode === "legacy",
 		};
 	}
-	const legacySources = findLegacyInstalledSources(pkg, installedPiSources);
+	const migrationSources = findSourcesRequiringMigration(pkg, installedPiSources);
 	return {
 		installed: installedPiSources.has(pkg.source),
-		legacy: legacySources.length > 0,
-		present: installedPiSources.has(pkg.source) || legacySources.length > 0,
+		legacy: migrationSources.length > 0,
+		present: installedPiSources.has(pkg.source) || migrationSources.length > 0,
 	};
 }
 
@@ -769,6 +919,165 @@ function isPackageInstalled(pkg, installedPiSources, local) {
 
 function isPackagePresent(pkg, installedPiSources, local) {
 	return packageInstallStatus(pkg, installedPiSources, local).present;
+}
+
+function reportPackageAction(action, interactive) {
+	if (interactive) log.step(action);
+	else console.log(`\n→ ${action}`);
+}
+
+let supportsPiApprovalFlag;
+let supportsPiUpdateAllFlag;
+
+function piSupportsApprovalFlag() {
+	if (supportsPiApprovalFlag != null) return supportsPiApprovalFlag;
+	const result = spawnCommand("pi", ["install", "--help"], { encoding: "utf8" });
+	const output = `${result.stdout ?? ""}\n${result.stderr ?? ""}`;
+	supportsPiApprovalFlag = result.status === 0 && output.includes("--approve");
+	return supportsPiApprovalFlag;
+}
+
+function piSupportsUpdateAll() {
+	if (supportsPiUpdateAllFlag != null) return supportsPiUpdateAllFlag;
+	const result = spawnCommand("pi", ["update", "--help"], { encoding: "utf8" });
+	const output = `${result.stdout ?? ""}\n${result.stderr ?? ""}`;
+	supportsPiUpdateAllFlag = result.status === 0 && output.includes("--all");
+	return supportsPiUpdateAllFlag;
+}
+
+function runPackageMutation(command, source, flags, interactive) {
+	const action = `pi ${command} ${source}`;
+	reportPackageAction(action, interactive);
+	const localArgs = flags.local
+		? [command, "-l", ...(piSupportsApprovalFlag() ? ["--approve"] : []), source]
+		: [command, source];
+	const env = command === "install" && source.startsWith("git:")
+		? { ...process.env, npm_config_ignore_scripts: "true" }
+		: process.env;
+	return spawnCommand("pi", localArgs, { stdio: "inherit", env }).status ?? 1;
+}
+
+function preserveReplacementPackageEntry(pkg, local, legacyEntry) {
+	if (!legacyEntry) return { ok: true, changed: false };
+	let found = false;
+	try {
+		const result = writeSettings(local, (settings) => {
+			if (!Array.isArray(settings.packages)) return false;
+			const legacyIndex = settings.packages.findIndex((entry) => {
+				const source = packageEntrySource(entry);
+				return source != null
+					&& isLegacySourceForPackage(pkg, source)
+					&& (typeof legacyEntry !== "object" || typeof entry === "object");
+			});
+			const replacementIndex = settings.packages.findIndex((entry) => packageEntrySource(entry) === pkg.source);
+			if (legacyIndex === -1 || replacementIndex === -1) return false;
+			found = true;
+			const existingReplacement = settings.packages[replacementIndex];
+			if (typeof existingReplacement === "object" || typeof legacyEntry !== "object") return false;
+			const replacementEntry = { ...legacyEntry, source: pkg.source };
+			const nextPackages = [...settings.packages];
+			nextPackages.splice(replacementIndex, 1);
+			const adjustedLegacyIndex = replacementIndex < legacyIndex ? legacyIndex - 1 : legacyIndex;
+			nextPackages.splice(adjustedLegacyIndex + 1, 0, replacementEntry);
+			settings.packages = nextPackages;
+			return true;
+		});
+		if (!result.ok || !found) {
+			return { ok: false, error: result.error ?? `replacement source ${pkg.source} is missing from settings` };
+		}
+		return result;
+	} catch (error) {
+		return { ok: false, error: error instanceof Error ? error.message : String(error) };
+	}
+}
+
+function consolidateSameIdentityPackageEntries(pkg, local) {
+	try {
+		return writeSettings(local, (settings) => {
+			if (!Array.isArray(settings.packages)) return false;
+			const matchingIndexes = settings.packages
+				.map((entry, index) => sourcesSharePackageIdentity(packageEntrySource(entry), pkg.source) ? index : -1)
+				.filter((index) => index !== -1);
+			if (matchingIndexes.length < 2) return false;
+			const firstIndex = matchingIndexes[0];
+			const preferredIndex = matchingIndexes.find((index) => {
+				const entry = settings.packages[index];
+				return packageEntrySource(entry) === pkg.source && typeof entry === "object";
+			}) ?? matchingIndexes.find((index) => typeof settings.packages[index] === "object")
+				?? matchingIndexes.find((index) => packageEntrySource(settings.packages[index]) === pkg.source)
+				?? firstIndex;
+			const preferredEntry = settings.packages[preferredIndex];
+			const replacementEntry = typeof preferredEntry === "object"
+				? { ...preferredEntry, source: pkg.source }
+				: pkg.source;
+			const nextPackages = settings.packages.filter((_, index) => !matchingIndexes.includes(index));
+			nextPackages.splice(firstIndex, 0, replacementEntry);
+			settings.packages = nextPackages;
+			return true;
+		});
+	} catch (error) {
+		return { ok: false, error: error instanceof Error ? error.message : String(error) };
+	}
+}
+
+function migrateOrInstallPackage(pkg, installedPiSources, flags, interactive) {
+	const initialMigrationSources = findSourcesRequiringMigration(pkg, installedPiSources);
+	const scopeConflict = crossScopeMigrationConflict(pkg, installedPiSources, flags.local);
+	if (scopeConflict) {
+		return { ok: false, phase: "cross-scope", reason: crossScopeMigrationReason(scopeConflict), rollbackFailures: [] };
+	}
+
+	const replacementWasInstalled = [...installedPiSources].some((source) => isCurrentSourceVariant(pkg, source));
+	const legacyEntryResult = findPackageEntry(flags.local, (source) => isLegacySourceForPackage(pkg, source));
+	const legacyEntry = legacyEntryResult.entry;
+
+	if (!installedPiSources.has(pkg.source)) {
+		const installStatus = runPackageMutation("install", pkg.source, flags, interactive);
+		if (installStatus !== 0) return { ok: false, phase: "install", rollbackFailures: [] };
+	}
+
+	const postInstallState = readInstalledSources(flags.local);
+	if (postInstallState.error) {
+		return { ok: false, phase: "verify-install", rollbackFailures: [] };
+	}
+	const legacySources = findLegacyInstalledSources(pkg, postInstallState.sources);
+
+	if (legacySources.length > 0 && legacyEntry) {
+		const preserveResult = preserveReplacementPackageEntry(pkg, flags.local, legacyEntry);
+		if (!preserveResult.ok) {
+			const rollbackFailures = [];
+			if (runPackageMutation("remove", pkg.source, flags, interactive) !== 0) rollbackFailures.push(pkg.source);
+			return { ok: false, phase: "preserve-config", rollbackFailures };
+		}
+	}
+
+	const sameIdentitySources = postInstallState.sources.has(pkg.source)
+		? [...postInstallState.sources].filter((source) => source !== pkg.source && sourcesSharePackageIdentity(source, pkg.source))
+		: [];
+	if (sameIdentitySources.length > 0) {
+		const cleanupResult = consolidateSameIdentityPackageEntries(pkg, flags.local);
+		if (!cleanupResult.ok) return { ok: false, phase: "remove-legacy", rollbackFailures: [] };
+	}
+	const removableLegacySources = dedupeSourcesByPackageIdentity(
+		legacySources.filter((source) => !sameIdentitySources.includes(source)),
+	);
+
+	const removedLegacySources = [];
+	for (const legacySource of removableLegacySources) {
+		const removeStatus = runPackageMutation("remove", legacySource, flags, interactive);
+		if (removeStatus === 0) {
+			removedLegacySources.push(legacySource);
+			continue;
+		}
+
+		const rollbackFailures = [];
+		for (const removedSource of removedLegacySources.reverse()) {
+			if (runPackageMutation("install", removedSource, flags, interactive) !== 0) rollbackFailures.push(removedSource);
+		}
+		return { ok: false, phase: "remove-legacy", rollbackFailures };
+	}
+
+	return { ok: true, migrated: initialMigrationSources.length > 0 };
 }
 
 // ---------------------------------------------------------------------------
@@ -914,6 +1223,7 @@ async function ensurePi(flags) {
 // install
 // ---------------------------------------------------------------------------
 async function cmdInstall(flags) {
+	if (!requireSupportedNode()) return 1;
 	let selectedIds = expandPackageDependencies(resolveSelection(flags));
 
 	const usedSelectionFlag = Boolean(flags.only || flags.except);
@@ -923,7 +1233,6 @@ async function cmdInstall(flags) {
 		console.log(renderLogo());
 		intro(bold("LazyPi"));
 	}
-	if (!(await ensurePi(flags))) return 127;
 
 	if (interactive) {
 		const choice = await askLazyOrPick(PACKAGES.length);
@@ -946,17 +1255,20 @@ async function cmdInstall(flags) {
 	const toInstall = selected.filter((pkg) => {
 		if (forceIds.has(pkg.id)) return true;
 		if (pkg.id === COMPOUND_PKG_ID) return !isCompoundInstalled(flags.local) || compoundNeedsMigration(flags.local);
-		return !isPackageInstalled(pkg, installedSources, flags.local);
+		const status = packageInstallStatus(pkg, installedSources, flags.local);
+		return !status.installed || status.legacy;
 	});
 	const alreadyInstalled = selected.filter((pkg) => {
 		if (forceIds.has(pkg.id)) return false;
 		if (pkg.id === COMPOUND_PKG_ID) return isCompoundInstalled(flags.local) && !compoundNeedsMigration(flags.local);
-		return isPackageInstalled(pkg, installedSources, flags.local);
+		const status = packageInstallStatus(pkg, installedSources, flags.local);
+		return status.installed && !status.legacy;
 	});
 	const legacyInstalled = selected.filter((pkg) => {
 		if (forceIds.has(pkg.id)) return false;
-		if (pkg.id === COMPOUND_PKG_ID) return compoundNeedsMigration(flags.local);
-		return !isPackageInstalled(pkg, installedSources, flags.local) && isPackagePresent(pkg, installedSources, flags.local);
+		return pkg.id === COMPOUND_PKG_ID
+			? compoundNeedsMigration(flags.local)
+			: packageInstallStatus(pkg, installedSources, flags.local).legacy;
 	});
 	const installLabel = legacyInstalled.length > 0 ? `${toInstall.length} (${legacyInstalled.length} migration${legacyInstalled.length === 1 ? "" : "s"})` : String(toInstall.length);
 	const scope = flags.local ? "project (.pi/settings.json)" : `global (${settingsPath(false)})`;
@@ -971,6 +1283,20 @@ async function cmdInstall(flags) {
 	].join("\n");
 	if (interactive) note(summary, "Plan");
 	else console.log(summary);
+
+	const migrationFailure = findCrossScopeMigrationFailure(toInstall, installedSources, flags.local);
+	if (migrationFailure) {
+		const message = `Refusing to migrate ${migrationFailure.pkg.id}: ${migrationFailure.reason}`;
+		if (interactive) {
+			log.error(message);
+			outro(red("Aborted."));
+		} else {
+			console.error(red(message));
+		}
+		return 1;
+	}
+
+	if (!(await ensurePi(flags))) return 127;
 
 	if (selected.some((p) => p.id === "subagents")) {
 		const overrideResult = writeSubagentOverrides(flags.local);
@@ -999,7 +1325,6 @@ async function cmdInstall(flags) {
 		return 0;
 	}
 
-	const piArgs = flags.local ? ["install", "-l"] : ["install"];
 	const failed = [];
 	const skipped = [];
 
@@ -1020,33 +1345,16 @@ async function cmdInstall(flags) {
 			continue;
 		}
 
-		const legacySources = findLegacyInstalledSources(pkg, installedSources);
-		let migrationStatus = 0;
-		for (const legacySource of legacySources) {
-			const removeAction = `pi remove ${legacySource}`;
-			if (interactive) log.step(removeAction);
-			else console.log(`\n→ ${removeAction}`);
-			migrationStatus = spawnCommand("pi", flags.local ? ["remove", "-l", legacySource] : ["remove", legacySource], { stdio: "inherit" }).status ?? 1;
-			if (migrationStatus !== 0) break;
-		}
-		if (migrationStatus !== 0) {
+		const result = migrateOrInstallPackage(pkg, installedSources, flags, interactive);
+		if (!result.ok) {
 			failed.push(pkg);
-			if (interactive) log.error(`failed to migrate ${pkg.id}`);
-			else console.error(red(`  ✗ failed to migrate ${pkg.id}`));
-			continue;
-		}
-
-		const action = `pi install ${pkg.source}`;
-		if (interactive) log.step(action);
-		else console.log(`\n→ ${action}`);
-		const env = pkg.source.startsWith("git:")
-			? { ...process.env, npm_config_ignore_scripts: "true" }
-			: process.env;
-		const status = spawnCommand("pi", [...piArgs, pkg.source], { stdio: "inherit", env }).status;
-		if (status !== 0) {
-			failed.push(pkg);
-			if (interactive) log.error(`failed to install ${pkg.id}`);
-			else console.error(red(`  ✗ failed to install ${pkg.id}`));
+			const operation = result.phase === "install" ? "install" : "migrate";
+			const reason = result.reason ? ` (${result.reason})` : "";
+			const rollback = result.rollbackFailures.length > 0
+				? `; rollback also failed for ${result.rollbackFailures.join(", ")}`
+				: "";
+			if (interactive) log.error(`failed to ${operation} ${pkg.id}${reason}${rollback}`);
+			else console.error(red(`  ✗ failed to ${operation} ${pkg.id}${reason}${rollback}`));
 		}
 	}
 
@@ -1136,7 +1444,9 @@ function cmdStatus(flags) {
 	const installed = PACKAGES.filter((pkg) => packageInstallStatus(pkg, sources, flags.local).installed);
 	const legacy = PACKAGES.filter((pkg) => packageInstallStatus(pkg, sources, flags.local).legacy);
 	const missing = PACKAGES.filter((pkg) => !packageInstallStatus(pkg, sources, flags.local).present);
-	const others = [...sources].filter((src) => !piCatalogSources.has(src) && !PACKAGES.some((pkg) => isLegacySourceForPackage(pkg, src)));
+	const others = [...sources].filter((src) =>
+		!piCatalogSources.has(src) && !PACKAGES.some((pkg) => findSourcesRequiringMigration(pkg, new Set([src])).length > 0)
+	);
 
 	printHeader(`Installed from LazyPi catalog (${installed.length}/${PACKAGES.length}):`);
 	if (installed.length === 0) console.log(dim("  none"));
@@ -1148,9 +1458,9 @@ function cmdStatus(flags) {
 	if (legacy.length === 0) console.log(dim("  none"));
 	for (const pkg of legacy) {
 		const detail = pkg.id === COMPOUND_PKG_ID
-			? dim("legacy LazyPi state detected — run `lazypi update` to migrate to CE 3")
-			: findLegacyInstalledSources(pkg, sources).map((src) => dim(src)).join(", ");
-		console.log(`  ${yellow("!")} [${pkg.category}] ${pkg.id.padEnd(20)} ${detail}`);
+			? "legacy LazyPi state detected"
+			: findSourcesRequiringMigration(pkg, sources).join(", ");
+		console.log(`  ${yellow("!")} [${pkg.category}] ${pkg.id.padEnd(20)} ${dim(`${detail} — run \`lazypi update\` to migrate`)}`);
 	}
 
 	printHeader(`Missing from LazyPi catalog (${missing.length}):`);
@@ -1168,12 +1478,13 @@ function cmdStatus(flags) {
 
 function resolveUpdateCatalogIds(flags) {
 	const { sources, error } = readInstalledSources(flags.local);
-	if (error) return { ids: [], error };
+	if (error) return { ids: [], sources, error };
 	const selectedIds = resolveSelection(flags);
 	return {
 		ids: PACKAGES
 			.filter((pkg) => selectedIds.has(pkg.id) && isPackagePresent(pkg, sources, flags.local))
 			.map((pkg) => pkg.id),
+		sources,
 		error: null,
 	};
 }
@@ -1182,7 +1493,7 @@ function resolveUpdateCatalogIds(flags) {
 // update
 // ---------------------------------------------------------------------------
 async function cmdUpdate(flags) {
-	if (!(await ensurePi(flags))) return 127;
+	if (!requireSupportedNode()) return 1;
 
 	const updateSelection = resolveUpdateCatalogIds(flags);
 	if (updateSelection.error) {
@@ -1190,10 +1501,46 @@ async function cmdUpdate(flags) {
 		return 1;
 	}
 
+	const legacyPackages = PACKAGES.filter((pkg) =>
+		pkg.id !== COMPOUND_PKG_ID
+		&& updateSelection.ids.includes(pkg.id)
+		&& packageInstallStatus(pkg, updateSelection.sources, flags.local).legacy
+	);
+	const migrationFailure = findCrossScopeMigrationFailure(legacyPackages, updateSelection.sources, flags.local);
+	if (migrationFailure) {
+		console.error(red(`Refusing to migrate ${migrationFailure.pkg.id}: ${migrationFailure.reason}`));
+		return 1;
+	}
+
+	if (!(await ensurePi(flags))) return 127;
+
 	reportLoadOrderNormalization(normalizePackageLoadOrder(flags.local), false);
 
-	if (updateSelection.ids.includes(COMPOUND_PKG_ID)) {
-		console.log(bold("Step 1/2: refresh Compound Engineering"));
+	const refreshCompound = updateSelection.ids.includes(COMPOUND_PKG_ID);
+	const stepCount = Number(legacyPackages.length > 0) + Number(refreshCompound) + 1;
+	let step = 1;
+	const printStep = (message) => {
+		const prefix = stepCount > 1 ? `Step ${step++}/${stepCount}: ` : "";
+		console.log(bold(`${prefix}${message}`));
+	};
+
+	if (legacyPackages.length > 0) {
+		printStep(`migrate legacy catalog package${legacyPackages.length === 1 ? "" : "s"}`);
+		for (const pkg of legacyPackages) {
+			const result = migrateOrInstallPackage(pkg, updateSelection.sources, flags, false);
+			if (!result.ok) {
+				const reason = result.reason ? ` (${result.reason})` : "";
+				const rollback = result.rollbackFailures.length > 0
+					? `; rollback also failed for ${result.rollbackFailures.join(", ")}`
+					: "";
+				console.error(red(`  ✗ failed to migrate ${pkg.id}${reason}${rollback}`));
+				return 1;
+			}
+		}
+	}
+
+	if (refreshCompound) {
+		printStep("refresh Compound Engineering");
 		const installCode = await cmdInstall({
 			...flags,
 			command: "install",
@@ -1203,12 +1550,14 @@ async function cmdUpdate(flags) {
 			forceIds: [COMPOUND_PKG_ID],
 		});
 		if (installCode !== 0) return installCode;
-		console.log(bold("\nStep 2/2: pi update"));
-	} else {
-		console.log(bold("pi update"));
 	}
 
-	return runPi(flags.local ? ["update", "--extensions"] : ["update"]);
+	if (stepCount > 1) console.log("");
+	const updateArgs = flags.local
+		? ["update", "--extensions", ...(piSupportsApprovalFlag() ? ["--approve"] : [])]
+		: ["update", ...(piSupportsUpdateAll() ? ["--all"] : [])];
+	printStep(`pi ${updateArgs.join(" ")}`);
+	return runPi(updateArgs);
 }
 
 // ---------------------------------------------------------------------------
@@ -1229,9 +1578,8 @@ function cmdDoctor(flags) {
 	};
 
 	printHeader("Environment");
-	const nodeMajor = Number(process.versions.node.split(".")[0]);
-	if (Number.isFinite(nodeMajor) && nodeMajor >= 18) pass(`Node ${process.versions.node}`);
-	else fail(`Node ${process.versions.node} — LazyPi requires Node >= 18`);
+	if (isSupportedNodeVersion(process.versions.node)) pass(`Node ${process.versions.node}`);
+	else fail(`Node ${process.versions.node} — LazyPi and current Pi require Node >= ${MIN_NODE_VERSION}`);
 
 	if (hasCmd("npm")) pass("npm is on PATH");
 	else fail("npm is not on PATH — LazyPi can't install Pi for you");
@@ -1365,9 +1713,11 @@ async function cmdRemove(flags, targets) {
 				...findLegacyInstalledSources(pkg, installedSources),
 			]
 			: [source];
-		const uniqueSources = [...new Set(sourcesToRemove.length > 0 ? sourcesToRemove : [source])];
+		const uniqueSources = dedupeSourcesByPackageIdentity(sourcesToRemove.length > 0 ? sourcesToRemove : [source]);
 		for (const resolvedSource of uniqueSources) {
-			const piArgs = flags.local ? ["remove", "-l", resolvedSource] : ["remove", resolvedSource];
+			const piArgs = flags.local
+				? ["remove", "-l", ...(piSupportsApprovalFlag() ? ["--approve"] : []), resolvedSource]
+				: ["remove", resolvedSource];
 			const result = spawnCommand("pi", piArgs, { stdio: "inherit" });
 			if (result.status !== 0) {
 				console.error(red(`Failed to remove ${target}`));

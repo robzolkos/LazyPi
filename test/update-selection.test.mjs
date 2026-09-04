@@ -30,7 +30,7 @@ function createWorkspace() {
 
 function writeFakePi(bin, callsPath) {
 	const piPath = join(bin, "pi");
-	writeFileSync(piPath, `#!/bin/sh\nprintf '%s\\n' "$*" >> "${callsPath}"\nexit 0\n`);
+	writeFileSync(piPath, `#!/bin/sh\nif [ "$1" = "update" ] && [ "$2" = "--help" ]; then echo '  --all'; exit 0; fi\nprintf '%s\\n' "$*" >> "${callsPath}"\nexit 0\n`);
 	chmodSync(piPath, 0o755);
 }
 
@@ -51,7 +51,7 @@ function runCli(args, { cwd, home, bin } = {}) {
 	return result;
 }
 
-test("update delegates to pi update without installing the full catalog", () => {
+test("update delegates to Pi's full updater without installing the catalog", () => {
 	const { root, home, workspace, bin } = createWorkspace();
 	const callsPath = join(root, "pi-calls.log");
 	writeFakePi(bin, callsPath);
@@ -63,6 +63,6 @@ test("update delegates to pi update without installing the full catalog", () => 
 	assert.match(result.stdout, /pi update/);
 
 	const calls = readFileSync(callsPath, "utf8").trim().split(/\r?\n/).filter(Boolean);
-	assert.deepEqual(calls, ["update"]);
+	assert.deepEqual(calls, ["update --all"]);
 	assert.doesNotMatch(calls.join("\n"), /install|npm:pi-mcp-adapter|npm:pi-web-access|npm:@devkade\/pi-plan/);
 });

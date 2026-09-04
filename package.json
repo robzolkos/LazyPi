@@ -21,7 +21,7 @@
     "LICENSE"
   ],
   "engines": {
-    "node": ">=20"
+    "node": ">=22.19.0"
   },
   "scripts": {
     "docs:serve": "cd docs && bundle exec jekyll serve --livereload",

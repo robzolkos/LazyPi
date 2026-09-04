@@ -15,7 +15,7 @@ jobs:
 
       - uses: actions/setup-node@v4
         with:
-          node-version: 20
+          node-version: 22.19.0
 
       - name: Install bun
         uses: oven-sh/setup-bun@v2
@@ -48,7 +48,7 @@ jobs:
 
       - uses: actions/setup-node@v4
         with:
-          node-version: 20
+          node-version: 22.19.0
 
       - name: Install pi
         run: npm install -g @earendil-works/pi-coding-agent
