@@ -44,12 +44,36 @@ function writeJson(path, value) {
 }
 
 function writeFakePi(bin) {
+	const driverPath = join(bin, "pi-driver.cjs");
+	writeFileSync(driverPath, `
+const { appendFileSync, readFileSync, writeFileSync } = require("node:fs");
+const { join } = require("node:path");
+const args = process.argv.slice(2);
+const command = args[0];
+if (command === "--version") {
+	console.log("pi test");
+	process.exit(0);
+}
+if (command === "update" && args.includes("--help")) {
+	console.log("  --all");
+	process.exit(0);
+}
+if (process.env.PI_TEST_CALLS) appendFileSync(process.env.PI_TEST_CALLS, args.join(" ") + "\\n");
+if (command !== "install" && command !== "remove") process.exit(0);
+const settingsPath = join(process.env.PI_CODING_AGENT_DIR, "settings.json");
+const settings = JSON.parse(readFileSync(settingsPath, "utf8"));
+const source = args.at(-1);
+const entrySource = (entry) => typeof entry === "string" ? entry : entry.source;
+if (command === "install") settings.packages.push(source);
+else settings.packages = settings.packages.filter((entry) => entrySource(entry) !== source);
+writeFileSync(settingsPath, JSON.stringify(settings, null, 2) + "\\n");
+`);
 	if (process.platform === "win32") {
-		writeFileSync(join(bin, "pi.cmd"), "@echo off\r\nif \"%1\"==\"--version\" echo pi test\r\nif defined PI_TEST_CALLS echo %*>>\"%PI_TEST_CALLS%\"\r\nexit /b 0\r\n");
+		writeFileSync(join(bin, "pi.cmd"), `@echo off\r\n"${process.execPath}" "${driverPath}" %*\r\n`);
 		return;
 	}
 	const piPath = join(bin, "pi");
-	writeFileSync(piPath, "#!/bin/sh\nif [ \"$1\" = \"--version\" ]; then echo 'pi test'; fi\nif [ -n \"$PI_TEST_CALLS\" ]; then printf '%s\\n' \"$*\" >> \"$PI_TEST_CALLS\"; fi\nexit 0\n");
+	writeFileSync(piPath, `#!/bin/sh\nexec "${process.execPath}" "${driverPath}" "$@"\n`);
 	chmodSync(piPath, 0o755);
 }
 
@@ -140,13 +164,26 @@ test("update and remove inspect the custom global settings", (t) => {
 	const updateResult = runCli(["update"], { cwd: workspace, home, agentDir: customAgentDir, bin, callsPath });
 	assert.equal(updateResult.status, 0, `STDOUT:\n${updateResult.stdout}\nSTDERR:\n${updateResult.stderr}`);
 	const customSettings = JSON.parse(readFileSync(join(customAgentDir, "settings.json"), "utf8"));
-	assert.deepEqual(customSettings.packages, [EXTENSION_SETTINGS_SOURCE, POWERBAR_SOURCE, "npm:pi-memory-md"]);
+	assert.deepEqual(customSettings.packages, [
+		EXTENSION_SETTINGS_SOURCE,
+		POWERBAR_SOURCE,
+		"git:github.com/VandeeFeng/pi-memory-md",
+	]);
 	assert.deepEqual(JSON.parse(readFileSync(join(defaultAgentDir, "settings.json"), "utf8")).packages, ["npm:pi-subagents"]);
 
 	const removeResult = runCli(["remove", "memory"], { cwd: workspace, home, agentDir: customAgentDir, bin, callsPath });
 	assert.equal(removeResult.status, 0, `STDOUT:\n${removeResult.stdout}\nSTDERR:\n${removeResult.stderr}`);
 	const calls = readFileSync(callsPath, "utf8").trim().split(/\r?\n/).filter(Boolean);
-	assert.deepEqual(calls, ["update", "remove npm:pi-memory-md"]);
+	assert.deepEqual(calls, [
+		"install git:github.com/VandeeFeng/pi-memory-md",
+		"remove npm:pi-memory-md",
+		"update --all",
+		"remove git:github.com/VandeeFeng/pi-memory-md",
+	]);
+	assert.deepEqual(JSON.parse(readFileSync(join(customAgentDir, "settings.json"), "utf8")).packages, [
+		EXTENSION_SETTINGS_SOURCE,
+		POWERBAR_SOURCE,
+	]);
 });
 
 test("--local settings remain independent of PI_CODING_AGENT_DIR", (t) => {

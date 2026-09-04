@@ -4,6 +4,8 @@ The [Pi](https://github.com/earendil-works/pi-mono) coding agent is minimal by d
 
 ## Quick start
 
+LazyPi requires Node.js 22.19 or later.
+
 ```bash
 npx @robzolkos/lazypi
 ```
@@ -26,7 +28,7 @@ Install is **idempotent** — LazyPi reads your Pi settings and skips any packag
 | `npx @robzolkos/lazypi` | Install all or selected catalog (interactive picker by default) |
 | `npx @robzolkos/lazypi remove <id>` | Remove a catalog package by id (or pass a raw pi source) |
 | `npx @robzolkos/lazypi status` | Show which catalog packages are installed, missing, or extra |
-| `npx @robzolkos/lazypi update` | Run `pi update` for installed Pi packages |
+| `npx @robzolkos/lazypi update` | Migrate legacy catalog sources and update Pi plus installed packages |
 | `npx @robzolkos/lazypi doctor` | Check your environment for common problems |
 
 ## Updating
@@ -34,6 +36,8 @@ Install is **idempotent** — LazyPi reads your Pi settings and skips any packag
 ```bash
 npx @robzolkos/lazypi update
 ```
+
+Update migrates installed legacy catalog sources, refreshes Compound Engineering when present, and runs Pi's full updater. See the [updating guide](https://lazypi.org/docs/updating.html) for migration and failure behavior.
 
 ## Removing packages
 

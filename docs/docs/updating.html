@@ -9,7 +9,7 @@ description: "How to update your LazyPi packages."
     <h2>Update installed packages</h2>
     <pre><code>npx @robzolkos/lazypi update</code></pre>
     <p>
-      This runs Pi's updater for installed package changes.
+      This reconciles LazyPi's installed catalog sources and runs Pi's full updater.
     </p>
 
     <h2>What the update does</h2>
@@ -17,12 +17,16 @@ description: "How to update your LazyPi packages."
       When you run <code>update</code>, LazyPi:
     </p>
     <ol>
+      <li>Migrates installed legacy catalog sources to their current maintained sources</li>
       <li>Refreshes Compound Engineering when it is installed</li>
-      <li>Runs <code>pi update</code> for installed Pi packages</li>
+      <li>Updates Pi itself and installed Pi packages</li>
       <li>Reports what changed</li>
     </ol>
     <p>
-      Update preserves your selected catalog footprint.
+      Update preserves your selected catalog footprint. A replacement installs successfully before LazyPi removes its legacy source. If cleanup fails, LazyPi keeps an installed source available and reports the migration failure.
+    </p>
+    <p>
+      When an identity-changing legacy source is configured in both global and current-project settings, LazyPi keeps both settings unchanged. Remove the duplicate from one scope, then rerun the update for the remaining scope.
     </p>
 
     <nav class="prev-next">

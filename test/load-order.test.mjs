@@ -120,5 +120,5 @@ test("update repairs load order before delegating to pi update", () => {
 	const settings = JSON.parse(readFileSync(settingsPath, "utf8"));
 	assert.deepEqual(settings.packages, [EXTENSION_SETTINGS_SOURCE, POWERBAR_SOURCE]);
 	const calls = readFileSync(callsPath, "utf8").trim().split(/\r?\n/).filter(Boolean);
-	assert.deepEqual(calls, ["update --extensions"]);
+	assert.deepEqual(calls, ["install --help", "update --extensions"]);
 });
