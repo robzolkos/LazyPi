@@ -2,6 +2,41 @@
   id: intro
   description: "Get started with Pi — introductions, tutorials, and setup guides."
   videos:
+    - id: gtPE8N6gSIA
+      title: "How to Install, Connect Provider, Interact, and Create a Custom Extension with Pi Coding Agent"
+      channel: CloudOpsDirect
+      duration: "14:42"
+      published: "2026-09-03"
+    - id: o8-EgQhqdU0
+      title: "Here's why I like Pi"
+      channel: Academind
+      duration: "9:25"
+      published: "2026-08-06"
+    - id: XhliUzOmSa8
+      title: "Pi Coding Agent is now my absolute favorite..."
+      channel: NeuralNine
+      duration: "13:19"
+      published: "2026-07-20"
+    - id: QpceyQQwC_E
+      title: "Pi is the Claude Code Killer Nobody Saw Coming..."
+      channel: The AI Automators
+      duration: "9:59"
+      published: "2026-07-18"
+    - id: jPuN4ilZLdU
+      title: "Pi replaced every other coding agent harness for me"
+      channel: Jilles
+      duration: "6:10"
+      published: "2026-07-09"
+    - id: csqd5H6Oyrs
+      title: "Codex vs OpenCode vs Pi Agent: Who Wins?"
+      channel: Brandon Melville
+      duration: "13:04"
+      published: "2026-07-08"
+    - id: DogTO1jjFtI
+      title: "What I Use Instead"
+      channel: Web Dev Simplified
+      duration: "19:58"
+      published: "2026-06-23"
     - id: jcUqsNpDDDk
       title: "If you don’t run Pi locally you’re falling behind…"
       channel: David Ondrej
@@ -192,6 +227,21 @@
   id: fullcourse
   description: "Extended videos showing it all."
   videos:
+    - id: 0sI0MbCt4f4
+      title: "You Can Learn Pi Minimal Coding Agent Harness In 22 Min | Skills, Extensions, Packages, Bash"
+      channel: Sean‘s AI Stories
+      duration: "22:30"
+      published: "2026-07-25"
+    - id: -5Gw-N8LmDA
+      title: "Pi Coding Agent Setup: Free AI Models via OpenRouter (Full Guide)"
+      channel: Berto Mill
+      duration: "22:24"
+      published: "2026-07-05"
+    - id: B5_lAbGeBDY
+      title: "Pi Agent: Set Up Your First Local AI Agent (Full Guide)"
+      channel: "Kacper Rutkiewicz | AI Made Simple"
+      duration: "31:05"
+      published: "2026-06-19"
     - id: 6xXjHM3V1zM
       title: "How I Turned Pi Into the Ultimate Coding Agent"
       channel: Ben Davis
@@ -222,6 +272,111 @@
   id: advanced
   description: "Deep dives into advanced Pi workflows and techniques."
   videos:
+    - id: QkElI_HcuT8
+      title: "I Built an Auto Router for Local LLMs with LiteLLM + Pi Coding Agent"
+      channel: Execute Automation
+      duration: "20:04"
+      published: "2026-09-11"
+    - id: l3YCoX2i-78
+      title: "Upgrade your Pi Agent with Subagents + MCP"
+      channel: ZazenCodes
+      duration: "25:22"
+      published: "2026-09-09"
+    - id: ve4J5NtI3mQ
+      title: "Harness review: Pi"
+      channel: No place like localhost
+      duration: "23:51"
+      published: "2026-08-31"
+    - id: D1O5hcmBcZo
+      title: "Control Coding Harnesses with the Pi Coding Agent"
+      channel: Endmyion
+      duration: "17:45"
+      published: "2026-08-27"
+    - id: iKwPaB5TUdI
+      title: "Pi Setup After 6 Months of Use"
+      channel: Eero Alvar
+      duration: "19:08"
+      published: "2026-08-25"
+    - id: rqZHR-hRllI
+      title: "Intelligence EXPLOSION: Harness Engineering with Pi Agent, Deepseek, and Gemini"
+      channel: IndyDevDan
+      duration: "28:05"
+      published: "2026-08-24"
+    - id: gGdmthv1w_4
+      title: "Community Request How To: Pi coding agent x Ollama served local LLM"
+      channel: Tim Dickey
+      duration: "18:37"
+      published: "2026-08-22"
+    - id: 5kLL0xUC28Q
+      title: "Pi Coding Agent - Deep Dive"
+      channel: 0xSero
+      duration: "29:59"
+      published: "2026-08-21"
+    - id: kJzInda9E-o
+      title: "Build Your Own AI Agent With pi, Explained In 11 Minutes"
+      channel: AI Dive
+      duration: "10:36"
+      published: "2026-08-19"
+    - id: j3c35v386T0
+      title: "Pi Agent + DeepSeek AI Just Beat Claude Code?"
+      channel: Julian Goldie SEO
+      duration: "12:27"
+      published: "2026-08-11"
+    - id: WoOWe1SrIQo
+      title: "Pi Agent + GPT-5.6 Luna, V4 Flash & Every Model: THIS IS THE BEST!"
+      channel: AICodeKing
+      duration: "8:41"
+      published: "2026-08-09"
+    - id: I-Sjt6xKouU
+      title: "TESTED the best AI agent harness? opencode vs pi vs jcode vs reasonix"
+      channel: Luigi Tech
+      duration: "18:29"
+      published: "2026-08-08"
+    - id: jcCPUcS4yzs
+      title: "Oh-My-Pi: Is This The Best Agent Harness?!"
+      channel: NeuralNine
+      duration: "19:53"
+      published: "2026-08-03"
+    - id: fpvF4n32lsE
+      title: "Did I Build the Best Local AI Agent Harness? (diched Hermes)"
+      channel: Codacus
+      duration: "14:09"
+      published: "2026-08-02"
+    - id: 4V9pVNTtmw4
+      title: "PI Coding Agent + Llama CPP is the BEST local AI setup you could have"
+      channel: AI RNCZ
+      duration: "13:01"
+      published: "2026-08-01"
+    - id: B0K5p_-2Pes
+      title: "Recommend some Pi Agent plugins"
+      channel: 龙胆紫
+      duration: "4:12"
+      published: "2026-07-25"
+    - id: qAiivspEHmU
+      title: "Pi Extensible Workflows: Full Guide"
+      channel: Andrea Baccega
+      duration: "28:11"
+      published: "2026-07-25"
+    - id: 5Qu2SkSQeBU
+      title: "I Created the Ultimate Coding Agent by Combining Pi, Codex, and Claude Code..."
+      channel: Ben Davis
+      duration: "30:35"
+      published: "2026-07-24"
+    - id: MsPhMhfvgD4
+      title: "Why I switched to Pi..."
+      channel: AI Jason
+      duration: "15:19"
+      published: "2026-07-14"
+    - id: eC4j5uiHcvA
+      title: "Run Pi coding agent in the cloud for free | Coding agents in remote sandbox"
+      channel: Aniket Maurya
+      duration: "4:55"
+      published: "2026-07-11"
+    - id: cUwH8wxYDx8
+      title: "Pi + Ollama I Replaced Claude Code With This FREE Local Agent"
+      channel: Leon van Zyl
+      duration: "21:02"
+      published: "2026-06-30"
     - id: VTvpbqEdIZQ
       title: "Talking to My Terminal with Local Speech to text and Pi Coding Agent"
       channel: Agentic Coding Weekly
@@ -467,6 +622,31 @@
   id: slice
   description: "Talks, interviews, and discussions about Pi from the creator and community."
   videos:
+    - id: SxuQs9GGYbk
+      title: "Pi Agent dev reveals his Agentic Engineering Workflow"
+      channel: David Ondrej
+      duration: "1:05:29"
+      published: "2026-09-12"
+    - id: RKHaecOi0CA
+      title: "Meet Pi: The Minimalist, Self-Modifying Coding Agent"
+      channel: CultRepo
+      duration: "11:22"
+      published: "2026-08-20"
+    - id: AuuiIFqQ1tY
+      title: "You don't own your AI agent sessions"
+      channel: Maximilian Schwarzmüller
+      duration: "21:23"
+      published: "2026-08-05"
+    - id: wjXstnM8co0
+      title: "Armin Ronacher Colin Daymond Hanna — Reflections on building cloud and local hybrid machine entities"
+      channel: Local-First Conf
+      duration: "24:25"
+      published: "2026-07-31"
+    - id: _lfpEy_9vf0
+      title: "State of Agentic Coding #8 with Mario, Armin, and Ben"
+      channel: Armin Ronacher
+      duration: "1:20:53"
+      published: "2026-07-13"
     - id: DPgJjRdQWrg
       title: "Pi Building Pi, Openclaw's Minimalist Coding Agent | Mario Zechner, Creator of Pi"
       channel: The Modern Software Developer
