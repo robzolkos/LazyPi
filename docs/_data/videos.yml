@@ -282,6 +282,11 @@
   id: advanced
   description: "Deep dives into advanced Pi workflows and techniques."
   videos:
+    - id: JxmCyvF3FUs
+      title: "🧠 Claude Code + OpenCode + Pi  + Hermes: Build Your Own Guardrailed AI Coding Agent 🚀 #hermes 🔌"
+      channel: DevOps Gang
+      duration: "10:23"
+      published: "2026-09-15"
     - id: QkElI_HcuT8
       title: "I Built an Auto Router for Local LLMs with LiteLLM + Pi Coding Agent"
       channel: Execute Automation
