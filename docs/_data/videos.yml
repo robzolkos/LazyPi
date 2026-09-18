@@ -282,6 +282,11 @@
   id: advanced
   description: "Deep dives into advanced Pi workflows and techniques."
   videos:
+    - id: aNsPxGT1erM
+      title: "Running Qwen 3.8 Flash-Next at xhigh on 3 harnesses"
+      channel: Jose Romero
+      duration: "16:56"
+      published: "2026-09-18"
     - id: JxmCyvF3FUs
       title: "🧠 Claude Code + OpenCode + Pi  + Hermes: Build Your Own Guardrailed AI Coding Agent 🚀 #hermes 🔌"
       channel: DevOps Gang
@@ -642,6 +647,11 @@
       channel: David Ondrej
       duration: "1:05:29"
       published: "2026-09-12"
+    - id: sYNOgpDKTvE
+      title: "How a Cloudflare Engineer Ships Production Code He Didn't Write | Dillon Mulroy"
+      channel: Jan-Niklas Wortmann
+      duration: "1:04:31"
+      published: "2026-09-10"
     - id: RKHaecOi0CA
       title: "Meet Pi: The Minimalist, Self-Modifying Coding Agent"
       channel: CultRepo
