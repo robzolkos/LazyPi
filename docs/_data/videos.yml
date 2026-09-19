@@ -282,6 +282,11 @@
   id: advanced
   description: "Deep dives into advanced Pi workflows and techniques."
   videos:
+    - id: w9IBF4AEpfI
+      title: "Pi said the repo was clean. My API keys leaked anyway."
+      channel: Adam Gardner
+      duration: "12:14"
+      published: "2026-09-18"
     - id: aNsPxGT1erM
       title: "Running Qwen 3.8 Flash-Next at xhigh on 3 harnesses"
       channel: Jose Romero
