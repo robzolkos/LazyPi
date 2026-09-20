@@ -302,6 +302,11 @@
       channel: Execute Automation
       duration: "20:04"
       published: "2026-09-11"
+    - id: w1xjXDPP99U
+      title: "Make Your AI Agents Work in Parallel"
+      channel: Devin Ersoy
+      duration: "4:35"
+      published: "2026-09-10"
     - id: l3YCoX2i-78
       title: "Upgrade your Pi Agent with Subagents + MCP"
       channel: ZazenCodes
