@@ -282,6 +282,16 @@
   id: advanced
   description: "Deep dives into advanced Pi workflows and techniques."
   videos:
+    - id: 3b0U4_02bAE
+      title: "Self-Compact Pi Agent: ZERO HYPE Agentic Coding Devlog"
+      channel: IndyDevDan
+      duration: "30:02"
+      published: "2026-09-21"
+    - id: YdyGDo7uLTo
+      title: "The Best Pi Coding Agent Setup for AI Agentic Workflows"
+      channel: Yasir Khan
+      duration: "8:40"
+      published: "2026-09-21"
     - id: w9IBF4AEpfI
       title: "Pi said the repo was clean. My API keys leaked anyway."
       channel: Adam Gardner
@@ -297,6 +307,11 @@
       channel: DevOps Gang
       duration: "10:23"
       published: "2026-09-15"
+    - id: _MgtDxLitQQ
+      title: "Pi + Hermes and Zero Cloud: My Whole Home Setup in One Workflow"
+      channel: LivingOnLinux
+      duration: "14:27"
+      published: "2026-09-14"
     - id: QkElI_HcuT8
       title: "I Built an Auto Router for Local LLMs with LiteLLM + Pi Coding Agent"
       channel: Execute Automation
