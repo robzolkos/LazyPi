@@ -287,6 +287,11 @@
   id: advanced
   description: "Deep dives into advanced Pi workflows and techniques."
   videos:
+    - id: mYZCS0RBJ4Y
+      title: "Saya Coba 2 Cara Voice Coding di Oh-My-Pi & Microphone MAONO PD100W"
+      channel: Dirumahrafif
+      duration: "11:12"
+      published: "2026-09-25"
     - id: khvc8KaPhrY
       title: "Oh-My-Pi Ternyata Punya Fitur-fitur ini ... (Tutorial OMP)"
       channel: Dirumahrafif
