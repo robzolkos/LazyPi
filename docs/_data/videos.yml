@@ -237,6 +237,11 @@
   id: fullcourse
   description: "Extended videos showing it all."
   videos:
+    - id: umfFbfApSAc
+      title: "Así se arma un agente de código a tu medida con Pi"
+      channel: Fazt
+      duration: "49:31"
+      published: "2026-09-24"
     - id: 0sI0MbCt4f4
       title: "You Can Learn Pi Minimal Coding Agent Harness In 22 Min | Skills, Extensions, Packages, Bash"
       channel: Sean‘s AI Stories
@@ -302,6 +307,11 @@
       channel: Jose Romero
       duration: "16:56"
       published: "2026-09-18"
+    - id: qQNd7ajxDL8
+      title: "Cómo Programar con Spec-Driven Development 🚀 Ejemplo con IA Local y Pi Agent"
+      channel: Nichonauta
+      duration: "26:12"
+      published: "2026-09-15"
     - id: JxmCyvF3FUs
       title: "🧠 Claude Code + OpenCode + Pi  + Hermes: Build Your Own Guardrailed AI Coding Agent 🚀 #hermes 🔌"
       channel: DevOps Gang
@@ -377,11 +387,6 @@
       channel: Luigi Tech
       duration: "18:29"
       published: "2026-08-08"
-    - id: jcCPUcS4yzs
-      title: "Oh-My-Pi: Is This The Best Agent Harness?!"
-      channel: NeuralNine
-      duration: "19:53"
-      published: "2026-08-03"
     - id: fpvF4n32lsE
       title: "Did I Build the Best Local AI Agent Harness? (diched Hermes)"
       channel: Codacus
