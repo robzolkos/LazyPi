@@ -2,6 +2,11 @@
   id: intro
   description: "Get started with Pi — introductions, tutorials, and setup guides."
   videos:
+    - id: EMdSr1OciVc
+      title: "Pi Agent 零基础入门：不写代码，装好就让 AI 替你整理资料、写文章"
+      channel: 范凯说AI
+      duration: "16:20"
+      published: "2026-09-28"
     - id: sfGDycIrD-w
       title: "The Best Open Source Coding Tool?? Pi Code vs OpenCode"
       channel: Ömer Göçmen | Yapay Zeka & Otomasyon
@@ -292,6 +297,16 @@
   id: advanced
   description: "Deep dives into advanced Pi workflows and techniques."
   videos:
+    - id: 4YVeQf8huyM
+      title: "Jev + AI Agents: Where a Decision Model Actually Helps"
+      channel: Prompt Engineering
+      duration: "15:32"
+      published: "2026-09-29"
+    - id: _U-O5lYhJ7Q
+      title: "10 Levels of Jev For Agentic Engineers"
+      channel: IndyDevDan
+      duration: "35:17"
+      published: "2026-09-28"
     - id: wGfdDnxwp-I
       title: "Qwen 3.8 27b + 3 AI-агента: кто реально умеет писать код? Aider vs pi.dev vs opencode"
       channel: johenews
@@ -312,6 +327,11 @@
       channel: Yasir Khan
       duration: "8:40"
       published: "2026-09-21"
+    - id: 03JccN3VOps
+      title: "Opencode vs PI on a Local Model: 3 Projects Each"
+      channel: Testination
+      duration: "7:47"
+      published: "2026-09-20"
     - id: w9IBF4AEpfI
       title: "Pi said the repo was clean. My API keys leaked anyway."
       channel: Adam Gardner
