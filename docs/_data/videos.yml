@@ -302,10 +302,20 @@
       channel: Prompt Engineering
       duration: "15:32"
       published: "2026-09-29"
+    - id: Eh8kuJ1fFGM
+      title: "Reinventing the Agent Loop | Plugging Jev in a Pi extension"
+      channel: Kristiyan Stoyanov
+      duration: "10:08"
+      published: "2026-09-29"
     - id: _U-O5lYhJ7Q
       title: "10 Levels of Jev For Agentic Engineers"
       channel: IndyDevDan
       duration: "35:17"
+      published: "2026-09-28"
+    - id: IBDpcLr-VBk
+      title: "Claude Codeのサブスク枠はPiで使えない ─ ハーネスとモデルを自由に乗り換える"
+      channel: 胡田昌彦 / Windows, Azure, M365, 生成AI
+      duration: "6:49"
       published: "2026-09-28"
     - id: wGfdDnxwp-I
       title: "Qwen 3.8 27b + 3 AI-агента: кто реально умеет писать код? Aider vs pi.dev vs opencode"
@@ -326,6 +336,11 @@
       title: "The Best Pi Coding Agent Setup for AI Agentic Workflows"
       channel: Yasir Khan
       duration: "8:40"
+      published: "2026-09-21"
+    - id: u2sbzYgREtQ
+      title: "Durable Long-Running Agent Loops in Pi & Herdr"
+      channel: Joel Hooks
+      duration: "9:09"
       published: "2026-09-21"
     - id: 03JccN3VOps
       title: "Opencode vs PI on a Local Model: 3 Projects Each"
