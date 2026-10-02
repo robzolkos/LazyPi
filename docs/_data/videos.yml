@@ -242,6 +242,11 @@
   id: fullcourse
   description: "Extended videos showing it all."
   videos:
+    - id: bYkJFfQANzc
+      title: "Build Your Own AI Agent Harness with Pi and Prime — Hands-on Course"
+      channel: Charles Shen, PhD, EMBA
+      duration: "3:19:10"
+      published: "2026-09-29"
     - id: umfFbfApSAc
       title: "Así se arma un agente de código a tu medida con Pi"
       channel: Fazt
@@ -297,6 +302,11 @@
   id: advanced
   description: "Deep dives into advanced Pi workflows and techniques."
   videos:
+    - id: 6GEIazFgPhA
+      title: "The 9 Pi Coding Agent Packages I Won't Work Without (Fully Local)"
+      channel: Production Grade AI
+      duration: "15:36"
+      published: "2026-09-30"
     - id: 4YVeQf8huyM
       title: "Jev + AI Agents: Where a Decision Model Actually Helps"
       channel: Prompt Engineering
