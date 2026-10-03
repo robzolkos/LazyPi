@@ -302,6 +302,11 @@
   id: advanced
   description: "Deep dives into advanced Pi workflows and techniques."
   videos:
+    - id: Wzpz7rQawNo
+      title: "Pi vs PiG: Is This New Go Agent Faster?"
+      channel: DIY Smart Code
+      duration: "8:12"
+      published: "2026-10-02"
     - id: 6GEIazFgPhA
       title: "The 9 Pi Coding Agent Packages I Won't Work Without (Fully Local)"
       channel: Production Grade AI
@@ -732,6 +737,11 @@
   id: slice
   description: "Talks, interviews, and discussions about Pi from the creator and community."
   videos:
+    - id: U3xzXfvHuOA
+      title: "Pi Coding Agent Said No MCP, Then Built It In. Its Post Admits What's Still Hard"
+      channel: You Code It
+      duration: "5:30"
+      published: "2026-10-02"
     - id: SxuQs9GGYbk
       title: "Pi Agent dev reveals his Agentic Engineering Workflow"
       channel: David Ondrej
