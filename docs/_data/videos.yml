@@ -302,6 +302,11 @@
   id: advanced
   description: "Deep dives into advanced Pi workflows and techniques."
   videos:
+    - id: IrQE95cUiMU
+      title: "Pi Agent Just Added CODEMODE… and It’s INSANE!"
+      channel: kintu
+      duration: "11:25"
+      published: "2026-10-03"
     - id: Wzpz7rQawNo
       title: "Pi vs PiG: Is This New Go Agent Faster?"
       channel: DIY Smart Code
