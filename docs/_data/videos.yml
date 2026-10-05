@@ -2,6 +2,11 @@
   id: intro
   description: "Get started with Pi — introductions, tutorials, and setup guides."
   videos:
+    - id: hKaMUjWqqFY
+      title: "Pi 1.0 🚀 El Agente de Desarrollo MINIMALISTA para la Terminal"
+      channel: Nichonauta
+      duration: "10:30"
+      published: "2026-10-03"
     - id: EMdSr1OciVc
       title: "Pi Agent 零基础入门：不写代码，装好就让 AI 替你整理资料、写文章"
       channel: 范凯说AI
@@ -302,6 +307,16 @@
   id: advanced
   description: "Deep dives into advanced Pi workflows and techniques."
   videos:
+    - id: n1sSzDRcRRM
+      title: "Pi Durable 是什么，有什么用？Pi 1.0 同日发布的 Agent Harness 框架"
+      channel: 01Coder
+      duration: "23:07"
+      published: "2026-10-04"
+    - id: LNGBIsU3V7s
+      title: "Crea un Agente Que Revisa tus Pull Requests con Pi y GitHub Actions"
+      channel: Gilberts Ahumada
+      duration: "24:35"
+      published: "2026-10-03"
     - id: IrQE95cUiMU
       title: "Pi Agent Just Added CODEMODE… and It’s INSANE!"
       channel: kintu
@@ -742,6 +757,11 @@
   id: slice
   description: "Talks, interviews, and discussions about Pi from the creator and community."
   videos:
+    - id: Ueq-VggU1Mw
+      title: "Pi 1.0 Keeps the Line Through No. The New Default Is Fullscreen. Codemode Came Earlier."
+      channel: You Code It
+      duration: "4:36"
+      published: "2026-10-02"
     - id: U3xzXfvHuOA
       title: "Pi Coding Agent Said No MCP, Then Built It In. Its Post Admits What's Still Hard"
       channel: You Code It
