@@ -312,10 +312,20 @@
       channel: 01Coder
       duration: "23:07"
       published: "2026-10-04"
+    - id: coP7Csa5Jlo
+      title: "Modifying Your Coding Harness: How to build your own Pi Extensions"
+      channel: Tech with Arnav
+      duration: "1:12:02"
+      published: "2026-10-04"
     - id: LNGBIsU3V7s
       title: "Crea un Agente Que Revisa tus Pull Requests con Pi y GitHub Actions"
       channel: Gilberts Ahumada
       duration: "24:35"
+      published: "2026-10-03"
+    - id: hZOT9NCrWAo
+      title: "Deep Dive w/Scott: LLM PR polish w/crit.md #adafruit"
+      channel: Adafruit Industries
+      duration: "1:11:10"
       published: "2026-10-03"
     - id: IrQE95cUiMU
       title: "Pi Agent Just Added CODEMODE… and It’s INSANE!"
@@ -327,6 +337,11 @@
       channel: DIY Smart Code
       duration: "8:12"
       published: "2026-10-02"
+    - id: cCMN85D1Sxk
+      title: "Build Your AI Agent for Network & Security Operations"
+      channel: Cisco DevNet
+      duration: "3:19"
+      published: "2026-10-01"
     - id: 6GEIazFgPhA
       title: "The 9 Pi Coding Agent Packages I Won't Work Without (Fully Local)"
       channel: Production Grade AI
