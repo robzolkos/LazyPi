@@ -307,6 +307,11 @@
   id: advanced
   description: "Deep dives into advanced Pi workflows and techniques."
   videos:
+    - id: Bgtr1Ue40Jo
+      title: "Context Language Models: Your Agent Doesn't Need Compaction"
+      channel: Prompt Engineering
+      duration: "13:53"
+      published: "2026-10-05"
     - id: n1sSzDRcRRM
       title: "Pi Durable 是什么，有什么用？Pi 1.0 同日发布的 Agent Harness 框架"
       channel: 01Coder
