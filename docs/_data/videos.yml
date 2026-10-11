@@ -247,6 +247,11 @@
   id: fullcourse
   description: "Extended videos showing it all."
   videos:
+    - id: a3uVCPN_Rr4
+      title: "Агент Pi. Полный гайд по агенту. LSP, MCP, extentions, skills. Настраивам агент и улучшаем код."
+      channel: johenews
+      duration: "47:33"
+      published: "2026-10-10"
     - id: bYkJFfQANzc
       title: "Build Your Own AI Agent Harness with Pi and Prime — Hands-on Course"
       channel: Charles Shen, PhD, EMBA
