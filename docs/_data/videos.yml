@@ -312,6 +312,11 @@
   id: advanced
   description: "Deep dives into advanced Pi workflows and techniques."
   videos:
+    - id: p2kspDx5G6w
+      title: "Pi es IMPRESIONANTE!"
+      channel: HolaMundo
+      duration: "12:55"
+      published: "2026-10-11"
     - id: VtwJpJ0KM5E
       title: "How AgentJournal Fixes AI Agent Context Without Compaction"
       channel: Pi Percent Human
@@ -917,6 +922,11 @@
   id: shortpi
   description: "Quick Pi clips and YouTube Shorts."
   videos:
+    - id: fwGOuXMIa6I
+      title: "same AI model. same results. double the bill."
+      channel: Deonna Hodges | Learn AI
+      duration: "0:40"
+      published: "2026-10-08"
     - id: iAQq0MndX9c
       title: "Pi can run from your phone!"
       channel: DevOps Toolbox
