@@ -312,6 +312,11 @@
   id: advanced
   description: "Deep dives into advanced Pi workflows and techniques."
   videos:
+    - id: DNDYYHsypZg
+      title: "Pi Durable PROACTIVE Agents: Jev Triggers My ON-CALL Pi Agent"
+      channel: IndyDevDan
+      duration: "35:16"
+      published: "2026-10-12"
     - id: p2kspDx5G6w
       title: "Pi es IMPRESIONANTE!"
       channel: HolaMundo
