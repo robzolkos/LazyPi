@@ -312,6 +312,16 @@
   id: advanced
   description: "Deep dives into advanced Pi workflows and techniques."
   videos:
+    - id: zgb_MkrxpRs
+      title: "I Built My Own AI Coding Agent (100% Local & FREE)"
+      channel: Vivek Shetye
+      duration: "12:30"
+      published: "2026-10-13"
+    - id: Iw04ZkSPlHA
+      title: "【Pi Durable 实战】把 Agent 的执行环境搬到远程"
+      channel: 01Coder
+      duration: "12:30"
+      published: "2026-10-12"
     - id: DNDYYHsypZg
       title: "Pi Durable PROACTIVE Agents: Jev Triggers My ON-CALL Pi Agent"
       channel: IndyDevDan
@@ -327,6 +337,16 @@
       channel: Pi Percent Human
       duration: "9:49"
       published: "2026-10-09"
+    - id: 6gFPVaczUxQ
+      title: "Agenti AI in Locale su PC: proviamo LM Studio + Pi Agent"
+      channel: Lore Cloud
+      duration: "17:15"
+      published: "2026-10-09"
+    - id: KguLVSPKWWU
+      title: "Pi Agent 实战：Package 的安装与开发｜试用、项目安装，再做一个自己的 Package"
+      channel: 01Coder
+      duration: "7:23"
+      published: "2026-10-06"
     - id: glBpe4zilfE
       title: "用 Pi Durable 快速写一个 Agent：从 SQLite 做存储到 Tools、Skills"
       channel: 01Coder
