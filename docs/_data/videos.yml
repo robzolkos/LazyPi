@@ -822,6 +822,11 @@
   id: slice
   description: "Talks, interviews, and discussions about Pi from the creator and community."
   videos:
+    - id: f3uwmL0lVQs
+      title: "Monday Meditations October 5th 2026"
+      channel: Pi
+      duration: "27:26"
+      published: "2026-10-06"
     - id: Ueq-VggU1Mw
       title: "Pi 1.0 Keeps the Line Through No. The New Default Is Fullscreen. Codemode Came Earlier."
       channel: You Code It
