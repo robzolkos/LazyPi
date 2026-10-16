@@ -837,11 +837,6 @@
   id: slice
   description: "Talks, interviews, and discussions about Pi from the creator and community."
   videos:
-    - id: wTZSNFK2lfs
-      title: "Quanitzed AI News 26/09: Always-On Agents, Gemini 4 Argon & Pi 1"
-      channel: Soverius AI
-      duration: "12:22"
-      published: "2026-10-14"
     - id: f3uwmL0lVQs
       title: "Monday Meditations October 5th 2026"
       channel: Pi
