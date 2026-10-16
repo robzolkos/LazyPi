@@ -247,6 +247,11 @@
   id: fullcourse
   description: "Extended videos showing it all."
   videos:
+    - id: oKKJr7QIskI
+      title: "Pi Agent desde cero: La alternativa minimalista a Claude Code, OpenCode, Codex..."
+      channel: MoureDev by Brais Moure
+      duration: "1:48:15"
+      published: "2026-10-15"
     - id: a3uVCPN_Rr4
       title: "Агент Pi. Полный гайд по агенту. LSP, MCP, extentions, skills. Настраивам агент и улучшаем код."
       channel: johenews
@@ -312,6 +317,16 @@
   id: advanced
   description: "Deep dives into advanced Pi workflows and techniques."
   videos:
+    - id: _35OxmSp5EM
+      title: "Teaching Kids Programming with Pi"
+      channel: Armin Ronacher
+      duration: "15:25"
+      published: "2026-10-15"
+    - id: XxmGa3or3lE
+      title: "How I Permanently Fixed AI Code Slop (In 9 Minutes)"
+      channel: DIY Software
+      duration: "9:37"
+      published: "2026-10-14"
     - id: zgb_MkrxpRs
       title: "I Built My Own AI Coding Agent (100% Local & FREE)"
       channel: Vivek Shetye
@@ -822,6 +837,11 @@
   id: slice
   description: "Talks, interviews, and discussions about Pi from the creator and community."
   videos:
+    - id: wTZSNFK2lfs
+      title: "Quanitzed AI News 26/09: Always-On Agents, Gemini 4 Argon & Pi 1"
+      channel: Soverius AI
+      duration: "12:22"
+      published: "2026-10-14"
     - id: f3uwmL0lVQs
       title: "Monday Meditations October 5th 2026"
       channel: Pi
