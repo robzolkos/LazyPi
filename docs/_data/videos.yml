@@ -317,6 +317,11 @@
   id: advanced
   description: "Deep dives into advanced Pi workflows and techniques."
   videos:
+    - id: BLRReTwV8Fc
+      title: "You need to check out Pi Durable"
+      channel: Syntax
+      duration: "15:16"
+      published: "2026-10-16"
     - id: _35OxmSp5EM
       title: "Teaching Kids Programming with Pi"
       channel: Armin Ronacher
