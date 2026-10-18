@@ -317,6 +317,11 @@
   id: advanced
   description: "Deep dives into advanced Pi workflows and techniques."
   videos:
+    - id: fJsGeO2GDsw
+      title: "Pi Agent 1.0 Code Mode：用 JavaScript 编排工具调用"
+      channel: 01Coder
+      duration: "10:31"
+      published: "2026-10-14"
     - id: BLRReTwV8Fc
       title: "You need to check out Pi Durable"
       channel: Syntax
