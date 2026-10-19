@@ -317,11 +317,11 @@
   id: advanced
   description: "Deep dives into advanced Pi workflows and techniques."
   videos:
-    - id: fJsGeO2GDsw
-      title: "Pi Agent 1.0 Code Mode：用 JavaScript 编排工具调用"
-      channel: 01Coder
-      duration: "10:31"
-      published: "2026-10-14"
+    - id: re4Mt200UC4
+      title: "Pi & OpenCode’s Code Mode Fixes MCP’s Biggest Problem"
+      channel: The Cef Experience
+      duration: "9:32"
+      published: "2026-10-17"
     - id: BLRReTwV8Fc
       title: "You need to check out Pi Durable"
       channel: Syntax
@@ -332,6 +332,11 @@
       channel: Armin Ronacher
       duration: "15:25"
       published: "2026-10-15"
+    - id: fJsGeO2GDsw
+      title: "Pi Agent 1.0 Code Mode：用 JavaScript 编排工具调用"
+      channel: 01Coder
+      duration: "10:31"
+      published: "2026-10-14"
     - id: XxmGa3or3lE
       title: "How I Permanently Fixed AI Code Slop (In 9 Minutes)"
       channel: DIY Software
