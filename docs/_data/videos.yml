@@ -317,6 +317,11 @@
   id: advanced
   description: "Deep dives into advanced Pi workflows and techniques."
   videos:
+    - id: ti3vVYwzW4A
+      title: "Pi Durable EXPLAINED: Build Always-On Agents with Local Models"
+      channel: Hugging Face
+      duration: "30:02"
+      published: "2026-10-19"
     - id: re4Mt200UC4
       title: "Pi & OpenCode’s Code Mode Fixes MCP’s Biggest Problem"
       channel: The Cef Experience
