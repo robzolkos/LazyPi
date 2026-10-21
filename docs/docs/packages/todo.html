@@ -1,22 +1,25 @@
 ---
 layout: docs
-title: "Todo List — LazyPi Docs"
+title: "Tasks — LazyPi Docs"
 ---
-<h1>Todo List</h1>
-    <p class="page-desc">Multi-step work tracker with a live progress widget, session persistence, and parallel in-progress support.</p>
+<h1>Tasks</h1>
+    <p class="page-desc">Claude Code-style task tracking with dependencies, a live task widget, and shared task lists.</p>
 
     <h2>What it does</h2>
     <p>
-      Pi-manage-todo-list gives Pi a structured way to track multi-step work. A live progress widget appears above the editor and updates as tasks are completed. The todo list persists across session switches and forks — if you branch a conversation or start a new session, the task state follows.
+      Pi-tasks gives Pi a structured way to track multi-step work. It adds task tools modeled on Claude Code's (<code>TaskCreate</code>, <code>TaskList</code>, <code>TaskUpdate</code>, and friends), and a live widget above the editor shows each task as pending, in progress, or done, with elapsed time and token counts for active work.
     </p>
     <p>
-      The package is compatible with the VSCode Copilot Chat todo format and supports multiple parallel in-progress items, which is particularly useful when combined with sub-agents — each agent can have its own active task visible in the same widget.
+      Tasks can block one another, so Pi knows what has to finish before the next step can start. Task lists persist per session by default and survive resume; they can also be shared across Pi sessions in the same project for coordinated multi-agent work.
     </p>
 
     <h2>Why it's included</h2>
     <p>
-      Without explicit task tracking, long multi-step work tends to lose coherence — Pi can forget what's done, what's next, or what was deprioritized. A persistent, visible todo list keeps both you and Pi oriented, especially when context windows fill and conversations get compacted.
+      Without explicit task tracking, long multi-step work tends to lose coherence — Pi can forget what's done, what's next, or what was deprioritized. A persistent, visible task list keeps both you and Pi oriented, especially when context windows fill and conversations get compacted.
     </p>
+    <div class="callout">
+      <p>Pi-tasks replaces <code>pi-manage-todo-list</code>, which its author has deprecated. Running <code>npx @robzolkos/lazypi update</code> migrates existing installs automatically.</p>
+    </div>
 
     <h2>Commands</h2>
     <table>
@@ -25,18 +28,14 @@ title: "Todo List — LazyPi Docs"
       </thead>
       <tbody>
         <tr>
-          <td><code>/todos</code></td>
-          <td>Show completion statistics and refresh the progress widget</td>
-        </tr>
-        <tr>
-          <td><code>/todos clear</code></td>
-          <td>Clear the entire todo list and reset the widget</td>
+          <td><code>/tasks</code></td>
+          <td>Open the task menu to view, create, or clear tasks and change settings such as storage scope and widget sorting</td>
         </tr>
       </tbody>
     </table>
 
     <div class="learn-more">
-      <a href="https://github.com/tintinweb/pi-manage-todo-list" target="_blank" rel="noopener">→ GitHub — tintinweb/pi-manage-todo-list</a>
+      <a href="https://github.com/tintinweb/pi-tasks" target="_blank" rel="noopener">→ GitHub — tintinweb/pi-tasks</a>
     </div>
 
     <nav class="prev-next">
