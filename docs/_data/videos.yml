@@ -247,16 +247,6 @@
   id: fullcourse
   description: "Extended videos showing it all."
   videos:
-    - id: oKKJr7QIskI
-      title: "Pi Agent desde cero: La alternativa minimalista a Claude Code, OpenCode, Codex..."
-      channel: MoureDev by Brais Moure
-      duration: "1:48:15"
-      published: "2026-10-15"
-    - id: a3uVCPN_Rr4
-      title: "Агент Pi. Полный гайд по агенту. LSP, MCP, extentions, skills. Настраивам агент и улучшаем код."
-      channel: johenews
-      duration: "47:33"
-      published: "2026-10-10"
     - id: bYkJFfQANzc
       title: "Build Your Own AI Agent Harness with Pi and Prime — Hands-on Course"
       channel: Charles Shen, PhD, EMBA
@@ -337,56 +327,16 @@
       channel: Armin Ronacher
       duration: "15:25"
       published: "2026-10-15"
-    - id: fJsGeO2GDsw
-      title: "Pi Agent 1.0 Code Mode：用 JavaScript 编排工具调用"
-      channel: 01Coder
-      duration: "10:31"
-      published: "2026-10-14"
-    - id: XxmGa3or3lE
-      title: "How I Permanently Fixed AI Code Slop (In 9 Minutes)"
-      channel: DIY Software
-      duration: "9:37"
-      published: "2026-10-14"
     - id: zgb_MkrxpRs
       title: "I Built My Own AI Coding Agent (100% Local & FREE)"
       channel: Vivek Shetye
       duration: "12:30"
       published: "2026-10-13"
-    - id: Iw04ZkSPlHA
-      title: "【Pi Durable 实战】把 Agent 的执行环境搬到远程"
-      channel: 01Coder
-      duration: "12:30"
-      published: "2026-10-12"
     - id: DNDYYHsypZg
       title: "Pi Durable PROACTIVE Agents: Jev Triggers My ON-CALL Pi Agent"
       channel: IndyDevDan
       duration: "35:16"
       published: "2026-10-12"
-    - id: p2kspDx5G6w
-      title: "Pi es IMPRESIONANTE!"
-      channel: HolaMundo
-      duration: "12:55"
-      published: "2026-10-11"
-    - id: VtwJpJ0KM5E
-      title: "How AgentJournal Fixes AI Agent Context Without Compaction"
-      channel: Pi Percent Human
-      duration: "9:49"
-      published: "2026-10-09"
-    - id: 6gFPVaczUxQ
-      title: "Agenti AI in Locale su PC: proviamo LM Studio + Pi Agent"
-      channel: Lore Cloud
-      duration: "17:15"
-      published: "2026-10-09"
-    - id: KguLVSPKWWU
-      title: "Pi Agent 实战：Package 的安装与开发｜试用、项目安装，再做一个自己的 Package"
-      channel: 01Coder
-      duration: "7:23"
-      published: "2026-10-06"
-    - id: glBpe4zilfE
-      title: "用 Pi Durable 快速写一个 Agent：从 SQLite 做存储到 Tools、Skills"
-      channel: 01Coder
-      duration: "11:04"
-      published: "2026-10-06"
     - id: Bgtr1Ue40Jo
       title: "Context Language Models: Your Agent Doesn't Need Compaction"
       channel: Prompt Engineering
@@ -987,11 +937,6 @@
   id: shortpi
   description: "Quick Pi clips and YouTube Shorts."
   videos:
-    - id: fwGOuXMIa6I
-      title: "same AI model. same results. double the bill."
-      channel: Deonna Hodges | Learn AI
-      duration: "0:40"
-      published: "2026-10-08"
     - id: iAQq0MndX9c
       title: "Pi can run from your phone!"
       channel: DevOps Toolbox
