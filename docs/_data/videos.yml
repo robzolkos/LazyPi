@@ -307,6 +307,36 @@
   id: advanced
   description: "Deep dives into advanced Pi workflows and techniques."
   videos:
+    - id: ti3vVYwzW4A
+      title: "Pi Durable EXPLAINED: Build Always-On Agents with Local Models"
+      channel: Hugging Face
+      duration: "30:02"
+      published: "2026-10-19"
+    - id: re4Mt200UC4
+      title: "Pi & OpenCode’s Code Mode Fixes MCP’s Biggest Problem"
+      channel: The Cef Experience
+      duration: "9:32"
+      published: "2026-10-17"
+    - id: BLRReTwV8Fc
+      title: "You need to check out Pi Durable"
+      channel: Syntax
+      duration: "15:16"
+      published: "2026-10-16"
+    - id: _35OxmSp5EM
+      title: "Teaching Kids Programming with Pi"
+      channel: Armin Ronacher
+      duration: "15:25"
+      published: "2026-10-15"
+    - id: zgb_MkrxpRs
+      title: "I Built My Own AI Coding Agent (100% Local & FREE)"
+      channel: Vivek Shetye
+      duration: "12:30"
+      published: "2026-10-13"
+    - id: DNDYYHsypZg
+      title: "Pi Durable PROACTIVE Agents: Jev Triggers My ON-CALL Pi Agent"
+      channel: IndyDevDan
+      duration: "35:16"
+      published: "2026-10-12"
     - id: Bgtr1Ue40Jo
       title: "Context Language Models: Your Agent Doesn't Need Compaction"
       channel: Prompt Engineering
@@ -777,6 +807,11 @@
   id: slice
   description: "Talks, interviews, and discussions about Pi from the creator and community."
   videos:
+    - id: f3uwmL0lVQs
+      title: "Monday Meditations October 5th 2026"
+      channel: Pi
+      duration: "27:26"
+      published: "2026-10-06"
     - id: Ueq-VggU1Mw
       title: "Pi 1.0 Keeps the Line Through No. The New Default Is Fullscreen. Codemode Came Earlier."
       channel: You Code It
