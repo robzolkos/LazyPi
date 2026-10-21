@@ -1,5 +1,12 @@
 # Changelog
 
+## [0.6.6](https://github.com/robzolkos/LazyPi/compare/v0.6.5...v0.6.6) (2026-10-21)
+
+
+### Bug Fixes
+
+* drop pi-mcp-adapter and move todos to pi-tasks ([#100](https://github.com/robzolkos/LazyPi/issues/100)) ([10a411c](https://github.com/robzolkos/LazyPi/commit/10a411c51994f0ab284b32cc0c7bbd18d7f9081d)), closes [#92](https://github.com/robzolkos/LazyPi/issues/92)
+
 ## [0.6.5](https://github.com/robzolkos/LazyPi/compare/v0.6.4...v0.6.5) (2026-09-04)
 
 
