@@ -28,7 +28,6 @@ const CATEGORIES = ["core", "ui", "research", "frameworks", "themes"];
 export const PACKAGES = [
 	{ id: "subagents", category: "core", source: "npm:pi-subagents", description: "Sub-agent execution", hint: "Run isolated sub-agents for parallel work." },
 	{ id: "pi-ask-user", category: "core", source: "npm:pi-ask-user", description: "Ask-user prompts", hint: "Interactive user questions for agent workflows." },
-	{ id: "mcp", category: "core", source: "npm:pi-mcp-adapter", description: "MCP server integration", hint: "Connect Pi to any MCP-compatible tool server." },
 	{ id: "web-access", category: "core", source: "npm:pi-web-access", description: "Web search and page fetch", hint: "Built-in web search and URL fetching." },
 	{
 		id: "memory",
@@ -282,7 +281,7 @@ ${bold("Default behaviour:")}
   - With --yes, --only, or --except the picker is skipped.
 
 ${bold("Categories:")}
-  core         foundations: sub-agents, MCP, web access, memory, model providers, …
+  core         foundations: sub-agents, web access, memory, model providers, …
   ui           powerbar, interactive shell overlays, usage dashboard, …
   research     autonomous research / experiment loops
   frameworks   structured engineering workflows
@@ -291,7 +290,7 @@ ${bold("Examples:")}
   npx @robzolkos/lazypi                              # everything (interactive picker on a TTY)
   npx @robzolkos/lazypi --yes                        # everything, no prompt
   npx @robzolkos/lazypi --only core                  # just the core category
-  npx @robzolkos/lazypi --only subagents,mcp         # individual package ids also work
+  npx @robzolkos/lazypi --only subagents,plan        # individual package ids also work
   npx @robzolkos/lazypi --only core --local          # core into the current project
   npx @robzolkos/lazypi status
   npx @robzolkos/lazypi doctor`);

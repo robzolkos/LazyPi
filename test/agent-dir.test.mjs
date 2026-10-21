@@ -119,7 +119,7 @@ test("resolveAgentConfigDir matches Pi path semantics", () => {
 test("status reads settings and Compound state from PI_CODING_AGENT_DIR", (t) => {
 	const { home, workspace } = createWorkspace(t);
 	const customAgentDir = join(home, ".pi", "lazy");
-	writeSettings(join(home, ".pi", "agent"), ["npm:pi-mcp-adapter"]);
+	writeSettings(join(home, ".pi", "agent"), ["npm:pi-web-access"]);
 	writeSettings(customAgentDir, ["npm:pi-subagents"]);
 	writeJson(join(customAgentDir, "compound-engineering", "install-manifest.json"), { files: ["AGENTS.md"] });
 
@@ -129,7 +129,7 @@ test("status reads settings and Compound state from PI_CODING_AGENT_DIR", (t) =>
 	assert.ok(result.stdout.includes(`Settings file: ${join(customAgentDir, "settings.json")}`));
 	assert.match(result.stdout, /✓ \[core\] subagents/);
 	assert.match(result.stdout, /✓ \[frameworks\] compound/);
-	assert.doesNotMatch(result.stdout, /✓ \[core\] mcp/);
+	assert.doesNotMatch(result.stdout, /✓ \[core\] web-access/);
 });
 
 test("install reads auth and writes settings in PI_CODING_AGENT_DIR", (t) => {
@@ -137,7 +137,7 @@ test("install reads auth and writes settings in PI_CODING_AGENT_DIR", (t) => {
 	const defaultAgentDir = join(home, ".pi", "agent");
 	const customAgentDir = join(home, ".pi", "lazy");
 	writeFakePi(bin);
-	writeSettings(defaultAgentDir, ["npm:pi-mcp-adapter"]);
+	writeSettings(defaultAgentDir, ["npm:pi-web-access"]);
 	writeSettings(customAgentDir, ["npm:pi-subagents"]);
 	writeJson(join(defaultAgentDir, "auth.json"), { openai: { type: "api_key", key: "default" } });
 	writeJson(join(customAgentDir, "auth.json"), { anthropic: { type: "api_key", key: "custom" } });
@@ -190,12 +190,12 @@ test("--local settings remain independent of PI_CODING_AGENT_DIR", (t) => {
 	const { home, workspace } = createWorkspace(t);
 	const customAgentDir = join(home, ".pi", "lazy");
 	writeSettings(customAgentDir, ["npm:pi-subagents"]);
-	writeSettings(join(workspace, ".pi"), ["npm:pi-mcp-adapter"]);
+	writeSettings(join(workspace, ".pi"), ["npm:pi-web-access"]);
 
 	const result = runCli(["status", "--local"], { cwd: workspace, home, agentDir: customAgentDir });
 
 	assert.equal(result.status, 0, `STDOUT:\n${result.stdout}\nSTDERR:\n${result.stderr}`);
 	assert.ok(result.stdout.includes(`Settings file: ${join(workspace, ".pi", "settings.json")}`));
-	assert.match(result.stdout, /✓ \[core\] mcp/);
+	assert.match(result.stdout, /✓ \[core\] web-access/);
 	assert.doesNotMatch(result.stdout, /✓ \[core\] subagents/);
 });
