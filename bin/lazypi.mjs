@@ -28,7 +28,6 @@ const CATEGORIES = ["core", "ui", "research", "frameworks", "themes"];
 export const PACKAGES = [
 	{ id: "subagents", category: "core", source: "npm:pi-subagents", description: "Sub-agent execution", hint: "Run isolated sub-agents for parallel work." },
 	{ id: "pi-ask-user", category: "core", source: "npm:pi-ask-user", description: "Ask-user prompts", hint: "Interactive user questions for agent workflows." },
-	{ id: "mcp", category: "core", source: "npm:pi-mcp-adapter", description: "MCP server integration", hint: "Connect Pi to any MCP-compatible tool server." },
 	{ id: "web-access", category: "core", source: "npm:pi-web-access", description: "Web search and page fetch", hint: "Built-in web search and URL fetching." },
 	{
 		id: "memory",
@@ -56,7 +55,14 @@ export const PACKAGES = [
 	{ id: "powerbar", category: "ui", source: "npm:@juanibiapina/pi-powerbar", description: "Powerbar UI", hint: "Status line for Pi with live context." },
 	{ id: "usage", category: "ui", source: "npm:@tmustier/pi-usage-extension", description: "Usage and cost dashboard", hint: "Track token usage and API cost in-session." },
 	{ id: "raw-paste", category: "ui", source: "npm:@tmustier/pi-raw-paste", description: "Raw paste command", hint: "Paste raw clipboard content without Pi re-interpreting it." },
-	{ id: "todos", category: "ui", source: "git:github.com/tintinweb/pi-manage-todo-list@b75c449aa85ce328e9a8b632f62bf642aed40359", description: "Todo list management", hint: "Track multi-step work with live progress widget and session persistence." },
+	{
+		id: "todos",
+		category: "ui",
+		source: "npm:@tintinweb/pi-tasks",
+		legacySources: ["git:github.com/tintinweb/pi-manage-todo-list@b75c449aa85ce328e9a8b632f62bf642aed40359"],
+		description: "Task tracking",
+		hint: "Track multi-step work with dependencies and a live task widget.",
+	},
 	{ id: "btw", category: "ui", source: "npm:pi-btw", description: "Side-chat popover", hint: "Ask quick questions without polluting your conversation history." },
 	{ id: "interactive-shell", category: "ui", source: "npm:pi-interactive-shell", description: "Interactive shell overlays", hint: "Run Pi, Codex, editors, SSH, and long-running CLIs in observable overlays with hands-free and dispatch modes." },
 	{
@@ -282,7 +288,7 @@ ${bold("Default behaviour:")}
   - With --yes, --only, or --except the picker is skipped.
 
 ${bold("Categories:")}
-  core         foundations: sub-agents, MCP, web access, memory, model providers, …
+  core         foundations: sub-agents, web access, memory, model providers, …
   ui           powerbar, interactive shell overlays, usage dashboard, …
   research     autonomous research / experiment loops
   frameworks   structured engineering workflows
@@ -291,7 +297,7 @@ ${bold("Examples:")}
   npx @robzolkos/lazypi                              # everything (interactive picker on a TTY)
   npx @robzolkos/lazypi --yes                        # everything, no prompt
   npx @robzolkos/lazypi --only core                  # just the core category
-  npx @robzolkos/lazypi --only subagents,mcp         # individual package ids also work
+  npx @robzolkos/lazypi --only subagents,plan        # individual package ids also work
   npx @robzolkos/lazypi --only core --local          # core into the current project
   npx @robzolkos/lazypi status
   npx @robzolkos/lazypi doctor`);

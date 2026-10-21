@@ -15,6 +15,8 @@ const LEGACY_SOURCE = "npm:pi-claude-cli";
 const PINNED_LEGACY_SOURCE = "npm:pi-claude-cli@0.3.1";
 const CURRENT_AUTORESEARCH_SOURCE = "git:github.com/davebcn87/pi-autoresearch";
 const LEGACY_AUTORESEARCH_SOURCE = "git:github.com/davebcn87/pi-autoresearch@5a29db080131449edc6d25a6b351b12879063366";
+const CURRENT_TODOS_SOURCE = "npm:@tintinweb/pi-tasks";
+const LEGACY_TODOS_SOURCE = "git:github.com/tintinweb/pi-manage-todo-list@b75c449aa85ce328e9a8b632f62bf642aed40359";
 const USER_PINNED_UNPINNED_CATALOG_SOURCE = "npm:pi-subagents@0.13.3";
 const AUTH_ENV_VARS = [
 	"ANTHROPIC_API_KEY",
@@ -393,6 +395,17 @@ test("same-identity cleanup keeps current-source filters when duplicate entries 
 	});
 	assertSuccess(migration.result);
 	assert.deepEqual(migration.settings.packages, [currentEntry]);
+});
+
+test("update migrates the deprecated todo list to pi-tasks", (t) => {
+	const { result, calls, settings } = runCli(t, ["update", "--only", "todos"], { packages: [LEGACY_TODOS_SOURCE] });
+	assertSuccess(result);
+	assert.deepEqual(calls, [
+		`install ${CURRENT_TODOS_SOURCE}`,
+		`remove ${LEGACY_TODOS_SOURCE}`,
+		"update --all",
+	]);
+	assert.deepEqual(settings.packages, [CURRENT_TODOS_SOURCE]);
 });
 
 test("duplicate spellings of one legacy npm package require one removal", (t) => {
