@@ -247,6 +247,11 @@
   id: fullcourse
   description: "Extended videos showing it all."
   videos:
+    - id: faLwXY3S7ps
+      title: "Learn 90% of Pi Coding Agent in Under 25 Minutes (2026)"
+      channel: James NoCode
+      duration: "25:19"
+      published: "2026-10-20"
     - id: bYkJFfQANzc
       title: "Build Your Own AI Agent Harness with Pi and Prime — Hands-on Course"
       channel: Charles Shen, PhD, EMBA
@@ -327,6 +332,11 @@
       channel: Armin Ronacher
       duration: "15:25"
       published: "2026-10-15"
+    - id: e-iOaaXtn7E
+      title: "Criei meu próprio harness com o Pi Durable"
+      channel: André Prado
+      duration: "18:22"
+      published: "2026-10-14"
     - id: zgb_MkrxpRs
       title: "I Built My Own AI Coding Agent (100% Local & FREE)"
       channel: Vivek Shetye
@@ -807,6 +817,11 @@
   id: slice
   description: "Talks, interviews, and discussions about Pi from the creator and community."
   videos:
+    - id: 7mBQknCnovM
+      title: "312 - Understanding Pi Durable with Mario & Armin of Earendil"
+      channel: Fragmented - AI Developer Podcast
+      duration: "1:00:43"
+      published: "2026-10-20"
     - id: f3uwmL0lVQs
       title: "Monday Meditations October 5th 2026"
       channel: Pi
