@@ -817,6 +817,11 @@
   id: slice
   description: "Talks, interviews, and discussions about Pi from the creator and community."
   videos:
+    - id: BB84EzZjF3U
+      title: "Pi Durable: The Missing Piece for AI Agents That Keep Working"
+      channel: Superlinear
+      duration: "42:52"
+      published: "2026-10-22"
     - id: 7mBQknCnovM
       title: "312 - Understanding Pi Durable with Mario & Armin of Earendil"
       channel: Fragmented - AI Developer Podcast
