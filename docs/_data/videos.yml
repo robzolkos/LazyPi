@@ -312,6 +312,11 @@
   id: advanced
   description: "Deep dives into advanced Pi workflows and techniques."
   videos:
+    - id: OrG6Tya_WhU
+      title: "Run your Pi Agent for Free with 9Router + VPS (Full Guide + Demo)"
+      channel: ZazenCodes
+      duration: "35:38"
+      published: "2026-10-23"
     - id: ti3vVYwzW4A
       title: "Pi Durable EXPLAINED: Build Always-On Agents with Local Models"
       channel: Hugging Face
