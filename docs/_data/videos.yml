@@ -317,6 +317,16 @@
       channel: ZazenCodes
       duration: "35:38"
       published: "2026-10-23"
+    - id: lsVp86Ufdb4
+      title: "Pi Agent: Dei uma Tarefa pra IA e Fui Tomar Café. Ela Fez TUDO!"
+      channel: Caio Delgado
+      duration: "14:27"
+      published: "2026-10-21"
+    - id: OLqP8jxJ0Wc
+      title: "My Jev Pi Durable Agent CURATES News: HYPE, FACT, or SIGNAL"
+      channel: IndyDevDan
+      duration: "22:34"
+      published: "2026-10-19"
     - id: ti3vVYwzW4A
       title: "Pi Durable EXPLAINED: Build Always-On Agents with Local Models"
       channel: Hugging Face
@@ -327,6 +337,11 @@
       channel: The Cef Experience
       duration: "9:32"
       published: "2026-10-17"
+    - id: tJdbPuB-7iM
+      title: "Pulling Datadog Metrics Into Omarchy With Pup CLI"
+      channel: Datadog Community
+      duration: "20:23"
+      published: "2026-10-16"
     - id: BLRReTwV8Fc
       title: "You need to check out Pi Durable"
       channel: Syntax
@@ -822,6 +837,11 @@
   id: slice
   description: "Talks, interviews, and discussions about Pi from the creator and community."
   videos:
+    - id: 29STjfKZpx0
+      title: "Ditch Hermes for Pi Durable— Is it Worth it??"
+      channel: Superbash (BoxminingAI)
+      duration: "11:10"
+      published: "2026-10-25"
     - id: BB84EzZjF3U
       title: "Pi Durable: The Missing Piece for AI Agents That Keep Working"
       channel: Superlinear
