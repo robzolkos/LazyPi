@@ -312,6 +312,21 @@
   id: advanced
   description: "Deep dives into advanced Pi workflows and techniques."
   videos:
+    - id: 5QVNGRINTfk
+      title: "Pi Harness Better than Codex / Claude? (Fan Favourite)"
+      channel: Superbash (BoxminingAI)
+      duration: "14:08"
+      published: "2026-10-27"
+    - id: PtveTLGD4rM
+      title: "Новая агентская IDE от JetBrains – лучше чем AIR?"
+      channel: Swag
+      duration: "14:49"
+      published: "2026-10-27"
+    - id: DoL5CVPhEPM
+      title: "Pi Durable: This Is Actually INSANE!"
+      channel: kintu
+      duration: "8:38"
+      published: "2026-10-25"
     - id: OrG6Tya_WhU
       title: "Run your Pi Agent for Free with 9Router + VPS (Full Guide + Demo)"
       channel: ZazenCodes
