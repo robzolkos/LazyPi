@@ -312,11 +312,51 @@
   id: advanced
   description: "Deep dives into advanced Pi workflows and techniques."
   videos:
+    - id: 5QVNGRINTfk
+      title: "Pi Harness Better than Codex / Claude? (Fan Favourite)"
+      channel: Superbash (BoxminingAI)
+      duration: "14:08"
+      published: "2026-10-27"
+    - id: PtveTLGD4rM
+      title: "Новая агентская IDE от JetBrains – лучше чем AIR?"
+      channel: Swag
+      duration: "14:49"
+      published: "2026-10-27"
+    - id: 52JX83rGPLc
+      title: "ELITE Agentic Engineers Are LEAVING THE LOOP... Here’s why"
+      channel: IndyDevDan
+      duration: "25:46"
+      published: "2026-10-26"
+    - id: DoL5CVPhEPM
+      title: "Pi Durable: This Is Actually INSANE!"
+      channel: kintu
+      duration: "8:38"
+      published: "2026-10-25"
+    - id: LekPYsqCyGo
+      title: "Pi Durable in Practice: Building a 24/7 AI SRE Agent"
+      channel: Martí Blanes
+      duration: "17:12"
+      published: "2026-10-24"
+    - id: yF5EGEKA_B4
+      title: "JetBrains Just Released an Open-Source Agentic IDE (ThinkRail)"
+      channel: NeuralNine
+      duration: "16:02"
+      published: "2026-10-23"
     - id: OrG6Tya_WhU
       title: "Run your Pi Agent for Free with 9Router + VPS (Full Guide + Demo)"
       channel: ZazenCodes
       duration: "35:38"
       published: "2026-10-23"
+    - id: lsVp86Ufdb4
+      title: "Pi Agent: Dei uma Tarefa pra IA e Fui Tomar Café. Ela Fez TUDO!"
+      channel: Caio Delgado
+      duration: "14:27"
+      published: "2026-10-21"
+    - id: OLqP8jxJ0Wc
+      title: "My Jev Pi Durable Agent CURATES News: HYPE, FACT, or SIGNAL"
+      channel: IndyDevDan
+      duration: "22:34"
+      published: "2026-10-19"
     - id: ti3vVYwzW4A
       title: "Pi Durable EXPLAINED: Build Always-On Agents with Local Models"
       channel: Hugging Face
@@ -327,6 +367,11 @@
       channel: The Cef Experience
       duration: "9:32"
       published: "2026-10-17"
+    - id: tJdbPuB-7iM
+      title: "Pulling Datadog Metrics Into Omarchy With Pup CLI"
+      channel: Datadog Community
+      duration: "20:23"
+      published: "2026-10-16"
     - id: BLRReTwV8Fc
       title: "You need to check out Pi Durable"
       channel: Syntax
@@ -822,6 +867,11 @@
   id: slice
   description: "Talks, interviews, and discussions about Pi from the creator and community."
   videos:
+    - id: 29STjfKZpx0
+      title: "Ditch Hermes for Pi Durable— Is it Worth it??"
+      channel: Superbash (BoxminingAI)
+      duration: "11:10"
+      published: "2026-10-25"
     - id: BB84EzZjF3U
       title: "Pi Durable: The Missing Piece for AI Agents That Keep Working"
       channel: Superlinear
