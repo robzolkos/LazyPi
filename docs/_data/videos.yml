@@ -322,11 +322,26 @@
       channel: Swag
       duration: "14:49"
       published: "2026-10-27"
+    - id: 52JX83rGPLc
+      title: "ELITE Agentic Engineers Are LEAVING THE LOOP... Here’s why"
+      channel: IndyDevDan
+      duration: "25:46"
+      published: "2026-10-26"
     - id: DoL5CVPhEPM
       title: "Pi Durable: This Is Actually INSANE!"
       channel: kintu
       duration: "8:38"
       published: "2026-10-25"
+    - id: LekPYsqCyGo
+      title: "Pi Durable in Practice: Building a 24/7 AI SRE Agent"
+      channel: Martí Blanes
+      duration: "17:12"
+      published: "2026-10-24"
+    - id: yF5EGEKA_B4
+      title: "JetBrains Just Released an Open-Source Agentic IDE (ThinkRail)"
+      channel: NeuralNine
+      duration: "16:02"
+      published: "2026-10-23"
     - id: OrG6Tya_WhU
       title: "Run your Pi Agent for Free with 9Router + VPS (Full Guide + Demo)"
       channel: ZazenCodes
