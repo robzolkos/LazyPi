@@ -312,6 +312,16 @@
   id: advanced
   description: "Deep dives into advanced Pi workflows and techniques."
   videos:
+    - id: aaBVds9uQuM
+      title: "Pi 也能用 subagent：作者 Mario 的插件怎么用"
+      channel: 01Coder
+      duration: "8:24"
+      published: "2026-10-30"
+    - id: OpGOdKly4Mk
+      title: "I Let My Pi Agent DRIVE My Backtest Software."
+      channel: Morphic Labs
+      duration: "11:37"
+      published: "2026-10-29"
     - id: 5QVNGRINTfk
       title: "Pi Harness Better than Codex / Claude? (Fan Favourite)"
       channel: Superbash (BoxminingAI)
