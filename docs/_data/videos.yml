@@ -312,6 +312,11 @@
   id: advanced
   description: "Deep dives into advanced Pi workflows and techniques."
   videos:
+    - id: y9V8Lh_28Ek
+      title: "Why I Switched to Pi as My Daily AI Coding Agent"
+      channel: Pål-Kristian Hamre
+      duration: "15:59"
+      published: "2026-10-30"
     - id: 5QVNGRINTfk
       title: "Pi Harness Better than Codex / Claude? (Fan Favourite)"
       channel: Superbash (BoxminingAI)
