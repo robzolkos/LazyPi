@@ -247,6 +247,11 @@
   id: fullcourse
   description: "Extended videos showing it all."
   videos:
+    - id: 5MTzSVKOBYc
+      title: "Boosting your geocomputation workflow using Pi coding agent (Leandro Parente)"
+      channel: OpenGeoHub Foundation Official Channel
+      duration: "1:31:43"
+      published: "2026-11-01"
     - id: faLwXY3S7ps
       title: "Learn 90% of Pi Coding Agent in Under 25 Minutes (2026)"
       channel: James NoCode
