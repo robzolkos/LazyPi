@@ -2,6 +2,11 @@
   id: intro
   description: "Get started with Pi — introductions, tutorials, and setup guides."
   videos:
+    - id: coJGLdWkXGw
+      title: "Pi is the coding agent that made me love vibe coding"
+      channel: Em Dash
+      duration: "6:17"
+      published: "2026-11-03"
     - id: hKaMUjWqqFY
       title: "Pi 1.0 🚀 El Agente de Desarrollo MINIMALISTA para la Terminal"
       channel: Nichonauta
