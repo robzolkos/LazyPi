@@ -322,11 +322,26 @@
   id: advanced
   description: "Deep dives into advanced Pi workflows and techniques."
   videos:
+    - id: 4gSXKRusEYk
+      title: "Build and Deploy an Always-On AI Agent with Pi"
+      channel: ZazenCodes
+      duration: "33:35"
+      published: "2026-11-05"
+    - id: Xc5BAhz1cc8
+      title: "Один DeepSeek 4.1 Flash — четыре результата! Харнес решает больше, чем нейросеть?"
+      channel: NullsCode
+      duration: "45:31"
+      published: "2026-11-04"
     - id: y9V8Lh_28Ek
       title: "Why I Switched to Pi as My Daily AI Coding Agent"
       channel: Pål-Kristian Hamre
       duration: "15:59"
       published: "2026-10-30"
+    - id: u5Q149jlMQ8
+      title: "Building a local AI agent in Workshop on Ubuntu"
+      channel: Canonical Ubuntu
+      duration: "15:18"
+      published: "2026-10-27"
     - id: 5QVNGRINTfk
       title: "Pi Harness Better than Codex / Claude? (Fan Favourite)"
       channel: Superbash (BoxminingAI)
