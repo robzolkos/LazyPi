@@ -322,6 +322,11 @@
   id: advanced
   description: "Deep dives into advanced Pi workflows and techniques."
   videos:
+    - id: P-43lvj4YGQ
+      title: "KI-Agenten 2026 – Mein kompletter Workflow | INSIDE AI #42"
+      channel: Fraunhofer IEM
+      duration: "27:24"
+      published: "2026-11-06"
     - id: 4gSXKRusEYk
       title: "Build and Deploy an Always-On AI Agent with Pi"
       channel: ZazenCodes
