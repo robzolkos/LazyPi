@@ -322,6 +322,16 @@
   id: advanced
   description: "Deep dives into advanced Pi workflows and techniques."
   videos:
+    - id: wnAm69ywPZ8
+      title: "How to SETUP CLI PROXY for AI Coding Agents - Pi and T3 Code"
+      channel: OddScape
+      duration: "1:59"
+      published: "2026-11-07"
+    - id: P-43lvj4YGQ
+      title: "KI-Agenten 2026 – Mein kompletter Workflow | INSIDE AI #42"
+      channel: Fraunhofer IEM
+      duration: "27:24"
+      published: "2026-11-06"
     - id: 4gSXKRusEYk
       title: "Build and Deploy an Always-On AI Agent with Pi"
       channel: ZazenCodes
@@ -332,6 +342,11 @@
       channel: NullsCode
       duration: "45:31"
       published: "2026-11-04"
+    - id: EEyQQC-RcqU
+      title: "How I built my own personal cloud agent"
+      channel: Amanvir Parhar
+      duration: "10:27"
+      published: "2026-11-02"
     - id: y9V8Lh_28Ek
       title: "Why I Switched to Pi as My Daily AI Coding Agent"
       channel: Pål-Kristian Hamre
