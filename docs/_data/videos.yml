@@ -322,6 +322,11 @@
   id: advanced
   description: "Deep dives into advanced Pi workflows and techniques."
   videos:
+    - id: 8TXTmqnrCpc
+      title: "More token-efficient than Pi? I try 3code"
+      channel: Em Dash
+      duration: "11:20"
+      published: "2026-11-08"
     - id: wnAm69ywPZ8
       title: "How to SETUP CLI PROXY for AI Coding Agents - Pi and T3 Code"
       channel: OddScape
