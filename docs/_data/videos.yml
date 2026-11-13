@@ -322,6 +322,16 @@
   id: advanced
   description: "Deep dives into advanced Pi workflows and techniques."
   videos:
+    - id: TFtvFRCAwFQ
+      title: "Pi Agent 开发实战：用 faux provider 做 0 成本测试"
+      channel: 01Coder
+      duration: "10:31"
+      published: "2026-11-08"
+    - id: 8TXTmqnrCpc
+      title: "More token-efficient than Pi? I try 3code"
+      channel: Em Dash
+      duration: "11:20"
+      published: "2026-11-08"
     - id: wnAm69ywPZ8
       title: "How to SETUP CLI PROXY for AI Coding Agents - Pi and T3 Code"
       channel: OddScape
@@ -342,6 +352,11 @@
       channel: NullsCode
       duration: "45:31"
       published: "2026-11-04"
+    - id: gOa43y-RjJQ
+      title: "Pi Durable: Para Agentes de Verdad"
+      channel: Gilberts Ahumada
+      duration: "18:15"
+      published: "2026-11-03"
     - id: EEyQQC-RcqU
       title: "How I built my own personal cloud agent"
       channel: Amanvir Parhar
