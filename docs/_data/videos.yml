@@ -932,6 +932,11 @@
   id: slice
   description: "Talks, interviews, and discussions about Pi from the creator and community."
   videos:
+    - id: EreOxs9Vvrg
+      title: "Pi Durable - Mario Zechner"
+      channel: Vienna AI Engineering
+      duration: "39:16"
+      published: "2026-11-15"
     - id: 29STjfKZpx0
       title: "Ditch Hermes for Pi Durable— Is it Worth it??"
       channel: Superbash (BoxminingAI)
