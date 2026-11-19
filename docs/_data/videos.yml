@@ -322,6 +322,16 @@
   id: advanced
   description: "Deep dives into advanced Pi workflows and techniques."
   videos:
+    - id: 3giACfGjwpE
+      title: "Wait… Pi Can Do WHAT?!"
+      channel: DevOps Toolbox
+      duration: "11:29"
+      published: "2026-11-18"
+    - id: SBEGweMW3BM
+      title: "The Simplest Demo of pi-durable"
+      channel: Official Channel for Exe Dev
+      duration: "5:51"
+      published: "2026-11-18"
     - id: TFtvFRCAwFQ
       title: "Pi Agent 开发实战：用 faux provider 做 0 成本测试"
       channel: 01Coder
