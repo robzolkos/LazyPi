@@ -322,10 +322,45 @@
   id: advanced
   description: "Deep dives into advanced Pi workflows and techniques."
   videos:
+    - id: bvKYINTivcE
+      title: "Qwen3.8-27B Pi Adapter: Hands-On Test vs Base Model"
+      channel: Fahd Mirza
+      duration: "9:02"
+      published: "2026-11-20"
+    - id: 3giACfGjwpE
+      title: "Wait… Pi Can Do WHAT?!"
+      channel: DevOps Toolbox
+      duration: "11:29"
+      published: "2026-11-18"
+    - id: SBEGweMW3BM
+      title: "The Simplest Demo of pi-durable"
+      channel: Official Channel for Exe Dev
+      duration: "5:51"
+      published: "2026-11-18"
+    - id: 44regQgCahw
+      title: "My Pi agent kept looking things up one at a time, so I built pi-efficient-tool-use"
+      channel: Don Yin
+      duration: "2:36"
+      published: "2026-11-17"
+    - id: TFtvFRCAwFQ
+      title: "Pi Agent 开发实战：用 faux provider 做 0 成本测试"
+      channel: 01Coder
+      duration: "10:31"
+      published: "2026-11-08"
+    - id: 8TXTmqnrCpc
+      title: "More token-efficient than Pi? I try 3code"
+      channel: Em Dash
+      duration: "11:20"
+      published: "2026-11-08"
     - id: wnAm69ywPZ8
       title: "How to SETUP CLI PROXY for AI Coding Agents - Pi and T3 Code"
       channel: OddScape
       duration: "1:59"
+      published: "2026-11-07"
+    - id: x_8k2DJXYmA
+      title: "T3 Code Honest First Impression"
+      channel: Em Dash
+      duration: "23:31"
       published: "2026-11-07"
     - id: P-43lvj4YGQ
       title: "KI-Agenten 2026 – Mein kompletter Workflow | INSIDE AI #42"
@@ -342,6 +377,11 @@
       channel: NullsCode
       duration: "45:31"
       published: "2026-11-04"
+    - id: gOa43y-RjJQ
+      title: "Pi Durable: Para Agentes de Verdad"
+      channel: Gilberts Ahumada
+      duration: "18:15"
+      published: "2026-11-03"
     - id: EEyQQC-RcqU
       title: "How I built my own personal cloud agent"
       channel: Amanvir Parhar
@@ -912,6 +952,11 @@
   id: slice
   description: "Talks, interviews, and discussions about Pi from the creator and community."
   videos:
+    - id: EreOxs9Vvrg
+      title: "Pi Durable - Mario Zechner"
+      channel: Vienna AI Engineering
+      duration: "39:16"
+      published: "2026-11-15"
     - id: 29STjfKZpx0
       title: "Ditch Hermes for Pi Durable— Is it Worth it??"
       channel: Superbash (BoxminingAI)
