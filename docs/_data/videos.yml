@@ -322,10 +322,20 @@
   id: advanced
   description: "Deep dives into advanced Pi workflows and techniques."
   videos:
+    - id: 2Q1XFIXLsE4
+      title: "Pi Web Tutorial: Run the Pi Coding Agent in Your Browser, Step by Step (Free Local Model)"
+      channel: Tech On Cue
+      duration: "7:01"
+      published: "2026-11-21"
     - id: bvKYINTivcE
       title: "Qwen3.8-27B Pi Adapter: Hands-On Test vs Base Model"
       channel: Fahd Mirza
       duration: "9:02"
+      published: "2026-11-20"
+    - id: wFZx4Np8cM0
+      title: "Pi Coding Agent Codemode Tested: Does It Save Tokens?"
+      channel: ZCODER
+      duration: "3:25"
       published: "2026-11-20"
     - id: 3giACfGjwpE
       title: "Wait… Pi Can Do WHAT?!"
