@@ -322,11 +322,21 @@
   id: advanced
   description: "Deep dives into advanced Pi workflows and techniques."
   videos:
+    - id: 4NzM2hcWp1s
+      title: "Harness Adapters: Train Your Model for Any Coding Agent"
+      channel: Prompt Engineering
+      duration: "11:37"
+      published: "2026-11-24"
     - id: 2Q1XFIXLsE4
       title: "Pi Web Tutorial: Run the Pi Coding Agent in Your Browser, Step by Step (Free Local Model)"
       channel: Tech On Cue
       duration: "7:01"
       published: "2026-11-21"
+    - id: Z4R8KfzaC5s
+      title: "5 Token Saving Tools for Coding Agents: RTK, Ponytail, Headroom + More (Full Setup Guide)"
+      channel: ZazenCodes
+      duration: "37:37"
+      published: "2026-11-20"
     - id: bvKYINTivcE
       title: "Qwen3.8-27B Pi Adapter: Hands-On Test vs Base Model"
       channel: Fahd Mirza
