@@ -322,6 +322,21 @@
   id: advanced
   description: "Deep dives into advanced Pi workflows and techniques."
   videos:
+    - id: oxhAfqM6XaA
+      title: "Bonsai 2.5 27B on a 16 GB GPU: 4x Faster Than Qwen 3.8 Q4"
+      channel: Zero to MVP
+      duration: "5:30"
+      published: "2026-11-25"
+    - id: X_0e5U4glBI
+      title: "Inkling 2 Mini: I ran my Qwen game test (live + setup)"
+      channel: Nidhi Singh
+      duration: "20:28"
+      published: "2026-11-25"
+    - id: E7u8Pp121jA
+      title: "Ternary Bonsai 2.5 27B: Just 6GB, Near FP16 Intelligence & 59 TPS on M5 Max!"
+      channel: Execute Automation
+      duration: "12:44"
+      published: "2026-11-25"
     - id: 4NzM2hcWp1s
       title: "Harness Adapters: Train Your Model for Any Coding Agent"
       channel: Prompt Engineering
