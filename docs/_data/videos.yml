@@ -337,11 +337,31 @@
       channel: Execute Automation
       duration: "12:44"
       published: "2026-11-25"
+    - id: EpSyB_pUKjA
+      title: "PI agent connecting Telegram (video: 6)"
+      channel: Michael Provenzano
+      duration: "2:50"
+      published: "2026-11-24"
+    - id: bb_CUeMwaIk
+      title: "Claude Code vs. OpenCode: Welcher lokale Agent gewinnt?"
+      channel: Rion Weyler
+      duration: "16:37"
+      published: "2026-11-24"
     - id: 4NzM2hcWp1s
       title: "Harness Adapters: Train Your Model for Any Coding Agent"
       channel: Prompt Engineering
       duration: "11:37"
       published: "2026-11-24"
+    - id: sXkgVSgpCHA
+      title: "Pi agent network analysis skill (video: 3)"
+      channel: Michael Provenzano
+      duration: "8:47"
+      published: "2026-11-22"
+    - id: aGUmHnJWyYs
+      title: "pi vs opencode: Which Coding Agent Wins?"
+      channel: ZCODER
+      duration: "2:52"
+      published: "2026-11-21"
     - id: 2Q1XFIXLsE4
       title: "Pi Web Tutorial: Run the Pi Coding Agent in Your Browser, Step by Step (Free Local Model)"
       channel: Tech On Cue
